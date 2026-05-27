@@ -1,0 +1,297 @@
+---
+title: "Determinantes de la Desnutricion Cronica"
+subtitle: "Fase 3 - Exploracion de Asociaciones | ENDES Peru"
+author: "Investigador"
+date: last-modified
+format:
+  html:
+    toc: true
+    theme: cosmo
+    code-fold: true
+execute:
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| label: setup
+#| include: false
+
+library(dplyr)
+library(ggplot2)
+library(knitr)
+library(tidyr)
+
+source("../core/utils.R")
+data_path <- "../../data/silver/validated/master_validated.rds"
+
+if (file.exists(data_path)) {
+  master <- readRDS(data_path)
+} else {
+  stop("La data validada no existe. Ejecuta primero los scripts de pipeline.")
+}
+
+# Dataset de trabajo
+master_det <- master %>%
+  select(
+    hhid, hc0, year_survey,
+    hc70_num, hc1, hc27, hc63, hc64,
+    hc61, hc62,
+    hv270, hv271, hv025, hv024,
+    hv201, hv205, hv206, hv226,
+    hv009, hv014, hv216,
+    hv005
+  ) %>%
+  mutate(
+    peso       = as.numeric(hv005) / 1000000,
+    desnutrido = ifelse(hc70_num < -200, 1, 0),
+    zscore     = as.numeric(hc70_num) / 100
+  )
+
+# Funcion auxiliar: prevalencia ponderada por grupo
+prev_por <- function(df, var) {
+  df %>%
+    group_by(across(all_of(var))) %>%
+    summarise(
+      n           = n(),
+      prevalencia = round(weighted.mean(desnutrido, peso, na.rm = TRUE) * 100, 2),
+      .groups     = "drop"
+    ) %>%
+    arrange(desc(prevalencia))
+}
+```
+
+## 1. Panorama general
+
+Antes de analizar determinantes, revisamos la distribucion del z-score de talla/edad (`hc70_num`) para entender la dispersion y la magnitud del problema en el dataset.
+
+```{r distribucion-zscore}
+#| label: distribucion-zscore
+#| fig-cap: "Distribucion del Z-score talla/edad. La linea roja marca el umbral de -2 SD (stunting)."
+
+ggplot(master_det %>% filter(!is.na(zscore)), aes(x = zscore)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 60, fill = "#3498db", alpha = 0.7) +
+  geom_density(color = "#2c3e50", linewidth = 0.8) +
+  geom_vline(xintercept = -2, color = "#e74c3c",
+             linetype = "dashed", linewidth = 1) +
+  annotate("text", x = -2.1, y = 0.05,
+           label = "Umbral stunting\n(-2 SD)",
+           hjust = 1, size = 3.2, color = "#e74c3c") +
+  theme_minimal() +
+  labs(
+    title = "Distribucion del Z-score Talla/Edad",
+    x     = "Z-score",
+    y     = "Densidad"
+  )
+```
+
+```{r resumen-zscore}
+#| label: resumen-zscore
+
+master_det %>%
+  summarise(
+    Media    = round(mean(zscore, na.rm = TRUE), 3),
+    Mediana  = round(median(zscore, na.rm = TRUE), 3),
+    SD       = round(sd(zscore, na.rm = TRUE), 3),
+    Min      = round(min(zscore, na.rm = TRUE), 3),
+    Max      = round(max(zscore, na.rm = TRUE), 3),
+    Stunting = paste0(round(mean(desnutrido, na.rm = TRUE) * 100, 2), "%")
+  ) %>%
+  knitr::kable(caption = "Resumen estadistico del Z-score talla/edad")
+```
+
+## 2. Indice de riqueza
+
+El indice de riqueza (`hv270`) es un proxy del nivel socioeconomico del hogar construido por el ENDES a partir de activos del hogar. Se espera una relacion inversa con la desnutricion cronica.
+
+```{r riqueza}
+#| label: riqueza
+#| fig-cap: "Prevalencia de desnutricion cronica por quintil de riqueza."
+
+prev_riqueza <- prev_por(master_det, "hv270") %>%
+  mutate(hv270 = factor(as.integer(hv270)))
+
+ggplot(prev_riqueza, aes(x = hv270, y = prevalencia, fill = hv270)) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = paste0(prevalencia, "%")), vjust = -0.4, size = 3.5) +
+  scale_fill_brewer(palette = "RdYlGn", direction = -1) +
+  theme_minimal() +
+  labs(
+    title = "Prevalencia por Indice de Riqueza",
+    x     = "Quintil de riqueza",
+    y     = "Prevalencia (%)"
+  ) +
+  ylim(0, max(prev_riqueza$prevalencia) + 8)
+
+knitr::kable(prev_riqueza,
+  col.names = c("Quintil", "N", "Prevalencia (%)"),
+  caption   = "Desnutricion cronica por quintil de riqueza"
+)
+```
+
+## 3. Nivel educativo de la madre
+
+La educacion de la madre es uno de los determinantes mas documentados de la desnutricion infantil. Una mayor educacion se asocia con mejores practicas de cuidado y alimentacion.
+
+```{r educacion-madre}
+#| label: educacion-madre
+#| fig-cap: "Prevalencia de desnutricion cronica segun nivel educativo de la madre."
+
+prev_educ <- prev_por(master_det, "hc61")
+
+ggplot(prev_educ, aes(x = reorder(hc61, prevalencia), y = prevalencia)) +
+  geom_col(fill = "#8e44ad", alpha = 0.8) +
+  geom_text(aes(label = paste0(prevalencia, "%")), hjust = -0.2, size = 3.5) +
+  coord_flip() +
+  expand_limits(y = max(prev_educ$prevalencia, na.rm = TRUE) + 8) +
+  theme_minimal() +
+  labs(
+    title = "Prevalencia por Nivel Educativo de la Madre",
+    x     = "Nivel educativo",
+    y     = "Prevalencia (%)"
+  )
+
+knitr::kable(prev_educ,
+  col.names = c("Nivel educativo", "N", "Prevalencia (%)"),
+  caption   = "Desnutricion cronica por nivel educativo de la madre"
+)
+```
+
+## 4. Area de residencia y region
+
+```{r area-region}
+#| label: area-region
+#| fig-cap: "Prevalencia por area de residencia."
+
+prev_area <- prev_por(master_det, "hv025")
+
+p_area <- ggplot(prev_area, aes(x = reorder(hv025, prevalencia), y = prevalencia, fill = hv025)) +
+  geom_col(show.legend = FALSE, alpha = 0.85) +
+  geom_text(aes(label = paste0(prevalencia, "%")), hjust = -0.2, size = 4) +
+  coord_flip() +
+  scale_fill_brewer(palette = "Set2") +
+  expand_limits(y = max(prev_area$prevalencia, na.rm = TRUE) + 8) +
+  theme_minimal() +
+  labs(title = "Prevalencia por Area", x = NULL, y = "Prevalencia (%)")
+
+prev_region <- prev_por(master_det, "hv024")
+
+p_region <- ggplot(prev_region,
+                   aes(x = reorder(hv024, prevalencia), y = prevalencia)) +
+  geom_col(fill = "#2980b9", alpha = 0.85) +
+  geom_text(aes(label = paste0(prevalencia, "%")), hjust = -0.2, size = 3.5) +
+  coord_flip() +
+  expand_limits(y = max(prev_region$prevalencia, na.rm = TRUE) + 8) +
+  theme_minimal() +
+  labs(title = "Prevalencia por Region Natural",
+       x = NULL, y = "Prevalencia (%)")
+
+p_area
+p_region
+```
+
+## 5. Fuente de agua y saneamiento
+
+```{r agua-saneamiento}
+#| label: agua-saneamiento
+
+prev_agua  <- prev_por(master_det, "hv201")
+prev_banio <- prev_por(master_det, "hv205")
+
+ggplot(prev_agua %>% filter(!is.na(hv201)),
+       aes(x = reorder(hv201, prevalencia), y = prevalencia)) +
+  geom_col(fill = "#16a085", alpha = 0.85) +
+  geom_text(aes(label = paste0(prevalencia, "%")), hjust = -0.2, size = 3) +
+  coord_flip() +
+  expand_limits(y = max(prev_agua$prevalencia, na.rm = TRUE) + 8) +
+  theme_minimal() +
+  labs(
+    title = "Prevalencia por Fuente de Agua para Beber",
+    x     = NULL, y = "Prevalencia (%)"
+  )
+
+ggplot(prev_banio %>% filter(!is.na(hv205)),
+       aes(x = reorder(hv205, prevalencia), y = prevalencia)) +
+  geom_col(fill = "#2c3e50", alpha = 0.85) +
+  geom_text(aes(label = paste0(prevalencia, "%")), hjust = -0.2, size = 3) +
+  coord_flip() +
+  expand_limits(y = max(prev_banio$prevalencia, na.rm = TRUE) + 8) +
+  theme_minimal() +
+  labs(
+    title = "Prevalencia por Tipo de Servicio Higienico",
+    x     = NULL, y = "Prevalencia (%)"
+  )
+```
+
+## 6. Combustible para cocinar
+
+La exposicion a humo por cocinar con combustibles solidos (lena, carbon) es un factor de riesgo asociado a retardo en el crecimiento.
+
+```{r combustible}
+#| label: combustible
+
+prev_comb <- prev_por(master_det, "hv226")
+
+ggplot(prev_comb %>% filter(!is.na(hv226)),
+       aes(x = reorder(hv226, prevalencia), y = prevalencia)) +
+  geom_col(fill = "#c0392b", alpha = 0.85) +
+  geom_text(aes(label = paste0(prevalencia, "%")), hjust = -0.2, size = 3) +
+  coord_flip() +
+  expand_limits(y = max(prev_comb$prevalencia, na.rm = TRUE) + 8) +
+  theme_minimal() +
+  labs(
+    title = "Prevalencia por Combustible para Cocinar",
+    x     = NULL, y = "Prevalencia (%)"
+  )
+```
+
+## 7. Caracteristicas del nino
+
+```{r caracteristicas-nino}
+#| label: caracteristicas-nino
+#| fig-cap: "Z-score medio por edad en meses y sexo del nino."
+
+master_det %>%
+  filter(!is.na(zscore), !is.na(hc1), hc1 <= 59) %>%
+  group_by(hc1, hc27) %>%
+  summarise(
+    zscore_medio = mean(zscore, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  ggplot(aes(x = hc1, y = zscore_medio, color = hc27)) +
+  geom_line(linewidth = 0.8) +
+  geom_smooth(se = FALSE, linetype = "dashed", linewidth = 0.5) +
+  geom_hline(yintercept = -2, color = "#e74c3c",
+             linetype = "dashed", linewidth = 0.8) +
+  theme_minimal() +
+  labs(
+    title  = "Z-score Talla/Edad por Edad en Meses y Sexo",
+    x      = "Edad (meses)",
+    y      = "Z-score medio",
+    color  = "Sexo"
+  )
+```
+
+## 8. Resumen de brechas
+
+Tabla comparativa que concentra la prevalencia segun los principales determinantes para facilitar la interpretacion de las brechas.
+
+```{r tabla-brechas}
+#| label: tabla-brechas
+
+brechas <- bind_rows(
+  prev_por(master_det, "hv025")  %>% rename(categoria = hv025)  %>% mutate(determinante = "Area"),
+  prev_por(master_det, "hv024")  %>% rename(categoria = hv024)  %>% mutate(determinante = "Region"),
+  prev_por(master_det, "hv270")  %>% rename(categoria = hv270)  %>% mutate(determinante = "Indice de riqueza"),
+  prev_por(master_det, "hc61")   %>% rename(categoria = hc61)   %>% mutate(determinante = "Educacion madre")
+) %>%
+  select(determinante, categoria, n, prevalencia) %>%
+  arrange(determinante, desc(prevalencia))
+
+knitr::kable(
+  brechas,
+  col.names = c("Determinante", "Categoria", "N", "Prevalencia (%)"),
+  caption   = "Resumen de prevalencia de desnutricion cronica por determinante"
+)
+```

@@ -1,0 +1,315 @@
+---
+title: "Calidad de Datos: Valores Extremos y Faltantes"
+subtitle: "Fase 3 - Exploracion | ENDES Peru"
+author: "Investigador"
+date: last-modified
+format:
+  html:
+    toc: true
+    theme: cosmo
+    code-fold: true
+execute:
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| label: setup
+#| include: false
+
+library(dplyr)
+library(ggplot2)
+library(knitr)
+library(tidyr)
+
+source("../core/utils.R")
+data_path <- "../../data/silver/validated/master_validated.rds"
+
+if (file.exists(data_path)) {
+  master <- readRDS(data_path)
+} else {
+  stop("La data validada no existe. Ejecuta primero los scripts de pipeline.")
+}
+
+# Variables del modelo seleccionadas en 01_variables.qmd
+vars_modelo <- c(
+  "hhid", "hc0", "year_survey",
+  "hc70_num", "hc71", "hc72", "hc73",
+  "hc1", "hc2", "hc3", "hc27", "hc53", "hc56", "hc56a",
+  "hc57", "hc57a", "hc63", "hc64",
+  "hc61", "hc62",
+  "hv270", "hv271", "hv025", "hv024", "hv026",
+  "hv009", "hv014", "hv216", "hv219", "hv220",
+  "hv201", "hv205", "hv206", "hv226", "hv237",
+  "hv213", "hv214", "hv215",
+  "ubigeo", "latitudy", "longitudx", "lat_ccpp", "long_ccpp",
+  "codccpp", "nomccpp", "hv001",
+  "hv005", "hv005x"
+)
+
+master_model <- master %>%
+  select(any_of(vars_modelo))
+```
+
+## 1. Resumen de valores faltantes
+
+Inspeccionamos cuantos valores `NA` tiene cada variable del modelo. Variables con alta proporcion de `NA` pueden requerir imputacion o ser descartadas antes del modelado.
+
+```{r na-resumen}
+#| label: na-resumen
+
+na_resumen <- master_model %>%
+  summarise(across(everything(), ~ sum(is.na(.)))) %>%
+  pivot_longer(everything(), names_to = "variable", values_to = "n_na") %>%
+  mutate(
+    pct_na = round(n_na / nrow(master_model) * 100, 2),
+    nivel  = case_when(
+      pct_na == 0             ~ "Sin NA",
+      pct_na < 5              ~ "Bajo (< 5%)",
+      pct_na < 20             ~ "Moderado (5-20%)",
+      TRUE                    ~ "Alto (> 20%)"
+    )
+  ) %>%
+  arrange(desc(pct_na))
+
+knitr::kable(
+  na_resumen,
+  col.names = c("Variable", "N faltantes", "% faltante", "Nivel"),
+  caption   = "Valores faltantes por variable del modelo"
+)
+```
+
+## 2. Visualizacion de valores faltantes
+
+```{r na-grafico}
+#| label: na-grafico
+#| fig-cap: "Variables ordenadas por porcentaje de valores faltantes. Solo se muestran variables con al menos un NA."
+
+na_resumen %>%
+  filter(n_na > 0) %>%
+  ggplot(aes(x = reorder(variable, pct_na), y = pct_na, fill = nivel)) +
+  geom_col() +
+  geom_text(aes(label = paste0(pct_na, "%")), hjust = -0.2, size = 3) +
+  coord_flip() +
+  scale_fill_manual(values = c(
+    "Bajo (< 5%)"      = "#27ae60",
+    "Moderado (5-20%)" = "#f39c12",
+    "Alto (> 20%)"     = "#e74c3c"
+  )) +
+  expand_limits(y = max(na_resumen$pct_na, na.rm = TRUE) + 10) +
+  theme_minimal() +
+  labs(
+    title = "Porcentaje de Valores Faltantes por Variable",
+    x     = NULL,
+    y     = "% NA",
+    fill  = "Nivel"
+  )
+```
+
+## 3. Valores faltantes por año de encuesta
+
+Verificamos si los `NA` de las variables criticas se concentran en algun ano especifico, lo que podria indicar un cambio en el cuestionario o un error en la integracion.
+
+```{r na-por-anio}
+#| label: na-por-anio
+
+# Variables criticas para el modelo
+vars_criticas <- c("hc70_num", "hc71", "hc72", "hc73",
+                   "hc1", "hc2", "hc3", "hv270", "hc61")
+
+master_model %>%
+  select(year_survey, any_of(vars_criticas)) %>%
+  group_by(year_survey) %>%
+  summarise(across(
+    any_of(vars_criticas),
+    ~ round(mean(is.na(.)) * 100, 2)
+  ), .groups = "drop") %>%
+  pivot_longer(-year_survey, names_to = "variable", values_to = "pct_na") %>%
+  ggplot(aes(x = year_survey, y = pct_na, color = variable)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2) +
+  theme_minimal() +
+  labs(
+    title  = "Porcentaje de NA por Año de Encuesta (Variables Criticas)",
+    x      = "Ano",
+    y      = "% NA",
+    color  = "Variable"
+  ) +
+  scale_x_continuous(breaks = sort(unique(master_model$year_survey)))
+```
+
+## 4. Outliers en variables numericas continuas
+
+Detectamos valores extremos en las variables antropometricas y continuas del modelo. Usamos la regla IQR (valores fuera de Q1 - 1.5*IQR o Q3 + 1.5*IQR) como referencia.
+
+```{r outliers-numericos}
+#| label: outliers-numericos
+
+vars_num <- c("hc70_num", "hc71", "hc72", "hc1", "hc2", "hc3",
+              "hc53", "hc56", "hc62", "hc63", "hv271")
+
+outlier_resumen <- lapply(vars_num, function(v) {
+  x <- as.numeric(master_model[[v]])
+  if (all(is.na(x))) return(NULL)
+  q1  <- quantile(x, 0.25, na.rm = TRUE)
+  q3  <- quantile(x, 0.75, na.rm = TRUE)
+  iqr <- q3 - q1
+  lim_inf <- q1 - 1.5 * iqr
+  lim_sup <- q3 + 1.5 * iqr
+  n_out <- sum(x < lim_inf | x > lim_sup, na.rm = TRUE)
+  tibble(
+    variable  = v,
+    min       = round(min(x, na.rm = TRUE), 2),
+    q1        = round(q1, 2),
+    mediana   = round(median(x, na.rm = TRUE), 2),
+    q3        = round(q3, 2),
+    max       = round(max(x, na.rm = TRUE), 2),
+    n_outlier = n_out,
+    pct_out   = round(n_out / sum(!is.na(x)) * 100, 2)
+  )
+}) %>%
+  bind_rows()
+
+knitr::kable(
+  outlier_resumen,
+  caption = "Resumen estadistico y outliers por variable numerica"
+)
+```
+
+## 5. Distribucion de variables antropometricas
+
+Boxplots para visualizar la dispersion y los valores extremos de los z-scores utilizados como variables dependientes.
+
+```{r boxplots-zscores}
+#| label: boxplots-zscores
+#| fig-cap: "Distribucion de los tres z-scores antropometricos del modelo."
+
+master_model %>%
+  select(hc70_num, hc71, hc72) %>%
+  mutate(across(everything(), ~ as.numeric(.))) %>%
+  pivot_longer(everything(), names_to = "zscore", values_to = "valor") %>%
+  mutate(
+    valor  = valor / 100,
+    zscore = recode(zscore,
+      hc70_num = "Talla/Edad (stunting)",
+      hc71     = "Peso/Edad (underweight)",
+      hc72     = "Peso/Talla (wasting)"
+    )
+  ) %>%
+  filter(!is.na(valor)) %>%
+  ggplot(aes(x = zscore, y = valor, fill = zscore)) +
+  geom_boxplot(alpha = 0.7, outlier.alpha = 0.2, outlier.size = 0.8) +
+  geom_hline(yintercept = -2, linetype = "dashed",
+             color = "#e74c3c", linewidth = 0.8) +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal() +
+  labs(
+    title = "Distribucion de Z-scores Antropometricos",
+    x     = NULL,
+    y     = "Z-score",
+    fill  = NULL
+  ) +
+  theme(legend.position = "none")
+```
+
+## 6. Registros problematicos en la variable dependiente
+
+Identificamos registros con valores extremos en `hc70_num` que podrian ser errores de medicion. El DHS recomienda excluir z-scores fuera del rango \[-600, 600\] (equivalente a -6 SD y +6 SD).
+
+```{r registros-extremos}
+#| label: registros-extremos
+
+extremos <- master_model %>%
+  mutate(zscore = as.numeric(hc70_num)) %>%
+  filter(!is.na(zscore)) %>%
+  mutate(
+    fuera_rango = zscore < -600 | zscore > 600,
+    categoria   = case_when(
+      zscore < -600 ~ "Extremo inferior (< -6 SD)",
+      zscore > 600  ~ "Extremo superior (> +6 SD)",
+      zscore < -200 ~ "Stunting (< -2 SD)",
+      zscore < 0    ~ "Bajo normal (0 a -2 SD)",
+      TRUE          ~ "Normal (>= 0)"
+    )
+  ) %>%
+  count(categoria) %>%
+  mutate(pct = round(n / nrow(master_model) * 100, 3)) %>%
+  arrange(desc(n))
+
+knitr::kable(
+  extremos,
+  col.names = c("Categoria", "N", "%"),
+  caption   = "Clasificacion de registros segun el z-score talla/edad"
+)
+```
+
+## 7. Inconsistencias en variables clave
+
+Verificamos inconsistencias logicas basicas que podrian afectar la calidad del analisis.
+
+```{r inconsistencias}
+#| label: inconsistencias
+
+inconsistencias <- tibble(
+  verificacion = c(
+    "Ninos con edad fuera de 0-59 meses",
+    "Ninos con peso <= 0 o > 30 kg",
+    "Ninos con talla <= 0 o > 130 cm",
+    "Registros sin ubigeo",
+    "Registros sin coordenadas"
+  ),
+  n = c(
+    sum(as.numeric(master_model$hc1) < 0 |
+        as.numeric(master_model$hc1) > 59, na.rm = TRUE),
+    sum(as.numeric(master_model$hc2) <= 0 |
+        as.numeric(master_model$hc2) > 300, na.rm = TRUE),
+    sum(as.numeric(master_model$hc3) <= 0 |
+        as.numeric(master_model$hc3) > 1300, na.rm = TRUE),
+    sum(is.na(master_model$ubigeo) | master_model$ubigeo == ""),
+    sum(is.na(master_model$latitudy) | as.numeric(master_model$latitudy) == 0)
+  )
+) %>%
+  mutate(pct = round(n / nrow(master_model) * 100, 3))
+
+knitr::kable(
+  inconsistencias,
+  col.names = c("Verificacion", "N", "%"),
+  caption   = "Inconsistencias logicas en variables clave"
+)
+```
+
+## 8. Recomendaciones para el pipeline de limpieza
+
+Con base en los resultados anteriores, se listan los filtros recomendados antes de pasar al modelado.
+
+```{r recomendaciones}
+#| label: recomendaciones
+#| echo: false
+
+recomendaciones <- tibble(
+  criterio = c(
+    "Excluir registros con hc70_num fuera de [-600, 600]",
+    "Excluir registros con hc1 fuera de [0, 59] meses",
+    "Excluir registros con hc2 (peso) <= 0 o > 300 (1 decimal)",
+    "Excluir registros con hc3 (talla) <= 0 o > 1300 (1 decimal)",
+    "Excluir registros sin ubigeo valido",
+    "Evaluar imputacion para variables con NA moderado (5-20%)",
+    "Descartar variables con NA > 20% si no son imputables"
+  ),
+  razon = c(
+    "Criterio DHS para excluir valores biologicamente imposibles",
+    "Solo se analizan ninos menores de 5 anos",
+    "Valores fuera de rango biologico razonable",
+    "Valores fuera de rango biologico razonable",
+    "Sin ubigeo no es posible el analisis espacial",
+    "Perdida moderada puede manejarse con imputacion multiple",
+    "Alta proporcion de NA introduce sesgo en el modelo"
+  )
+)
+
+knitr::kable(
+  recomendaciones,
+  col.names = c("Criterio de exclusion / tratamiento", "Razon"),
+  caption   = "Recomendaciones para el pipeline de limpieza previo al modelado"
+)
+```

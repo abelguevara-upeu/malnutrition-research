@@ -1,0 +1,54 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "mnp"
+version = "0.0.1"
+description = "Repositorio principal para la investigaci\u00f3n de desnutrici\u00f3n cr\u00f3nica infantil"
+authors = [
+  { name = "Abel Guevara, Veronica Vergara, Pamela Vallejos" },
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License"
+]
+dependencies = [
+    "beautifulsoup4",
+    "ipython",
+    "jupyterlab",
+    "loguru",
+    "matplotlib",
+    "mkdocs",
+    "notebook",
+    "numpy",
+    "pandas",
+    "pip",
+    "pyreadstat",
+    "pytest",
+    "python-dotenv",
+    "requests",
+    "rich",
+    "ruff",
+    "scikit-learn",
+    "tqdm",
+    "typer",
+    "seaborn",
+]
+requires-python = "==3.12.13"
+
+
+[tool.ruff]
+line-length = 99
+src = ["mnp"]
+include = ["pyproject.toml", "mnp/**/*.py"]
+
+[tool.ruff.lint]
+extend-select = ["I"]  # Add import sorting
+
+[tool.ruff.lint.isort]
+known-first-party = ["mnp"]
+force-sort-within-sections = true
+

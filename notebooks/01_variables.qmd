@@ -1,0 +1,179 @@
+---
+title: "Exploración de Variables"
+subtitle: "Fase 3 - Feature Selection | ENDES Perú"
+author: "Investigador"
+date: last-modified
+format:
+  html:
+    toc: true
+    theme: cosmo
+    code-fold: true
+execute:
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| label: setup
+#| include: false
+
+library(dplyr)
+library(knitr)
+
+source("../core/utils.R")
+data_path <- "../../data/silver/validated/master_validated.rds"
+
+if (file.exists(data_path)) {
+  master <- readRDS(data_path)
+} else {
+  stop("La data validada no existe. Ejecuta primero los scripts de pipeline.")
+}
+```
+
+## 1. Inventario de columnas
+
+Listado completo de variables del dataset validado: nombre, tipo de dato y etiqueta asignada por haven al momento de leer los archivos originales del ENDES.
+
+```{r inventario}
+#| label: inventario
+
+col_info <- tibble(
+  variable       = names(master),
+  type           = sapply(master, function(x) class(x)[1]),
+  etiqueta_haven = sapply(master, function(x) {
+    lbl <- attr(x, "label")
+    if (!is.null(lbl)) as.character(lbl) else NA_character_
+  })
+)
+
+knitr::kable(
+  col_info,
+  caption = "Variables del dataset master_validated"
+)
+```
+
+## 2. Variables seleccionadas para el modelo
+
+Subconjunto de variables retenidas tras el proceso de feature selection. El criterio de seleccion se basa en relevancia teorica para el analisis de desnutricion cronica infantil y disponibilidad longitudinal entre anos.
+
+```{r variables-aceptadas}
+#| label: variables-aceptadas
+
+aceptadas <- tribble(
+  ~grupo,               ~variable,    ~descripcion,
+  "Outcome",            "hc70_num",   "Z-score talla/edad (stunting) - variable dependiente",
+  "Outcome",            "hc71",       "Z-score peso/edad (underweight)",
+  "Outcome",            "hc72",       "Z-score peso/talla (wasting)",
+  "Outcome",            "hc73",       "Z-score IMC",
+  "Nino",               "hc1",        "Edad en meses",
+  "Nino",               "hc2",        "Peso en kg",
+  "Nino",               "hc3",        "Altura en cm",
+  "Nino",               "hc27",       "Sexo",
+  "Nino",               "hc53",       "Nivel de hemoglobina (g/dl)",
+  "Nino",               "hc56",       "Hemoglobina ajustada por altitud (RM 363-2022-MINSA)",
+  "Nino",               "hc56a",      "Hemoglobina ajustada por altitud (OMS 2024)",
+  "Nino",               "hc57",       "Nivel de anemia (RM 363-2022-MINSA)",
+  "Nino",               "hc57a",      "Nivel de anemia (OMS 2024)",
+  "Nino",               "hc63",       "Intervalo entre nacimientos anteriores",
+  "Nino",               "hc64",       "Numero de orden de nacimiento",
+  "Madre",              "hc61",       "Nivel educativo mas alto de la madre",
+  "Madre",              "hc62",       "Anos de educacion de la madre",
+  "Hogar",              "hv270",      "Indice de riqueza",
+  "Hogar",              "hv271",      "Puntaje del indice de riqueza",
+  "Hogar",              "hv025",      "Area de residencia (urbano/rural)",
+  "Hogar",              "hv024",      "Region",
+  "Hogar",              "hv026",      "Lugar de residencia",
+  "Hogar",              "hv009",      "Total de personas en el hogar",
+  "Hogar",              "hv014",      "Numero de ninos menores de 5 anos",
+  "Hogar",              "hv216",      "Numero de habitaciones para dormir",
+  "Hogar",              "hv219",      "Sexo del jefe de hogar",
+  "Hogar",              "hv220",      "Edad del jefe de hogar",
+  "Agua/Saneamiento",   "hv201",      "Fuente principal de agua para beber",
+  "Agua/Saneamiento",   "hv205",      "Tipo de servicio higienico",
+  "Agua/Saneamiento",   "hv206",      "Electricidad en el hogar",
+  "Agua/Saneamiento",   "hv226",      "Combustible para cocinar",
+  "Agua/Saneamiento",   "hv237",      "Trata el agua para hacerla segura",
+  "Agua/Saneamiento",   "hv213",      "Material predominante del piso",
+  "Agua/Saneamiento",   "hv214",      "Material predominante de las paredes exteriores",
+  "Agua/Saneamiento",   "hv215",      "Material predominante del techo",
+  "Geografia",          "ubigeo",     "Codigo de ubicacion geografica",
+  "Geografia",          "latitudy",   "Latitud del hogar",
+  "Geografia",          "longitudx",  "Longitud del hogar",
+  "Geografia",          "lat_ccpp",   "Latitud del centro poblado",
+  "Geografia",          "long_ccpp",  "Longitud del centro poblado",
+  "Geografia",          "codccpp",    "Codigo del centro poblado",
+  "Geografia",          "nomccpp",    "Nombre del centro poblado",
+  "Geografia",          "hv001",      "Conglomerado (UPM)",
+  "Identificadores",    "hhid",       "ID del hogar",
+  "Identificadores",    "hc0",        "ID del nino",
+  "Identificadores",    "year_survey","Ano de la encuesta",
+  "Ponderacion",        "hv005",      "Factor de ponderacion general",
+  "Ponderacion",        "hv005x",     "Factor de ponderacion ninos menores de 5 anos"
+)
+
+knitr::kable(
+  aceptadas,
+  caption = "Variables seleccionadas para el modelo"
+)
+```
+
+## 3. Variables descartadas
+
+Variables excluidas del modelo con justificacion por grupo.
+
+```{r variables-descartadas}
+#| label: variables-descartadas
+
+descartadas <- tribble(
+  ~grupo,                              ~variables,                                              ~razon,
+  "IDs internos",                      "id1, id1_hogar, id1_vivienda, id1_miembro",             "Claves internas del pipeline, no analiticas",
+  "Percentiles antiguos (NCHS)",       "hc4 a hc12",                                            "Redundantes; se usan z-scores OMS (hc70-hc73)",
+  "Administrativos del nino",          "hc13, hc15, hc16, hc19, hc30, hc31, hc33",             "Variables operativas de campo",
+  "Consentimiento",                    "hc51, hc52, hc55, hc58",                                "Variables de proceso, no analiticas",
+  "Orden de la madre en el hogar",     "hc60",                                                  "Reemplazada por hc61 / hc62",
+  "Pais constante",                    "hv000",                                                  "Siempre PE, sin variabilidad",
+  "Operativos de la encuesta",         "hv003, hv004, hv017, hv030, hv031, hv032, hv033",      "Informacion logistica de campo",
+  "Modulo masculino",                  "hv028, hv020, hv027",                                   "Fuera del scope (ninos < 5 anos)",
+  "Modulos especiales de seleccion",   "hv042, hv043, hv044",                                   "Seleccion para hemoglobina, mujeres y violencia",
+  "Mosquiteros",                       "hml1, hml1a, hml2",                                     "No relevante para desnutricion en Peru",
+  "Metadatos de la encuesta",          "shver, shequipo, nconglome",                            "Version del cuestionario y equipo de campo",
+  "Segmentacion redundante",           "shsemes, shprovin, shdistri",                           "Reemplazados por ubigeo",
+  "Tiempos de entrevista",             "sh01h/m, sh82h/m, sh90h/m, sh81h/m, sh31h/m",          "Horas de inicio y fin de entrevista",
+  "Modulos sin etiqueta haven",        "hv130-hv140, qh13a*, sh32-sh68f, sh73-sh127",          "Sin label y fuera del scope del modelo",
+  "Factores de ponderacion redundantes","shwt2004, shwt2005, shwlthi2, shwlthf2, hv005a",      "Usar unicamente hv005 y hv005x",
+  "Sin etiqueta ni uso identificado",  "hc17, hc18, hv006, hv016, hv018, hv019, f, rech6",    "Probablemente auxiliares de anos especificos",
+  "Ganaderia y activos detallados",    "hv246a-hv246k, hv244, hv245",                           "Detalle innecesario; resumido en hv270",
+  "Miembros fallecidos y enfermos",    "hv248, hv249, hv250, hv251",                            "Fuera del scope del modelo",
+  "Tratamiento de agua (detalle)",     "hv237a a hv237z",                                       "Resumido en la variable hv237"
+)
+
+knitr::kable(
+  descartadas,
+  caption = "Variables descartadas y justificacion"
+)
+```
+
+## 4. Dataset reducido (master_model)
+
+Aplicamos el filtro de columnas y generamos el dataset listo para modelado.
+
+```{r generar-master-model}
+#| label: generar-master-model
+
+master_model <- master %>%
+  select(
+    hhid, hc0, year_survey,
+    hc70_num, hc71, hc72, hc73,
+    hc1, hc2, hc3, hc27, hc53, hc56, hc56a, hc57, hc57a, hc63, hc64,
+    hc61, hc62,
+    hv270, hv271, hv025, hv024, hv026, hv009, hv014, hv216, hv219, hv220,
+    hv201, hv205, hv206, hv226, hv237, hv213, hv214, hv215,
+    ubigeo, latitudy, longitudx, lat_ccpp, long_ccpp, codccpp, nomccpp, hv001,
+    hv005, hv005x
+  )
+
+cat("Dimensiones del dataset reducido:\n")
+cat("  Registros:", nrow(master_model), "\n")
+cat("  Variables:", ncol(master_model), "\n")
+cat("  (Reduccion de", ncol(master) - ncol(master_model), "variables)\n")
+```

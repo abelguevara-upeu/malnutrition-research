@@ -1,0 +1,60 @@
+---
+config:
+  layout: elk
+---
+graph TD
+    %% Fase 1 (Semana 1)
+    subgraph "1. Negocio (W1 - Finalizado)"
+        A1[Definición de Indicadores]
+        A2[Estudio de Determinantes]
+    end
+
+    %% Fase 2 (Semana 2)
+    subgraph "2. Datos (W2 - Finalizado)"
+        B1[Mapeo de Módulos]
+        B2[Fichas Técnicas]
+    end
+
+    %% Fase 3 (Semana 3-4: ACTUAL)
+    subgraph "3. Preparación (W3 - W4)"
+        direction TB
+        C0[Ingesta Automática]
+        C1[Integración / Joins]
+        C2[Normalización Haven]
+        C3[Limpieza Outliers/Perdidos]
+        C4[<b>Feature Selection & Engineering</b>]
+        
+        C0 --> C1 --> C2 --> C3 --> C4
+    end
+
+    %% Fase 4 (Semana 5-6)
+    subgraph "4. Modelado (W5 - W6)"
+        D1[GLM Ponderado]
+        D2[Modelos Espaciales]
+        D3[Modelos ML]
+    end
+
+    %% Fase 5 (Semana 7)
+    subgraph "5. Evaluación (W7)"
+        E1[Validación Cruzada]
+        E2[Validación Espacial]
+    end
+
+    %% Fase 6 (Semana 8-9)
+    subgraph "6. Despliegue (W8 - W9)"
+        F1[Escritura Artículo Empírico]
+        F2[Finalización Mapa de Calor]
+    end
+
+    %% --- CONEXIONES ---
+    A2 --> B1
+    B2 --> C0
+    C4 --> D1
+    D3 --> E1
+    E1 --> F1
+
+    %% LOOPS (Tus iteraciones actuales)
+    D1 -. "Feature Selection" .-> C4
+    E1 -. "Re-entrenamiento" .-> D1
+
+    style C4 fill:#fff176,stroke:#fbc02d,stroke-width:4px

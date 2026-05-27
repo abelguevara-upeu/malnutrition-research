@@ -1,0 +1,30 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/CVS": true,
+    "**/.ruby-lsp": true,
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/*.pyo": true,
+    "**/.pytest_cache": true,
+    "**/.ipynb_checkpoints": true,
+    "**/.ruff_cache": true
+  },
+  "search.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "pyproject.toml": ".python-version, .pypirc, poetry.lock, uv.lock, pip-*, requirements*, .gitignore, .gitattributes, .gitkeep",
+    "Makefile": "Dockerfile, docker-compose.yml, .dockerignore, docker-compose.override.yml, .devcontainer.json, .env, .env.example, .env.*",
+    "README.md": "LICENSE, LICENSE.md, CHANGELOG.md, CONTRIBUTING.md, *.mmd"
+  },
+}

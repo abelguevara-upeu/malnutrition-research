@@ -1,0 +1,158 @@
+---
+title: "Prevalencia de Desnutricion Cronica"
+subtitle: "Fase 3 - Exploracion | ENDES Peru"
+author: "Investigador"
+date: last-modified
+format:
+  html:
+    toc: true
+    theme: cosmo
+    code-fold: true
+execute:
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| label: setup
+#| include: false
+
+library(dplyr)
+library(ggplot2)
+library(knitr)
+
+source("../core/utils.R")
+data_path <- "../../data/silver/validated/master_validated.rds"
+
+if (file.exists(data_path)) {
+  master <- readRDS(data_path)
+} else {
+  stop("La data validada no existe. Ejecuta primero los scripts de pipeline.")
+}
+```
+
+## 1. Resumen del dataset
+
+```{r resumen}
+#| label: resumen
+
+n_total    <- nrow(master)
+anios      <- sort(unique(master$year_survey))
+rango_anios <- paste(min(anios), "-", max(anios))
+
+cat("Registros totales:", format(n_total, big.mark = ","), "\n")
+cat("Anos disponibles:", rango_anios, "\n")
+cat("Anos:", paste(anios, collapse = ", "), "\n")
+```
+
+El dataset cuenta con **`r format(n_total, big.mark=",")`** registros validos cubriendo el periodo **`r rango_anios`**.
+
+## 2. Calculo de prevalencia (serie historica)
+
+El indicador de desnutricion cronica se define como un Z-score de talla para la edad (hc70) menor a -200 (equivalente a -2 desviaciones estandar segun los patrones de crecimiento OMS). El calculo aplica el factor de ponderacion `hv005` para obtener estimaciones representativas a nivel nacional.
+
+```{r serie-historica}
+#| label: serie-historica
+
+serie_historica <- master %>%
+  mutate(
+    peso      = as.numeric(hv005) / 1000000,
+    desnutrido = ifelse(as.numeric(hc70) < -200, 1, 0)
+  ) %>%
+  group_by(year_survey) %>%
+  summarise(
+    n           = n(),
+    prevalencia = round(weighted.mean(desnutrido, peso, na.rm = TRUE) * 100, 2),
+    .groups     = "drop"
+  ) %>%
+  arrange(year_survey)
+
+knitr::kable(
+  serie_historica,
+  col.names = c("Ano", "N (Muestra)", "Prevalencia (%)"),
+  caption   = "Tendencia historica de la desnutricion cronica en el Peru"
+)
+```
+
+## 3. Tendencia temporal
+
+```{r grafico-tendencia}
+#| label: grafico-tendencia
+#| fig-cap: "Evolucion de la desnutricion cronica infantil por ano de encuesta"
+
+ggplot(serie_historica, aes(x = year_survey, y = prevalencia)) +
+  geom_line(color = "#2c3e50", linewidth = 1) +
+  geom_point(color = "#e74c3c", size = 3) +
+  geom_text(
+    aes(label = paste0(prevalencia, "%")),
+    vjust = -1, size = 3.5
+  ) +
+  theme_minimal() +
+  labs(
+    title = "Evolucion de la Desnutricion Cronica Infantil",
+    x     = "Ano de la Encuesta",
+    y     = "Prevalencia (%)"
+  ) +
+  scale_x_continuous(breaks = serie_historica$year_survey) +
+  ylim(0, max(serie_historica$prevalencia) + 5)
+```
+
+## 4. Prevalencia por area de residencia
+
+```{r por-area}
+#| label: por-area
+
+serie_area <- master %>%
+  mutate(
+    peso       = as.numeric(hv005) / 1000000,
+    desnutrido = ifelse(as.numeric(hc70) < -200, 1, 0)
+  ) %>%
+  group_by(year_survey, hv025) %>%
+  summarise(
+    prevalencia = round(weighted.mean(desnutrido, peso, na.rm = TRUE) * 100, 2),
+    .groups     = "drop"
+  ) %>%
+  arrange(year_survey)
+
+ggplot(serie_area, aes(x = year_survey, y = prevalencia, color = hv025)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2.5) +
+  theme_minimal() +
+  labs(
+    title  = "Desnutricion Cronica por Area de Residencia",
+    x      = "Ano",
+    y      = "Prevalencia (%)",
+    color  = "Area"
+  ) +
+  scale_x_continuous(breaks = serie_historica$year_survey)
+```
+
+## 5. Prevalencia por region natural
+
+```{r por-region}
+#| label: por-region
+
+serie_region <- master %>%
+  mutate(
+    peso       = as.numeric(hv005) / 1000000,
+    desnutrido = ifelse(as.numeric(hc70) < -200, 1, 0)
+  ) %>%
+  group_by(year_survey, hv024) %>%
+  summarise(
+    prevalencia = round(weighted.mean(desnutrido, peso, na.rm = TRUE) * 100, 2),
+    .groups     = "drop"
+  ) %>%
+  arrange(year_survey)
+
+ggplot(serie_region, aes(x = year_survey, y = prevalencia, color = hv024)) +
+  geom_line(linewidth = 0.9) +
+  geom_point(size = 2) +
+  theme_minimal() +
+  labs(
+    title  = "Desnutricion Cronica por Region Natural",
+    x      = "Ano",
+    y      = "Prevalencia (%)",
+    color  = "Region"
+  ) +
+  scale_x_continuous(breaks = serie_historica$year_survey)
+```

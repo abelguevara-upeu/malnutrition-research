@@ -1,0 +1,17 @@
+services:
+  malnutrition-research-workspace:
+    build: .
+    image: malnutrition-research-workspace:latest
+    container_name: malnutrition-research-workspace
+    # Montamos todo el directorio actual al contenedor en /workspace para sincronización en tiempo real
+    volumes:
+      - .:/workspace
+    # Exponemos el puerto 8888 para Jupyter Lab
+    ports:
+      - "8888:8888"
+    # Cargamos las variables de entorno de tu archivo .env
+    env_file:
+      - .env
+    # Mantenemos el contenedor interactivo
+    stdin_open: true
+    tty: true

@@ -1,0 +1,64 @@
+---
+config:
+  layout: elk
+---
+graph
+    %% Fase 1
+    subgraph "1. Comprensión del Negocio (Contexto Perú)"
+        A1[Definición de Indicadores: DCI]
+        A2[Estudio de Factores Determinantes]
+        A3[Objetivo: Sistema de predicción espacial DCI]
+    end
+
+    %% Fase 2
+    subgraph "2. Comprensión de los Datos (Teoría ENDES)"
+        B1[Mapeo de Módulos: Hogar, Mujer, Niño, Antropometría]
+        B2[Revisión de Fichas Técnicas y Diccionarios INEI]
+        B3[Identificación de Variables Clave: Identificadores y Pesos]
+    end
+
+    %% Fase 3: EL PROCESAMIENTO REAL
+    subgraph "3. Preparación de Datos (El 80% del Esfuerzo)"
+        direction TB
+        C0[<b>Ingesta Automática:</b> Scraping/Descarga y extracción de INEI]
+        C1[<b>Integración de Módulos:</b> Joins de tablas mediante IDs]
+        C2[<b>Normalización con Haven:</b> Homologación de etiquetas y códigos 2000-2024]
+        C3[<b>Limpieza y Calidad:</b> Tratamiento de Outliers y Perdidos]
+        C4[<b>Feature Engineering:</b> Creación de indicadores complejos]
+        C5[<b>Enriquecimiento Espacial:</b> Vínculo con UBIGEO y GIS]
+        
+        C0 --> C1 --> C2 --> C3 --> C4 --> C5
+    end
+
+    %% Fase 4
+    subgraph "4. Modelado"
+        D1[Modelos Base: GLM Ponderado]
+        D2[Modelos Espaciales: GWR / Autocorrelación]
+        D3[Modelos ML: Random Forest / XGBoost]
+    end
+
+    %% Fase 5 y 6
+    subgraph "5. Evaluación"
+        E1[Validación de Métricas y Espacial]
+    end
+    subgraph "6. Despliegue"
+        F1[Artículo Empírico y Mapa de Calor]
+    end
+
+    %% --- CONEXIONES ---
+    A3 --> B1
+    B3 --> C0
+    C5 --> D1
+    D3 --> E1
+    E1 --> F1
+
+    %% LOOPS
+    E1 -- "Refinar datos" --> C0
+    D1 -- "Nuevas variables" --> C4
+    
+    linkStyle 5 stroke:#ff6666,stroke-width:2px,stroke-dasharray: 5 5
+    linkStyle 6 stroke:#6666ff,stroke-width:2px,stroke-dasharray: 5 5
+
+    style A1 fill:#fff4f4
+    style F1 fill:#f4fff4
+    style C0 fill:#fff9c4,stroke:#fbc02d
