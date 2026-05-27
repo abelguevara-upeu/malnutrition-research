@@ -12,19 +12,35 @@
     "**/*.pyo": true,
     "**/.pytest_cache": true,
     "**/.ipynb_checkpoints": true,
-    "**/.ruff_cache": true
+    "**/.ruff_cache": true,
+    "**/*.synctex.gz": true,
+    "**/.tmp": true
   },
   "search.exclude": {
     "**/__pycache__": true,
     "**/*.pyc": true,
     "**/.pytest_cache": true,
-    "**/.ruff_cache": true
+    "**/.ruff_cache": true,
+    "**/.tmp": true
   },
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": false,
   "explorer.fileNesting.patterns": {
     "pyproject.toml": ".python-version, .pypirc, poetry.lock, uv.lock, pip-*, requirements*, .gitignore, .gitattributes, .gitkeep",
-    "Makefile": "Dockerfile, docker-compose.yml, .dockerignore, docker-compose.override.yml, .devcontainer.json, .env, .env.example, .env.*",
+    "Makefile": "Dockerfile, latex.Dockerfile, docker-compose.yml, .dockerignore, docker-compose.override.yml, .devcontainer.json, .env, .env.example, .env.*",
     "README.md": "LICENSE, LICENSE.md, CHANGELOG.md, CONTRIBUTING.md, *.mmd"
   },
+  "latex-workshop.docker.enabled": true,
+  "latex-workshop.docker.image.latex": "latex-compiler:latest",
+  // --- PREVENIR LAG EN EL EDITOR (USANDO DOCKER) ---
+  // Desactivamos kpsewhich local en el host, ya que LaTeX no está instalado 
+  // en tu Mac y causa timeouts/retrasos molestos al buscar paquetes.
+  "latex-workshop.kpsewhich.enabled": false,
+  "latex-workshop.kpsewhich.class.enabled": false,
+  "latex-workshop.kpsewhich.bibtex.enabled": false,
+  // --- HIGIENE PROFESIONAL DEL PROYECTO ---
+  // No necesitamos borrar a la fuerza los archivos temporales porque
+  // nativamente los enviamos a la carpeta oculta tmp/ en nuestro latexmkrc.
+  "latex-workshop.latex.clean.enabled": false,
+  "latex-workshop.latex.auxDir": "%DIR%/.tmp",
 }

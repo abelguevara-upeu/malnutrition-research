@@ -8,15 +8,10 @@ ENV PYTHONUNBUFFERED=1
 # Instalar dependencias del sistema necesarias
 # - build-essential y make para compilar librerías y tareas del Makefile
 # - git para control de versiones si alguna librería de pip lo requiere
-# - texlive-latex-recommended, texlive-xetex, texlive-fonts-recommended y pandoc para LaTeX/Notebook PDF export
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     make \
     git \
-    texlive-latex-recommended \
-    texlive-xetex \
-    texlive-fonts-recommended \
-    pandoc \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

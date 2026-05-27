@@ -202,3 +202,6 @@ docs/**/*.fls
 docs/**/*.fdb_latexmk
 docs/**/*.blg
 docs/**/*.bbl
+
+# LaTeX auxiliary directory (.tmp)
+**/.tmp/
