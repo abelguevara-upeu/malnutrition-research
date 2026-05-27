@@ -6,6 +6,7 @@ import typer
 
 from mnp.config import MODELS_DIR, PROCESSED_DATA_DIR
 
+# TODO
 app = typer.Typer()
 
 

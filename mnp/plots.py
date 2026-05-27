@@ -6,9 +6,9 @@ import typer
 
 from mnp.config import FIGURES_DIR, PROCESSED_DATA_DIR
 
+# TODO
 app = typer.Typer()
 
-# TODO
 @app.command()
 def main(
     # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
