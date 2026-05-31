@@ -34,9 +34,9 @@ def calculate_chronic_malnutrition(year):
     logger.info(f"🚀 Calculando Desnutrición Crónica para el año {year}...")
 
     # 1. Cargar registros necesarios (sin etiquetas para mantener códigos numéricos)
-    r6 = load_endes(year, module="anthropometry", record="rech6", clean=False)
-    r1 = load_endes(year, module="household", record="rech1", clean=False)
-    r0 = load_endes(year, module="household", record="rech0", clean=False)
+    r6 = load_endes(year, module="anthropometry", record="rech6")
+    r1 = load_endes(year, module="household", record="rech1")
+    r0 = load_endes(year, module="household", record="rech0")
 
     # 2. Normalizar nombres de columnas a minúsculas
     r6.columns = r6.columns.str.lower()

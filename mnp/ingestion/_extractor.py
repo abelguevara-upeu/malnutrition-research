@@ -140,41 +140,46 @@ class IneiExtractor:
     def get_module_links(self, year):
         """Obtiene la lista de módulos disponibles para un año en el servidor INEI."""
         url = f"{self.base_url}/microdatos/cambiaPeriodo.asp"
-        payload = urllib.parse.urlencode(
-            {
-                "bandera": "1",
-                "_cmbEncuesta": self.encuesta_nombre,
-                "_cmbAnno": str(year),
-                "_cmbTrimestre": "5",
-            },
-            encoding="iso-8859-1",
-        )
-        try:
-            response = self.session.post(url, data=payload)
-            soup = BeautifulSoup(response.text, "html.parser")
-            modulos = []
-            for fila in soup.find_all("tr"):
-                enlaces = fila.find_all("a", href=True)
-                for e in enlaces:
-                    if "SPSS" in e.get("title", "").upper() or "SPSS" in e.text.upper():
-                        celdas = fila.find_all("td")
-                        if len(celdas) >= 7:
-                            module_code = celdas[5].text.strip()
-                            module_name_raw = celdas[6].text.strip()
-                            if not module_code.isdigit():
-                                continue
-                            nombre = f"{module_code} - {module_name_raw}"
-                            metadata = {
-                                "survey_code": celdas[3].text.strip(),
-                                "survey_name": celdas[4].text.strip(),
-                                "module_code": module_code,
-                                "module_name": module_name_raw,
-                                "year": str(year),
-                            }
-                            modulos.append((nombre, self.base_url + e["href"], metadata))
-            return modulos
-        except Exception:
-            return []
+        modulos = []
+
+        # El INEI usa '5' (Anual) y '51' (Línea de Base PpR...) para ENDES 2008.
+        for trimestre in ["5", "51"]:
+            payload = urllib.parse.urlencode(
+                {
+                    "bandera": "1",
+                    "_cmbEncuesta": self.encuesta_nombre,
+                    "_cmbAnno": str(year),
+                    "_cmbTrimestre": trimestre,
+                },
+                encoding="iso-8859-1",
+            )
+            try:
+                response = self.session.post(url, data=payload)
+                soup = BeautifulSoup(response.text, "html.parser")
+                for fila in soup.find_all("tr"):
+                    enlaces = fila.find_all("a", href=True)
+                    for e in enlaces:
+                        if "SPSS" in e.get("title", "").upper() or "SPSS" in e.text.upper():
+                            celdas = fila.find_all("td")
+                            if len(celdas) >= 7:
+                                module_code = celdas[5].text.strip()
+                                module_name_raw = celdas[6].text.strip()
+                                if not module_code.isdigit():
+                                    continue
+                                nombre = f"{module_code} - {module_name_raw}"
+                                metadata = {
+                                    "survey_code": celdas[3].text.strip(),
+                                    "survey_name": celdas[4].text.strip(),
+                                    "module_code": module_code,
+                                    "module_name": module_name_raw,
+                                    "year": str(year),
+                                }
+                                link = self.base_url + e["href"]
+                                if not any(m[1] == link for m in modulos):
+                                    modulos.append((nombre, link, metadata))
+            except Exception:
+                pass
+        return modulos
 
     def get_remote_size(self, url):
         """Obtiene el tamaño del archivo en el servidor remoto sin descargarlo."""

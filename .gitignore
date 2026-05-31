@@ -207,3 +207,5 @@ docs/**/*.bbl
 
 # LaTeX auxiliary directory (.tmp)
 **/.tmp/
+
+*/legacy

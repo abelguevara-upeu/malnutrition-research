@@ -27,7 +27,7 @@
   "explorer.fileNesting.expand": false,
   "explorer.fileNesting.patterns": {
     "pyproject.toml": ".python-version, .pypirc, poetry.lock, uv.lock, pip-*, requirements*, .gitignore, .gitattributes, .gitkeep",
-    "Makefile": "Dockerfile, latex.Dockerfile, docker-compose.yml, .dockerignore, docker-compose.override.yml, .devcontainer.json, .env, .env.example, .env.*",
+    "Makefile": "Dockerfile, latex.Dockerfile, docker-compose.yml, .dockerignore, docker-compose.override.yml, .devcontainer.json, .env, .env.example, .env.*, .latexmkrc",
     "README.md": "LICENSE, LICENSE.md, CHANGELOG.md, CONTRIBUTING.md, *.mmd"
   },
   "latex-workshop.docker.enabled": true,

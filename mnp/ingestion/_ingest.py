@@ -12,8 +12,8 @@ import time
 from rich.live import Live
 import typer
 
-from mnp.utils.console import Console
-from mnp.utils.extractor import IneiExtractor
+from mnp.ingestion._console import Console
+from mnp.ingestion._extractor import IneiExtractor
 
 app = typer.Typer(help="Ingesta de datos ENDES (INEI)")
 

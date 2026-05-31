@@ -36,10 +36,10 @@ def integrate_child_data(year):
 
     try:
         # 1. Carga de componentes (sin etiquetas para mantener códigos puros)
-        r0 = load_endes(year, "household", "rech0", clean=False)
-        r23 = load_endes(year, "housing", "rech23H", clean=False)
-        r1 = load_endes(year, "household", "rech1", clean=False)
-        r6 = load_endes(year, "anthropometry", "rech6", clean=False)
+        r0 = load_endes(year, "household", "rech0")
+        r23 = load_endes(year, "housing", "rech23H")
+        r1 = load_endes(year, "household", "rech1")
+        r6 = load_endes(year, "anthropometry", "rech6")
 
         # 2. Normalización de nombres a minúsculas
         r0.columns = r0.columns.str.lower()
