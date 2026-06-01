@@ -1,10 +1,3 @@
-"""
-Cargador inteligente de datos ENDES.
-
-Reescritura en Python de src-r/core/utils.R.
-Usa pyreadstat para leer archivos SPSS (.sav) directamente.
-"""
-
 import json
 from pathlib import Path
 import re
@@ -384,3 +377,126 @@ def load_endes(year=None, module=None, record=None, meta=False, **kwargs):
     )
     df, meta_data = read_sav(path, **kwargs)
     return (df, meta_data) if meta else df
+
+
+def display_endes(year, module, record=None, columns=None, rows_per_page=15, view_mode="enriched"):
+    """
+    Carga un módulo de la ENDES y devuelve un Visor Interactivo Paginado.
+
+    Args:
+        columns (list): Lista de columnas a mostrar. Si es None, muestra todas.
+        rows_per_page (int): Cantidad de registros por página.
+        view_mode (str): 'raw' (números), 'native' (texto), o 'enriched' (número + texto).
+    """
+    import textwrap
+    from IPython.display import display
+
+    try:
+        import ipywidgets as widgets
+    except ImportError:
+        logger.error(
+            "La librería 'ipywidgets' es necesaria para la paginación. Instálala con: pip install ipywidgets"
+        )
+        return None, None
+
+    df, meta = load_endes(
+        year=year,
+        module=module,
+        record=record,
+        meta=True,
+        apply_value_formats=(view_mode == "native"),
+    )
+
+    if isinstance(df, dict):
+        logger.error("Se requiere especificar un 'record' para el visor visual.")
+        return None, None
+
+    columnas_validas = [c for c in columns if c in df.columns] if columns else df.columns
+    df_base = df[columnas_validas].copy()
+
+    total_rows = len(df_base)
+    total_pages = max(
+        1, (total_rows // rows_per_page) + (1 if total_rows % rows_per_page != 0 else 0)
+    )
+
+    logger.info(
+        f"Visor interactivo activado. {total_rows} registros distribuidos en {total_pages} páginas."
+    )
+
+    out_widget = widgets.Output()
+
+    def render_page(change):
+        # Maneja tanto el llamado inicial (int) como los eventos del widget (dict)
+        Page = change.new if hasattr(change, "new") else change
+
+        inicio = (Page - 1) * rows_per_page
+        fin = inicio + rows_per_page
+        df_chunk = df_base.iloc[inicio:fin].copy()
+
+        if view_mode == "enriched":
+            for col in df_chunk.columns:
+                if col in meta.variable_value_labels:
+                    mapeo = {
+                        float(k): v
+                        for k, v in meta.variable_value_labels[col].items()
+                        if isinstance(k, (int, float, str))
+                        and str(k).replace(".", "", 1).isdigit()
+                    }
+
+                    def traducir_valor(x):
+                        if pd.isna(x):
+                            return x
+                        val_mostrar = int(x) if isinstance(x, float) and x.is_integer() else x
+                        if float(x) in mapeo:
+                            return f"{val_mostrar}\n({textwrap.fill(mapeo[float(x)], width=30)})"
+                        return val_mostrar
+
+                    df_chunk[col] = df_chunk[col].apply(traducir_valor)
+
+        # LIMPIEZA GLOBAL de floats
+        for col in df_chunk.columns:
+            df_chunk[col] = df_chunk[col].apply(
+                lambda x: int(x) if isinstance(x, float) and pd.notna(x) and x.is_integer() else x
+            )
+
+        def renombrar_columna(col):
+            etiqueta = meta.column_names_to_labels.get(col, "")
+            if etiqueta:
+                etiqueta_envuelta = textwrap.fill(etiqueta, width=40)
+                return f"{col}\n({etiqueta_envuelta})"
+            return col
+
+        df_chunk = df_chunk.rename(columns=renombrar_columna)
+
+        pd.set_option("display.max_colwidth", None)
+        estilo = df_chunk.style.set_table_styles(
+            [
+                dict(selector="th", props=[("white-space", "pre-wrap"), ("text-align", "center")]),
+                dict(selector="td", props=[("white-space", "pre-wrap"), ("text-align", "left")]),
+            ]
+        )
+
+        from IPython.display import HTML
+
+        html = estilo.to_html()
+
+        out_widget.clear_output(wait=True)
+        with out_widget:
+            display(HTML(f"<div style='width: 100%; overflow-x: auto;'>{html}</div>"))
+
+    page_widget = widgets.BoundedIntText(
+        min=1,
+        max=total_pages,
+        step=1,
+        value=1,
+        description=f"Page (of {total_pages}):",
+        style={"description_width": "initial"},
+    )
+
+    page_widget.observe(render_page, names="value")
+
+    # Renderizamos UI y la primera página manualmente
+    display(page_widget, out_widget)
+    render_page(1)
+
+    return df, meta

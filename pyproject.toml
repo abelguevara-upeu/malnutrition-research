@@ -36,6 +36,7 @@ dependencies = [
     "tqdm",
     "typer",
     "seaborn",
+    "ipywidgets"
 ]
 requires-python = "==3.12.13"
 
