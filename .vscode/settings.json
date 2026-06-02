@@ -43,4 +43,10 @@
   // nativamente los enviamos a la carpeta oculta tmp/ en nuestro latexmkrc.
   "latex-workshop.latex.clean.enabled": false,
   "latex-workshop.latex.auxDir": "%DIR%/.tmp",
+  "notebook.formatOnSave.enabled": true,
+  "notebook.globalToolbar": true,
+  "notebook.output.scrolling": true,
+  "notebook.output.textLineLimit": 40,
+  "notebook.stickyScroll.enabled": true,
+  "notebook.markdown.lineHeight": 0,
 }
