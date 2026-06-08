@@ -32,7 +32,8 @@ def analyze_schema_drift(col_labels_hist):
     
     return all_cols, stable_schema, mutated_schema
 
-def print_schema_drift_report(all_cols, stable_schema, mutated_schema):
+def print_schema_drift_report(all_cols, stable_schema, mutated_schema, logical_types=None):
+    from collections import defaultdict
     print("\033[1;94mREPORTE GLOBAL DE MUTACIÓN DE DESCRIPCIONES DE COLUMNAS (COLUMN LABELS)\033[0m\n")
     print(f"\033[1;94mTotal de columnas detectadas: {len(all_cols)}\033[0m\n")
     
@@ -42,13 +43,28 @@ def print_schema_drift_report(all_cols, stable_schema, mutated_schema):
             all_versions.extend(versions.values())
     global_max_len = max([len(format_year_ranges(a)) for a in all_versions] + [0])
     
+    col_to_logical = {}
+    if logical_types:
+        for l_type, cols in logical_types.items():
+            for c in cols:
+                col_to_logical[c] = l_type
+                
     for title, label_dict in [("Descripciones estables", stable_schema), ("Descripciones mutadas", mutated_schema)]:
         print(f"\033[1;94m{title}: {len(label_dict)}\033[0m")
+        
+        grouped_vars = defaultdict(dict)
         for var_name, versions in label_dict.items():
-            print(f"\033[1;94m{var_name} (Apariciones: {sum(len(y) for y in versions.values())} años)\033[0m")
-            for label, years_list in versions.items():
-                years_str = format_year_ranges(years_list)
-                print(f"  - Años {years_str:<{global_max_len}} : {label}")
+            l_type = col_to_logical.get(var_name, "Sin Categoría") if logical_types else "Todas"
+            grouped_vars[l_type][var_name] = versions
+            
+        for l_type, vars_dict in sorted(grouped_vars.items()):
+            if logical_types:
+                print(f"\n\033[1;93m--- {l_type.upper()} ---\033[0m")
+            for var_name, versions in vars_dict.items():
+                print(f"\033[1;94m{var_name} (Apariciones: {sum(len(y) for y in versions.values())} años)\033[0m")
+                for label, years_list in versions.items():
+                    years_str = format_year_ranges(years_list)
+                    print(f"  - Años {years_str:<{global_max_len}} : {label}")
         print("\n")
 
 def analyze_val_drift(value_labels_history):
@@ -72,7 +88,8 @@ def analyze_val_drift(value_labels_history):
     
     return all_val_cols, stable_val_labels, mutated_val_labels
 
-def print_val_drift_report(all_val_cols, stable_val_labels, mutated_val_labels):
+def print_val_drift_report(all_val_cols, stable_val_labels, mutated_val_labels, logical_types=None, latest_year_labels=None):
+    from collections import defaultdict
     print("\033[1;94mREPORTE GLOBAL DE MUTACIÓN DE ETIQUETAS DE VALORES (2007 - 2024)\033[0m\n")
     print(f"\033[1;94mTotal de columnas con mapeo de valores detectadas: {len(all_val_cols)}\033[0m\n")
 
@@ -82,33 +99,48 @@ def print_val_drift_report(all_val_cols, stable_val_labels, mutated_val_labels):
             all_versions.extend(versions.values())
     global_max_len = max([len(format_year_ranges(a)) for a in all_versions] + [0])
 
-    from collections import defaultdict
+    col_to_logical = {}
+    if logical_types:
+        for l_type, cols in logical_types.items():
+            for c in cols:
+                col_to_logical[c] = l_type
+
     for title, label_dict in [("Etiquetas de valores estables", stable_val_labels), ("Etiquetas de valores mutadas", mutated_val_labels)]:
         print(f"\033[1;94m{title}: {len(label_dict)}\033[0m")
+        
+        grouped_vars = defaultdict(dict)
         for var_name, versions in label_dict.items():
-            print(f"\033[1;94m{var_name} (Apariciones: {sum(len(y) for y in versions.values())} años)\033[0m")
+            l_type = col_to_logical.get(var_name, "Sin Categoría") if logical_types else "Todas"
+            grouped_vars[l_type][var_name] = versions
             
-            col_max_lens = defaultdict(int)
-            for mapping_str in versions.keys():
-                if isinstance(mapping_str, tuple):
-                    for i, (k, v) in enumerate(mapping_str):
-                        text_len = len(f"{k} ({v})")
-                        if text_len > col_max_lens[i]:
-                            col_max_lens[i] = text_len
-            
-            for mapping_str, years_list in versions.items():
-                years_str = format_year_ranges(years_list)
-                prefix = f"  - Años {years_str:<{global_max_len}} : "
+        for l_type, vars_dict in sorted(grouped_vars.items()):
+            if logical_types:
+                print(f"\n\033[1;93m--- {l_type.upper()} ---\033[0m")
+            for var_name, versions in vars_dict.items():
+                desc = f" - {latest_year_labels[var_name]}" if latest_year_labels and var_name in latest_year_labels else ""
+                print(f"\033[1;94m{var_name}{desc} (Apariciones: {sum(len(y) for y in versions.values())} años)\033[0m")
                 
-                if isinstance(mapping_str, tuple):
-                    formatted_items = []
-                    for i, (k, v) in enumerate(mapping_str):
-                        text = f"{k} ({v})"
-                        formatted_items.append(f"{text:<{col_max_lens[i]}}" if i < len(mapping_str) - 1 else text)
-                    mapping_str_fmt = " | ".join(formatted_items)
-                else:
-                    mapping_str_fmt = mapping_str
-                print(f"{prefix}{mapping_str_fmt}")
+                col_max_lens = defaultdict(int)
+                for mapping_str in versions.keys():
+                    if isinstance(mapping_str, tuple):
+                        for i, (k, v) in enumerate(mapping_str):
+                            text_len = len(f"{k} ({v})")
+                            if text_len > col_max_lens[i]:
+                                col_max_lens[i] = text_len
+                
+                for mapping_str, years_list in versions.items():
+                    years_str = format_year_ranges(years_list)
+                    prefix = f"  - Años {years_str:<{global_max_len}} : "
+                    
+                    if isinstance(mapping_str, tuple):
+                        formatted_items = []
+                        for i, (k, v) in enumerate(mapping_str):
+                            text = f"{k} ({v})"
+                            formatted_items.append(f"{text:<{col_max_lens[i]}}" if i < len(mapping_str) - 1 else text)
+                        mapping_str_fmt = " | ".join(formatted_items)
+                    else:
+                        mapping_str_fmt = mapping_str
+                    print(f"{prefix}{mapping_str_fmt}")
         print("\n")
 
 def analyze_logical_types(df, all_cols, value_labels_history, col_labels_hist, forced_ids=None):

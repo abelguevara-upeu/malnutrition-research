@@ -1,0 +1,150 @@
+ ## Mutación de 'variable labels'
+  - Usar la etiqueta del último año (latest year label) es la mejor opción. No hay variables donde el significado haya cambiado drásticamente.
+ ## Mutación de 'value labels'
+  - Cantidad exacta de items observados en multiples versiones de un 'value label' sin variaciones drástricas
+ ## Tipos lógicos de variable
+  - Categóricos (con label a imputar) 11
+  - Identificadores (14)
+  - Numéricos (36)
+
+  ## Categóricos de negocio (Categorias Lógicas)
+    De los 11 labels:
+    ### Socio demográficos
+    - HV023 (Dominio)             -> 25 dominios geográficos (Ej: Amazonas, Ancash...).
+    - HV024 (Región)              -> 25 regiones geográficas equivalentes al dominio.
+    - HV025 (Área de residencia)  -> Subdivisión en Urbano / Rural. Feature clave para estratificación de la desnutrición.
+    - HV026 (Lugar de residencia) -> Subdivisión detallada del nivel de urbanización (Capital, Ciudad, Pueblo, Campo).
+    - HV022 / hv022 (Estrato)     -> Subdivisión administrativa (Sede Capital, Resto Urbano, Rural).
+    -> ACCIONES DE LIMPIEZA:
+      1. DROP `HV023`: Colinealidad perfecta con Región (0% nulos históricos).
+      2. COALESCE `HV022` y `hv022`: ¡Schema Drift detectado! `HV022` (mayúscula) tiene 0% nulos en todos los años excepto en 2016 donde tiene 100%. Exactamente en 2016, el INEI usó `hv022` (minúscula) con 0% nulos. Fusionándolas obtenemos el estrato histórico con 0% nulos absolutos.
+      3. KEEP `HV024`, `HV025`: Consistencia total (0% nulos).
+      4. KEEP `HV026`: Presenta 10.1% nulos solo en 2008 (resto 0%). Se deberá imputar esos nulos usando una lógica condicional basada en su correlación con `HV025` (Área de residencia) para no perder el 10% de la muestra de ese año.
+    > [!IMPORTANT]
+    > En regresiones y árboles, incluir Área y Lugar de residencia simultáneamente podría afectar la interpretabilidad por inflación de varianza.
+
+    ### Metadatos de Encuesta (Flags)
+    - HV015 (Resultado de la entrevista)     -> Indica el resultado de la entrevista (Completa, Ausente, Rechazada, etc.).
+    - HV020 (Criterio de elegibilidad)       -> Define el universo de mujeres encuestadas en ese hogar (Todas o solo casadas).
+    - HV027 (Selección hombre/esposo)        -> Indica si se aplicó el cuestionario masculino a una submuestra.
+    - HV042 (Selección medición hemoglobina) -> Indica si el hogar fue seleccionado para toma de muestra de sangre.
+    - HV043 (Módulo mujeres estado)          -> Flag de submuestra del INEI.
+    - HV044 (Módulo violencia familiar)      -> Flag de submuestra del INEI.
+    -> ACCIONES DE LIMPIEZA:
+      1. FILTER `HV015`: 0% nulos. Aplicar filtro estricto quedándonos solo con el código `1.0` (Completo / Completa). Los demás códigos (2.0 a 9.0) representan hogares ausentes, rechazados o vacíos, por lo que no aportan datos útiles.
+      2. DROP TODAS LAS DEMÁS (`HV020`, `HV027`, `HV042`, `HV043`, `HV044`): 0% nulos en todas. Son metadatos administrativos (ruido), no características reales del hogar, por lo que no sirven para el entrenamiento del modelo. (Ojo: HV042 es crítico solo si el modelo requiere explícitamente datos de anemia).
+    > [!WARNING]
+    > El orden de ejecución es vital. Si se hace el drop antes del filtro, se perderá la capacidad de distinguir y descartar los registros inválidos.
+    > [!TIP] De los 11 categóricos evaluados:
+    > Análisis de Value Drifting (2007-2024): Se verificó empíricamente que la mutación de etiquetas reportada en 8 de estas variables es puramente **cosmética y semántica** (traducciones del inglés al español). Los códigos numéricos subyacentes son **100% estables**.
+
+  ## Numéricos (sin label)
+    De los posibles 36 numéricos:
+
+    ### 1. Pesos Muestrales y Probabilidades (Sample Weights)
+    - HV005 (Factor de ponderación)             -> Peso estadístico principal.
+    - hv005 (Factor ponderación minúscula)      -> Complemento exacto de HV005.
+    - HV005A (Peso Departamental)               -> Peso departamental específico.
+    - HV005X (Peso niño <5 años)                -> Peso infantil específico.
+    - HV004 (Unidad última de muestreo)         -> Clave para diseño muestral.
+    - HV033 (Probabilidad de selección de área) -> Probabilidad base.
+    -> ACCIONES DE LIMPIEZA:
+      1. COALESCE `HV005` y `hv005`: HV005 está activo casi todos los años (0% nulos), excepto 2014 y 2016 (100% nulos), donde se usa hv005. Deben fusionarse en una sola columna maestra de "Peso de Ponderación".
+      2. EVALUAR `HV005A` y `HV005X`: Solo activos en 2008 y 2015 respectivamente (0% nulos en ese año). Se conservan para la siguiente fase de EDA.
+      3. KEEP `HV004`: 0% nulos en todos los años. Puede ser clave si se usa modelado multinivel.
+      4. DROP `HV033`: 89.1% nulos globales. Demasiada pérdida de información.
+    > [!IMPORTANT]
+    > Pandas procesa estas variables como columnas distintas debido a la sensibilidad a mayúsculas. Un merge es indispensable.
+
+    ### 2. Geolocalización (El rompecabezas espacial - Schema Drift)
+    - latitudy / longitudx -> Coordenadas geoespaciales.
+    - lat_ccpp / long_ccpp -> Coordenadas geoespaciales alternativas.
+    - LATITUDY / LONGITUDX -> Coordenadas geoespaciales en mayúscula.
+    -> ACCIONES DE LIMPIEZA:
+      1. COALESCE de las tres versiones: latitudy/longitudx (39.8% nulos), lat_ccpp/long_ccpp (94% nulos), y LATITUDY/LONGITUDX (81.6% nulos). Al unirlas se obtendrán dos columnas maestras (`Latitud_final`, `Longitud_final`) con una cobertura histórica casi total. ¡No dropear prematuramente!
+    > [!WARNING]
+    > Ejecutar dropna ciego en estas columnas borraría casi el total de la base de datos debido a la fragmentación histórica de sus nombres.
+
+    ### 3. Metadatos Temporales (Schema Drift)
+    - ID1 (Año)                 -> Año de la encuesta.
+    - HV007 (Año de entrevista) -> Año de la encuesta.
+    -> ACCIONES DE LIMPIEZA:
+      1. COALESCE `ID1` y `HV007`: ID1 tiene 27.6% nulos y HV007 tiene 6.2% nulos. Fusionarlos creará la variable definitiva del "Año" de la encuesta. 
+      2. IMPUTAR 2018: ¡Ojo! Tanto `ID1` como `HV007` tienen 100% de nulos en 2018. Para rellenar ese año faltante, se debe extraer el año matemáticamente usando la variable `HV008` (CMC): `Año = 1900 + (HV008 - 1) // 12`.
+    > [!IMPORTANT]
+    > Esta será la llave principal para realizar agrupaciones y particiones de train y test basadas en series temporales.
+
+    ### 4. Metadatos Operativos / Administrativos (Ruido)
+    - HV031 (Editor de campo)                  -> ID administrativo.
+    - HV019 (Identificador del digitador)      -> ID administrativo.
+    - HV006 (Mes de la entrevista)             -> Metadata operativa temporal.
+    - HV016 (Día de la entrevista)             -> Metadata operativa temporal.
+    - HV018 (Identificador del entrevistador)  -> ID administrativo.
+    - HV017 (Número de visitas al hogar)       -> Metadata operativa.
+    -> ACCIONES DE LIMPIEZA:
+      1. DROP DE TODAS: Presentan nulos variados (desde 0% hasta 100%). Quién digitó/editó, la fecha exacta de campo, o cuántas visitas hicieron no tienen relación causal predictiva con la desnutrición. Son ruido operativo absoluto.
+
+    ### 5. Características Demográficas Estructurales (Features Reales)
+    - HV009 (Total de personas en el hogar)            -> Representa el tamaño bruto del hogar. Útil para entender la demanda general de recursos alimentarios por vivienda.
+    - HV012 (Miembros de jure / residentes habituales) -> Conteo de personas que viven permanentemente allí. Es el denominador ideal y más estable para calcular el índice de hacinamiento y la carga de dependientes.
+    - HV013 (Miembros de facto / durmieron anoche)     -> Suma visitantes temporales y resta ausentes de la noche anterior. Es una foto volátil, menos fiable que `HV012` para modelado estructural.
+    - HV014 (Número de niños menores de 5 años)        -> Conteo exacto de tu población objetivo. Identifica de forma inmediata si el hogar es elegible para tu estudio de desnutrición infantil.
+    - HV010 (Número de mujeres elegibles)              -> Cantidad de mujeres en edad fértil (15-49 años). Sirve para entender la estructura de maternidad y cuidado potencial en el hogar.
+    - HV011 (Número de hombres elegibles)              -> Cantidad de varones elegibles. Permite inferir la composición adulta y la estructura familiar base.
+    - HV035 (Niños elegibles para altura y peso)       -> Conteo operativo que indica cuántos niños realmente pasaron por antropometría.
+    - HV041 (Mujeres con medición de peso y talla)     -> Conteo operativo para antropometría materna.
+    -> ACCIONES DE LIMPIEZA:
+      1. KEEP TODAS (0% nulos históricos): Son el núcleo demográfico del modelo. Específicamente, `HV012` (residentes habituales) se debe usar como el denominador metodológicamente correcto, prefiriéndolo sobre `HV013` (visitantes casuales).
+      2. FEATURE ENGINEERING: Usar `HV012`, `HV010` y `HV011` para crear índices de carga familiar y hacinamiento.
+      3. FILTRO ANTROPOMÉTRICO: `HV035 > 0` es un filtro adicional clave para garantizar que existan mediciones físicas reales en el hogar.
+    > [!IMPORTANT]  
+    > Tienen un uso triple en el modelo: (1) Pivote/Filtro: `HV014` aísla a la población de estudio. (2) Features Directos: Sus valores brutos son predictores causales. (3) Base de Derivación: Vitales para calcular índices económicos.
+
+    ### 6. Cronología Calculable (Century Month Code)
+    - HV008 (Fecha de entrevista meses - CMC) -> Formato de tiempo contínuo en meses.
+    -> ACCIONES DE LIMPIEZA:
+      1. KEEP `HV008` (0% nulos): Mantener para Fase de Feature Engineering. 
+    > [!WARNING]
+    > Un error comun es usar años completos para la edad del niño. El formato CMC garantiza la precision mensual exacta, la cual es un requisito de los estandares de la OMS para evaluar curvas de crecimiento y z-scores.
+
+    ### 7. Características Geofísicas (Features Reales)
+    - HV040 (Altitud del conglomerado en metros) -> Medida física de elevación del clúster geográfico.
+    -> ACCIONES DE LIMPIEZA:
+      1. KEEP `HV040` (0% nulos): Clave como predictor biológico y espacial.
+    > [!IMPORTANT]
+    > La altitud es un factor crítico en países andinos. Afecta directamente la oxigenación (requiere ajuste de hemoglobina para anemia) y correlaciona fuertemente con la dieta y brechas de infraestructura rural.
+
+  ## Identificadores
+    De los posibles 14 identificadores:
+    ### 1. Llaves Primarias (Primary Keys Estructurales)
+    - HHID (Identificación Cuestionario del Hogar)       -> Llave maestra concatenada oficial.
+    - HV001 (Conglomerado)                               -> ID geográfico (Primary Sampling Unit).
+    - HV002 (Vivienda)                                   -> ID de la estructura física.
+    - HV002A (Hogar)                                     -> ID de la familia dentro de la vivienda.
+    - HV021 (Unidad de muestreo primario - conglomerado) -> Redundante con HV001.
+    -> ACCIONES DE LIMPIEZA:
+      1. KEEP `HHID` (0% nulos): Es tu llave primaria absoluta para unir cualquier tabla a nivel hogar. Su magia es que ya resuelve el problema de los años viejos internamente.
+      2. KEEP `HV001`, `HV002` y `HV002A`: Son los componentes desagregados jerárquicos. (Nota: `HV001` y `HV021` son idénticos, mantener `HV001`). `HV002A` tiene 100% nulos entre 2007-2011 (Schema Drift), aparece recién en 2012. Al hacer modelos temporales que incluyan 2007-2011, ten cuidado con `HV002A` ya que es completamente nulo en esos años.
+    > [!IMPORTANT]
+    > Según el Documento Metodológico del INEI (Identificadores_de_las_bases_de_datos.pdf, pág. 262), la jerarquía matemática moderna es: HHID = HV001(conglomerado) + HV002(vivienda) + HV002A(hogar). Antes de 2012, el concepto de "hogares múltiples por vivienda" no se registraba igual, por eso HHID es la única variable 100% segura históricamente.
+    > [!WARNING]
+    > Toda esta estructura de llaves primarias (`HHID`, `HV001`, `HV002`) es estrictamente teórica basada en la documentación del nivel hogar. No se tomará ninguna decisión definitiva sobre qué usar como llave maestra hasta haber explorado a profundidad el módulo `RECH1` (Household Roster). Será este otro módulo el que nos confirme la verdadera cardinalidad, el comportamiento de los identificadores en la práctica y nos dé la última palabra.
+
+    ### 2. Identificadores Geográficos Nominales (Schema Drift Fuerte)
+    - NCONGLOME / NCONGLOME1 / nconglome                 -> Variaciones fragmentadas del conglomerado del marco.
+    - UBIGEO / ubigeo                                    -> Código de Ubicación Geográfica.
+    - CODCCPP / codccpp (Código Centro Poblado)          -> Código del centro poblado.
+    - NOMCCPP / nomccpp (Nombre Centro Poblado)          -> Nombre del centro poblado.
+    -> ACCIONES DE LIMPIEZA:
+      1. COALESCE `UBIGEO`, `CODCCPP` y `NOMCCPP`: Tienen entre 56% y 93% de nulos debido a nombres en minúscula/mayúscula. Fusionar obligatoriamente sus versiones. Aunque no cubrirán la historia completa, tendrás estas variables listas para el bloque moderno de años.
+      2. DROP `NCONGLOME*`: Tienen entre 69% a 94% nulos. Es redundante existiendo el `HV001` y sufre de una fragmentación muy severa.
+    > [!IMPORTANT]
+    > En encuestas longitudinales, las variables nativas creadas por el INEI en español (`UBIGEO`, `CODCCPP`) sufren de un severo "schema drift" por cambios de mayúsculas y minúsculas a lo largo de los años. ¡Nunca dropees por nulos estas columnas sin antes aplicar un COALESCE!
+
+    ### 3. Identificadores Operativos Constantes (Ruido)
+    - HV000 (Código del país)      -> Código de país del programa DHS.
+    - HV003 (N° orden informante)  -> Indica quién respondió la encuesta dentro del hogar.
+    - HV030 (Supervisor de campo)  -> ID administrativo del supervisor.
+    - HV032 (Editor de la oficina) -> ID administrativo del editor en sede.
+    -> ACCIONES DE LIMPIEZA:
+      1. DROP TODAS (0% nulos históricos): `HV000` tiene varianza cero (siempre es "PE6"). `HV003`, `HV030` y `HV032` son metadatos administrativos (ruido operativo) sin relación predictiva.

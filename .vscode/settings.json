@@ -14,16 +14,7 @@
     "**/.ipynb_checkpoints": true,
     "**/.ruff_cache": true,
     "**/*.synctex.gz": true,
-    "**/.tmp": true,
-    "[!n]*/**": true,
-    "n[!o]*/**": true,
-    "no[!t]*/**": true,
-    "not[!e]*/**": true,
-    "note[!b]*/**": true,
-    "noteb[!o]*/**": true,
-    "notebo[!o]*/**": true,
-    "noteboo[!k]*/**": true,
-    "notebook[!s]*/**": true
+    "**/.tmp": true
   },
   "search.exclude": {
     "**/__pycache__": true,

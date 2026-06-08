@@ -1,0 +1,4 @@
+   * Nota tecnica para el pipeline de dataunderstanding
+    - Visualizaciones en schema drifting, separar las variables por categorias de años completos, casi completos (< 2 años) y menos de 2 años. 
+    - Visualizaciones en value drifting, separar las variables por categorias de items completos, casi completos (< 2 items) y menos de 2 items.
+    - Se necesita sabe el porcentaje de nulos de cada variable por cada año, por todos los años de forma simple, para el reporte final (por variable :porcentaje de nulos > 0 de cada año, porcentaje de nulos < 0 en rango de años)
