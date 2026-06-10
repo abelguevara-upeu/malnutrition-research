@@ -1,0 +1,11 @@
+# 📋 Decisiones de Limpieza: Módulo RECH6 (Antropometría)
+
+Este documento registra las decisiones tomadas para estandarizar el módulo `rech6` a lo largo de 18 años (2007-2024), aplicando las reglas de auditoría longitudinal: DROP, KEEP, SPLIT y COALESCE.
+
+| Variable | Descripción | Años Presentes | Nulos (%) | Tipo | Acción | Estado | Advertencia | Nota | Column Label (Latest) | Value Label (Latest) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `f` | None | 2013 (1 año) | - | N/A | **DROP** | Solo presente en 2013 sin metadato ni descripción. Claro error tipográfico o columna fantasma en la ingesta. | `Error INEI` | Eliminar. No aporta valor longitudinal. | None | N/A |
+| `ID1` | Año | 2019-2024 (6 años) | - | Numérico Discreto | **DROP** | Metadato administrativo. Aunque indica el año, solo existe desde 2019 y el año siempre se puede deducir del dataset origen o cruzando con otras tablas. | `Valores Estables` | Descartar por redundancia administrativa y falta histórica. | Año (2019-2024) | N/A |
+| `HV005A` | Factor mediciones niño | 2020 (1 año) | - | Numérico Continuo | **DROP** | Factor de expansión específico que solo apareció en el año de la pandemia (2020). Imposible usar longitudinalmente sin romper la serie. | `Error INEI` / `Aislada` | Eliminar. Si es necesario expandir, usar el factor general de la encuesta (`HV005` de RECH1). | Factor mediciones niño (2020) | N/A |
+| `HC56A` | Nivel de hemoglobina ajustado por altitud | 2024 (1 año) | - | Numérico Continuo | **KEEP** / **SPLIT** | Variable nueva introducida por nueva directriz MINSA 2024. Altamente relevante para desnutrición/anemia, pero no tiene historia pre-2024. | `CORE` / `Valores Mutados` | Posible candidata para fusionar con versión antigua (ej. `HC56`) mediante lógica de dominio. Mantener en radar. | Nivel de hemoglobina... (2024) | N/A |
+| `HC57A` | Nivel de anemia | 2024 (1 año) | - | Categórico Ordinal | **KEEP** / **SPLIT** | Variable nueva (2024) para categoría de anemia. Vital, pero sin serie histórica. | `CORE` / `Valores Mutados` | Buscar la variable predecesora (probablemente `HC57`) para ver si pueden ser unificadas. | Nivel de anemia (2024) | N/A |
