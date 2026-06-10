@@ -61,4 +61,4 @@ Para asegurar que llenes la tabla correctamente, mantén este formato impecable:
 * **Estado**: Una justificación breve de la decisión tomada.
 * **Advertencia**: Clasifica la salud histórica. Usa etiquetas como: `Valores Estables`, `Valores Mutados`, `CORE` (fundamental), `CORE ESTRUCTURAL` (variables geográficas/diseño muestral), o `Error INEI`.
 * **Nota**: Instrucciones específicas para quien programe el Python (ej. "Reemplazar 99.0 por NaN", "Forzar a String").
-* **Column Label / Value Label**: Indica de qué año o diccionario provendrá la etiqueta oficial.
+* **Column Label / Value Label**: Indica de qué año o diccionario provendrá la etiqueta oficial. **CRÍTICO:** Debes adjuntar SIEMPRE el año de referencia entre paréntesis al final del *Value Label* (ej. `1.0 (Urbano), 2.0 (Rural) (2024)`). Si olvidas el año de la versión del diccionario, el mapeo pierde su trazabilidad histórica y se considera inválido.
