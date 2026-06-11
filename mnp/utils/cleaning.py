@@ -2,54 +2,94 @@ import pandas as pd
 import numpy as np
 
 
+import time
+
 def run_phase1_engine(df, config):
     """Limpieza (Fase 1) para cualquier módulo de ENDES."""
-    # Usamos .copy() para evitar fragmentación de memoria (el problema de lentitud que tuviste)
+    start_total = time.time()
+    print("[Limpieza] Iniciando Motor Fase 1...")
+    
     df_out = df.copy()
 
     # 1. Casteo de llaves
     if "keys_to_cast" in config:
+        print(f"[Limpieza] Casteando {len(config['keys_to_cast'])} columnas clave...")
+        start_step = time.time()
         for col in config["keys_to_cast"]:
             if col in df_out.columns:
-                df_out[col] = (
-                    df_out[col]
-                    .astype(str)
-                    .str.replace(r"\.0$", "", regex=True)
-                    .str.strip()
-                    .replace("nan", np.nan)
-                )
+                s = df_out[col].astype(str).str.strip()
+                # Al castear a string, los nulos se vuelven la cadena "nan".
+                mask = s.str.endswith(".0").fillna(False)
+                s_stripped = np.where(mask, s.str[:-2], s)
+                # Reemplazamos la cadena "nan" por np.nan real muy rápido en C
+                df_out[col] = np.where(s_stripped == "nan", np.nan, s_stripped)
+        print(f"[Limpieza] Casteo completado en {time.time() - start_step:.2f}s")
 
-    # 2. Reemplazo de Falsos Numéricos (Ultrarrápido)
-    if "false_numerics" in config:
+    # 2. Reemplazo de Falsos Numéricos
+    if "false_numerics" in config and config["false_numerics"]:
+        print("[Limpieza] Limpiando falsos numéricos...")
+        start_step = time.time()
         for col, bad_values in config["false_numerics"].items():
             if col in df_out.columns:
                 df_out.loc[df_out[col].isin(bad_values), col] = np.nan
+        print(f"[Limpieza] Falsos numéricos limpiados en {time.time() - start_step:.2f}s")
 
     # 3. Drops
     if "cols_to_drop" in config:
+        print("[Limpieza] Eliminando columnas descartables...")
+        start_step = time.time()
         cols = [c for c in config["cols_to_drop"] if c in df_out.columns]
         df_out = df_out.drop(columns=cols)
+        print(f"[Limpieza] {len(cols)} columnas eliminadas en {time.time() - start_step:.2f}s")
 
     # 4. Escalamiento matemático (Divide by 10)
     if "divide_by_10" in config:
+        print("[Limpieza] Escalamiento matemático (x/10)...")
+        start_step = time.time()
         for col in config["divide_by_10"]:
             if col in df_out.columns:
                 df_out[col] = df_out[col] / 10.0
+        print(f"[Limpieza] Escalamiento /10 completado en {time.time() - start_step:.2f}s")
 
     # 5. Escalamiento matemático (Divide by 100)
     if "divide_by_100" in config:
+        print("[Limpieza] Escalamiento matemático (x/100)...")
+        start_step = time.time()
         for col in config["divide_by_100"]:
             if col in df_out.columns:
                 df_out[col] = df_out[col] / 100.0
+        print(f"[Limpieza] Escalamiento /100 completado en {time.time() - start_step:.2f}s")
+
+    # 5.5. Escalamiento matemático (Divide by 1,000,000)
+    if "divide_by_1000000" in config:
+        print("[Limpieza] Escalamiento matemático (x/1,000,000)...")
+        start_step = time.time()
+        for col in config["divide_by_1000000"]:
+            if col in df_out.columns:
+                df_out[col] = df_out[col] / 1000000.0
+        print(f"[Limpieza] Escalamiento /1M completado en {time.time() - start_step:.2f}s")
 
     # 6. Coalesce (Unificación de columnas mutadas)
     if "coalesce" in config:
+        print("[Limpieza] Ejecutando Coalesce (Unificación de columnas)...")
+        start_step = time.time()
         for target_col, source_cols in config["coalesce"].items():
             valid_cols = [c for c in source_cols if c in df_out.columns]
             if valid_cols:
-                # bfill a través de las columnas de la lista y nos quedamos con la primera
-                df_out[target_col] = df_out[valid_cols].bfill(axis=1).iloc[:, 0]
+                # Optimized Coalesce: chained fillna is 100x faster than bfill(axis=1)
+                res = df_out[valid_cols[0]]
+                for col in valid_cols[1:]:
+                    res = res.fillna(df_out[col])
+                df_out[target_col] = res
+                
+                # Auto-drop absorbed source columns
+                cols_to_remove = [c for c in valid_cols if c != target_col]
+                if cols_to_remove:
+                    df_out.drop(columns=cols_to_remove, inplace=True)
+                    
+        print(f"[Limpieza] Coalesce completado en {time.time() - start_step:.2f}s")
 
+    print(f"[Limpieza] Motor Fase 1 finalizado. Tiempo total: {time.time() - start_total:.2f}s")
     return df_out
 
 def apply_standard_labels(df, val_labels_hist, mapping_config, phase1_config=None):

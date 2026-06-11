@@ -26,6 +26,7 @@ dependencies = [
     "numpy",
     "pandas",
     "pip",
+    "pyarrow",
     "pyreadstat",
     "pytest",
     "python-dotenv",
@@ -35,6 +36,7 @@ dependencies = [
     "scikit-learn",
     "tqdm",
     "typer",
+    "sweetviz",
     "seaborn",
     "ipywidgets"
 ]
