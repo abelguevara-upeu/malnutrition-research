@@ -42,7 +42,7 @@ config_f1 = {
     # 3. Unificación de columnas (Schema Drift) por directriz MINSA 2024
     "coalesce": {"HC56": ["HC56A", "HC56"], "HC57": ["HC57A", "HC57"]},
     # 4. Variables que requieren recuperar 1 decimal (división entre 10)
-    "divide_by_10": ["HC2", "HC3", "HC53", "HC56"],
+    "divide_by_10": ["HC2", "HC3", "HC53", "HC56", "HC56A"],
     # 5. Z-scores que requieren recuperar 2 decimales (división entre 100)
     "divide_by_100": ["HC5", "HC8", "HC11", "HC70", "HC71", "HC72", "HC73"],
     # 6. Columnas basura a eliminar (incluyendo las ya unificadas/coalescidas)
@@ -55,8 +55,6 @@ config_f1 = {
         "HC52",
         "HC58",
         "HC68",
-        "HC56A",
-        "HC57A",
     ],
 }
 

@@ -29,6 +29,9 @@ config_f1: Dict[str, Any] = {
     # Según la auditoría de decisiones-de-limpieza.md
     "cols_to_drop": [
         "HV000",
+        "HV003",  # Linea del encuestado (Irrelevante)
+        "HV011",  # Hombres elegibles (Irrelevante)
+        "HV041",  # Mujeres medidas (Drift severo y redundante)
         "HV005A",
         "HV005X",
         "HV023",  # Variables aisladas y colineales
@@ -62,6 +65,10 @@ config_f1: Dict[str, Any] = {
         "NOMCCPP": ["NOMCCPP", "nomccpp"],  # Nombre de centro poblado
         "LONGITUDX": ["LONGITUDX", "longitudx", "long_ccpp"],  # Longitud GPS
         "LATITUDY": ["LATITUDY", "latitudy", "lat_ccpp"],  # Latitud GPS
+    },
+    # 5. FILTRADO DE FILAS (Eliminar registros inválidos/vacíos)
+    "rows_to_keep": {
+        "HV015": [1.0],  # 1.0 = Entrevista Completada (Elimina Rechazos, Ausentes, etc)
     },
 }
 

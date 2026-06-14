@@ -125,6 +125,16 @@ def run_phase1_engine(df, config, inplace=False):
                     
         print(f"[Limpieza] Coalesce completado en {time.time() - start_step:.2f}s")
 
+    # 7. Filtrado de Filas (Filas a retener)
+    if "rows_to_keep" in config:
+        print("[Limpieza] Filtrando filas por valores válidos...")
+        start_step = time.time()
+        initial_len = len(df_out)
+        for col, valid_values in config["rows_to_keep"].items():
+            if col in df_out.columns:
+                df_out = df_out[df_out[col].isin(valid_values)]
+        print(f"[Limpieza] Filtro completado en {time.time() - start_step:.2f}s. Filas removidas: {initial_len - len(df_out)}")
+
     print(f"[Limpieza] Motor Fase 1 finalizado. Tiempo total: {time.time() - start_total:.2f}s")
     return df_out
 

@@ -60,15 +60,15 @@ config_f3 = {
     "HV102": 2024,  # Residente habitual
     "HV103": 2024,  # Durmió aquí anoche
     "HV104": 2024,  # Sexo
-    "HV106": 2024,  # Nivel de estudios más alto
-    "HV109": 2024,  # Nivel educativo
+    # "HV106": 2024,  # Nivel de estudios más alto (Ordinal)
+    # "HV109": 2024,  # Nivel educativo (Ordinal)
     "HV110": 2024,  # Asiste escuela
     "HV111": 2024,  # Madre viva
     "HV113": 2024,  # Padre vivo
     "HV115": 2024,  # Estado civil
     "HV120": 2024,  # Niños elegibles
     "HV121": 2024,  # Asistió escuela este año
-    "HV122": 2024,  # Nivel asiste/matriculado
+    # "HV122": 2024,  # Nivel asiste/matriculado (Ordinal)
     "HV125": 2024,  # Matriculado año pasado
-    "HV126": 2024,  # Nivel matriculado año pasado
+    # "HV126": 2024,  # Nivel matriculado año pasado (Ordinal)
 }
