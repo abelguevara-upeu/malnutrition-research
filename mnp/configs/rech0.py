@@ -9,6 +9,9 @@ config_f1: Dict[str, Any] = {
     # Se fuerza a string para no perder los ceros a la izquierda en los códigos geográficos.
     "keys_to_cast": [
         "HHID",
+        "HV001",
+        "HV002",
+        "HV002A",
         "HV021",
         "UBIGEO",
         "ubigeo",
