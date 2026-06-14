@@ -97,8 +97,39 @@ config_f1: Dict[str, Any] = {
         98.0
     ]
 },
+    'replace_values': {
+        "HV204": {996.0: 0.0},
+        "SH227": {6.0: 3.0},
+        "SHREGION": {5.0: 4.0}
+    },
     'divide_by_100000': ['HV271'],
     'cols_to_drop': [
+    "SHTRIMES",
+    "HV246H",
+    "HV246I",
+    "HV246J",
+    "HV245",
+    "HV246A",
+    "HV246C",
+    "HV246D",
+    "HV246E",
+    "HV246G",
+    "SH2211",
+    "SH52_Monto_Pago",
+    "SH28BB",
+    "SH79",
+    "SH80",
+    "SH76A",
+    "SH67A",
+    "SH27CA",
+    "SH77A",
+    "SH69",
+    "SH2604",
+    "SH76E",
+    "SH67E",
+    "SH77E",
+    "SH27CE",
+    "SH70_Hectareas",
     "HV202",
     "HV235",
     "HV237H",
@@ -231,17 +262,11 @@ config_f1: Dict[str, Any] = {
     ],
     "SH49_Frec_Basura": [
         "SH49_Frec_Basura",
-        "SH2413"
-    ],
-    "SH59": [
-        "SH59",
+        "SH59_Frec_Recojo",
         "SH2413"
     ],
     "SH50_Tipo_Basurero": [
         "SH50_Tipo_Basurero",
-        "SH2414"
-    ],
-    "SH60_Tipo_Basurero": [
         "SH60_Tipo_Basurero",
         "SH2414"
     ],
@@ -279,12 +304,9 @@ config_f1: Dict[str, Any] = {
         "SH69",
         "SH2604"
     ],
-    "SH60": [
-        "SH60",
-        "SH2609"
-    ],
     "SH70_Fuente_Luz": [
         "SH70_Fuente_Luz",
+        "SH60_Fuente_Luz",
         "SH2609"
     ],
     "SH67A": [
@@ -360,6 +382,10 @@ config_f1: Dict[str, Any] = {
     "SH78": [
         "SH78",
         "SH2801"
+    ],
+    "HV244": [
+        "HV244",
+        "SH78"
     ],
     "SH68F": [
         "SH68F",
@@ -544,13 +570,13 @@ config_f3 = {
     # "HV270": 2024, # Ordinal puro (dejamos los números 1-5)
     # "HV271": 2024, # Continuo (factor de riqueza)
     "HV026": 2024,
-    "HV040": 2024,
+    # "HV040": 2024, # Continuo (Altitud en metros, no traducir a texto)
     "SHREGION": 2024,
     "SHPROVIN": 2024,
     "SHDISTRI": 2024,
     "UBIGEO": 2024,
-    "ID1": 2024,
-    "HHID": 2024,
-    "HV218": 2024,
-    "SHSEMES": 2024
+    # "ID1": 2024, # ID (No traducir)
+    # "HHID": 2024, # ID (No traducir)
+    # "HV218": 2024, # Continuo (Línea de jefe, no traducir)
+    # "SHSEMES": 2024 # Continuo (Semestre, no traducir)
 }

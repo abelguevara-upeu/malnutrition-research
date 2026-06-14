@@ -58,6 +58,16 @@ def run_phase1_engine(df, config, inplace=False):
                 df_out.loc[df_out[col].isin(bad_values), col] = np.nan
         print(f"[Limpieza] Falsos numéricos limpiados en {time.time() - start_step:.2f}s")
 
+    # 2.5. Reemplazo Custom (Recodificaciones específicas como 996 -> 0)
+    if "replace_values" in config and config["replace_values"]:
+        print("[Limpieza] Aplicando reemplazos custom...")
+        start_step = time.time()
+        for col, mapping in config["replace_values"].items():
+            if col in df_out.columns:
+                df_out[col] = df_out[col].replace(mapping)
+        print(f"[Limpieza] Reemplazos custom completados en {time.time() - start_step:.2f}s")
+
+
     # 3. Drops (Se movió al inicio para optimizar memoria)
     # 4. Escalamiento matemático (Divide by 10)
     if "divide_by_10" in config:
