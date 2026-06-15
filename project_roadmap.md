@@ -23,17 +23,19 @@ Este documento sirve como el **punto de anclaje (Master Context)** para el asist
 **Estado Actual: EN PROGRESO**
 Estandarización de la ingesta dinámica de datos a través de diccionarios semánticos (`loader.py`), mapeando archivos históricos cambiantes a alias canónicos técnicos para facilitar el EDA.
 
-*Exploración de Módulos:*
+*Exploración RAW (Limpieza Básica):*
+- [X] `RECH6` $ightarrow$ `rech6` (Diagnóstico Clínico / Target).
+- [X] `RECH1` $ightarrow$ `household_roster` (Demografía y Criterios de Inclusión).
+- [ ] `RECH0` $ightarrow$ `household_characteristics` (Infraestructura). *← En progreso.*
+- [ ] `REC0111` $ightarrow$ `mef` (Salud Materna y Antecedentes). *← Pendiente.*
 
-- [X] `RECH6` $\rightarrow$ `rech6` (Diagnóstico Clínico / Target).
-- [X] `RECH1` $\rightarrow$ `household_roster` (Demografía y Criterios de Inclusión).
-- [ ] `RECH0` $\rightarrow$ `household_characteristics` (Infraestructura). *← En progreso (Falta análisis de dtypes y etiquetas de valor).*
-- [ ] `REC0111` $\rightarrow$ `mef` (Salud Materna y Antecedentes). *← Pendiente.*
-
-**Documentos de Apoyo Generados en esta Fase:**
-
-- [Diccionario y Justificación de Variables](file:///Users/abelguevarah/Desktop/invs/malnutrition-research/docs/docs/variable_justifications.md)
-- [Esquema Entidad-Relación (ERD)](file:///Users/abelguevarah/Desktop/invs/malnutrition-research/docs/docs/database_schema.md)
+*Análisis Exploratorio Profundo (Interim EDA):*
+- [X] **`RECH6` (Análisis del Target):** ¡COMPLETADO! 
+  - Se validó `HC70` (Z-score Talla/Edad) como target.
+  - Se identificó un salto masivo en el muestreo post-2015, exigiendo el uso de un **Time-Series Split** para validar el modelo futuro.
+  - Se demostró la no-linealidad biológica de la caída nutricional (Curva de los 1000 días), lo que justifica y fuerza el uso de **algoritmos basados en árboles** (Random Forest, XGBoost).
+  - La Anemia (`HC57`) fue coronada como *Super-Predictor*, mientras que el Peso (`HC2`), la Talla cruda (`HC3`) y el Método de medición (`HC15`) fueron estrictamente vetados para evitar trampa analítica (*Data Leakage*).
+- [ ] Análisis de Predictores Socioeconómicos (`RECH1`, `RECH0`, etc.). *← Pendiente.*
 
 ## Fase 3: Preparación de Datos (Data Preparation)
 
@@ -67,4 +69,4 @@ Estandarización de la ingesta dinámica de datos a través de diccionarios sem�
 
 ### Próximo Paso Inmediato para la IA (Next Action)
 
-- **Continuar EDA de RECH0 (`01_eda_raw_rech0.ipynb`):** Aún NO dar por cerrado el módulo. El siguiente paso crítico es **inspeccionar los tipos de datos (dtypes)** y las **etiquetas de valores (value labels)** (por ejemplo, saber que 1=Amazonas, 2=Ancash en el SPSS original). No se tomará ninguna decisión de imputación o exportación hasta validar empíricamente estos mapeos internos.
+- **Transición a las Variables Predictivas (Features):** Tras haber blindado magistralmente el *Target* en el módulo clínico (`RECH6`), el objetivo ahora es analizar las variables independientes que usaremos para predecir (ej. Índice de Riqueza, Educación de la Madre, Infraestructura de Agua/Saneamiento) ubicadas en los módulos socioeconómicos (`RECH1`, `RECH0` o `REC0111`). El usuario debe indicar qué cuaderno EDA se atacará a continuación.
