@@ -1,4 +1,6 @@
 """
+[DEPRECATED] - NO USAR EN LA ARQUITECTURA ACTUAL
+Este archivo es un residuo de la arquitectura antigua.
 Cálculo de indicadores de desnutrición crónica infantil.
 
 Reescritura en Python de src-r/core/indicators.R.

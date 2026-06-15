@@ -20,53 +20,57 @@ Este documento sirve como el **punto de anclaje (Master Context)** para el asist
 
 ## Fase 2: Comprensión de los Datos (Data Understanding)
 
-**Estado Actual: EN PROGRESO**
-Estandarización de la ingesta dinámica de datos a través de diccionarios semánticos (`loader.py`), mapeando archivos históricos cambiantes a alias canónicos técnicos para facilitar el EDA.
+**Estado Actual: COMPLETADO (Fase de variables base finalizada)**
 
 *Exploración RAW (Limpieza Básica):*
-- [X] `RECH6` $ightarrow$ `rech6` (Diagnóstico Clínico / Target).
-- [X] `RECH1` $ightarrow$ `household_roster` (Demografía y Criterios de Inclusión).
-- [ ] `RECH0` $ightarrow$ `household_characteristics` (Infraestructura). *← En progreso.*
-- [ ] `REC0111` $ightarrow$ `mef` (Salud Materna y Antecedentes). *← Pendiente.*
+- [x] `RECH6` -> `rech6` (Diagnóstico Clínico / Target).
+- [x] `RECH1` -> `household_roster` (Demografía y Criterios de Inclusión).
+- [x] `RECH0` -> `household_characteristics` (Datos de Entrevista).
+- [x] `RECH23` -> `rech23` (Características del Hogar y Geografía).
+- [ ] `REC0111` -> `mef` (Salud Materna y Antecedentes). *← PAUSADO por limitantes de tiempo. Queda como trabajo pendiente para agregarse a futuro.*
 
 *Análisis Exploratorio Profundo (Interim EDA):*
-- [X] **`RECH6` (Análisis del Target):** ¡COMPLETADO! 
+- [x] **`RECH6` (Análisis del Target):** ¡COMPLETADO! 
   - Se validó `HC70` (Z-score Talla/Edad) como target.
-  - Se identificó un salto masivo en el muestreo post-2015, exigiendo el uso de un **Time-Series Split** para validar el modelo futuro.
-  - Se demostró la no-linealidad biológica de la caída nutricional (Curva de los 1000 días), lo que justifica y fuerza el uso de **algoritmos basados en árboles** (Random Forest, XGBoost).
-  - La Anemia (`HC57`) fue coronada como *Super-Predictor*, mientras que el Peso (`HC2`), la Talla cruda (`HC3`) y el Método de medición (`HC15`) fueron estrictamente vetados para evitar trampa analítica (*Data Leakage*).
-- [ ] Análisis de Predictores Socioeconómicos (`RECH1`, `RECH0`, etc.). *← Pendiente.*
+  - Se identificó un salto masivo en el muestreo post-2015, exigiendo el uso de un **Time-Series Split**.
+  - Se demostró la no-linealidad biológica de la caída nutricional, forzando algoritmos basados en árboles (RF, XGBoost).
+  - La Anemia (`HC57`) fue coronada como *Super-Predictor*, mientras que Peso y Talla cruda fueron vetados (*Data Leakage*).
+- [x] **`RECH0` y `RECH1` (Criterios Base):** COMPLETADOS. Filtros estructurales de participación y residentes habituales validados, listos para hacer los *joins* correctos.
+- [x] **`RECH23` (Hogares y Geografía):** ¡COMPLETADO!
+  - 93 variables auditadas y categorizadas.
+  - Se identificaron dinámicas históricas críticas: el estancamiento de cocinar con leña (Humo) en un 25%, y cómo el celular ya no sirve para medir riqueza (96% cobertura) comparado con tener refrigeradora.
+  - Se estableció la guillotina del 60% para los Valores Nulos en todos los módulos pasados.
 
 ## Fase 3: Preparación de Datos (Data Preparation)
 
-**Estado Actual: PENDIENTE**
+**Estado Actual: SIGUIENTE PASO INMEDIATO**
 
-- **Consolidación (Merge Final):** Unir todas las tablas limpias mediante llaves foráneas (`HHID`, `HC0`, `HVIDX`, `HV112`).
-- **Feature Engineering:** Imputación de nulos y codificación de categorías (Las estrategias exactas se definirán al terminar la Fase 2, basándonos en la distribución real de los datos).
+- **Consolidación (Merge Final):** Unir todas las tablas limpias auditadas (`RECH6`, `RECH0`, `RECH1`, `RECH23`) mediante llaves foráneas (`HHID`, `HC0`, `HVIDX`, `HV112`).
+- **Feature Engineering:** Imputación de nulos y codificación de categorías basándonos en la distribución real de los datos y en el análisis de Nulidad (eliminar ruido estadístico mayor a 60%).
 
 ## Fase 4: Modelado (Modeling)
 
 **Estado Actual: PENDIENTE**
 *Nota: La selección algorítmica dependerá estrictamente de los hallazgos en la Fase 3.*
 
-- **Enfoque Propuesto:** Algoritmos basados en árboles (Tree-based como XGBoost o LightGBM) debido a la naturaleza tabular heterogénea de la ENDES.
-- **Manejo de Desbalance:** Técnicas (e.g., SMOTE, Class Weights) a definir según la tasa de prevalencia final del target (`HC70`).
+- **Enfoque Propuesto:** Algoritmos basados en árboles (Tree-based como XGBoost o LightGBM).
+- **Manejo de Desbalance:** Técnicas (e.g., SMOTE, Class Weights) a definir según la prevalencia final del target (`HC70`).
 
 ## Fase 5: Evaluación (Evaluation)
 
 **Estado Actual: PENDIENTE**
 
 - **Métricas a considerar:** PR-AUC, F1-Score (idóneas para clases desbalanceadas).
-- **Interpretabilidad (XAI):** Exploración de técnicas (como SHAP) para garantizar que las predicciones sean explicables al dominio médico.
+- **Interpretabilidad (XAI):** Técnicas (SHAP) para garantizar explicabilidad médica.
 
 ## Fase 6: Despliegue (Deployment)
 
 **Estado Actual: PENDIENTE**
 
-- Empaquetado de la arquitectura de extracción y el modelo de pronóstico, consolidando el Sistema Predictivo Sociodemográfico para una posible integración en dashboards o reportes dinámicos.
+- Empaquetado de la arquitectura de extracción y el modelo de pronóstico.
 
 ---
 
 ### Próximo Paso Inmediato para la IA (Next Action)
 
-- **Transición a las Variables Predictivas (Features):** Tras haber blindado magistralmente el *Target* en el módulo clínico (`RECH6`), el objetivo ahora es analizar las variables independientes que usaremos para predecir (ej. Índice de Riqueza, Educación de la Madre, Infraestructura de Agua/Saneamiento) ubicadas en los módulos socioeconómicos (`RECH1`, `RECH0` o `REC0111`). El usuario debe indicar qué cuaderno EDA se atacará a continuación.
+- **Transición a Fase 3 (Preparación y Joins):** Dado que la auditoría de los datos (Fase 2) para el individuo (`RECH6`) y su entorno demográfico y estructural (`RECH0, 1, 23`) ha sido validada exhaustivamente, el siguiente hito clave es construir la **tabla maestra consolidada**. La IA deberá empezar a diseñar el script de `merge` para integrar los *dataframes* sin perder o duplicar filas, preparándolos para la inyección al algoritmo predictivo.

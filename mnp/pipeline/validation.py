@@ -1,8 +1,9 @@
 """
-Pipeline de validación: interim/master_cleaned.csv → interim/master_validated.csv
+[DEPRECATED] - NO USAR EN LA ARQUITECTURA ACTUAL
+Este archivo es un residuo de la arquitectura antigua.
+La validación ahora se hace dinámicamente mediante Jupyter Notebooks y scripts en la Fase 3.
 
-Reescritura en Python de src-r/pipeline/02_validation.R.
-Toma la data cleaned y aplica filtros de calidad y validación científica.
+Pipeline de validación original: interim/master_cleaned.csv → interim/master_validated.csv
 """
 
 from loguru import logger
