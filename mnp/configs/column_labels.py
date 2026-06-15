@@ -1,6 +1,6 @@
-"""Diccionario autogenerado para Sweetviz"""
+"""Diccionario General de Variables de la ENDES"""
 
-SWEETVIZ_LABELS = {
+LABELS = {
     "ID1": "ID1 - Año",
     "id1": "ID1 - Año",
     "hv022": "HV022 - Estrato de la muestra",
