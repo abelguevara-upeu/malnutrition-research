@@ -3,6 +3,10 @@
 !/data/**/
 !/data/**/.gitkeep
 
+# Permitir seguimiento explícito de interim y processed
+!/data/interim/**
+!/data/processed/**
+
 # Mac OS-specific storage files
 .DS_Store
 
