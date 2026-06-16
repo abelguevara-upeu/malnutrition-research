@@ -11,10 +11,11 @@ Este documento sirve como el **punto de anclaje (Master Context)** para el asist
 
 ## Fase 1: Comprensión del Negocio (Business Understanding)
 
-**Objetivo:** Desarrollar un **Sistema Predictivo Sociodemográfico y Estructural** (Machine Learning) para pronosticar la Desnutrición Crónica Infantil en el Perú utilizando datos de la ENDES.
-*Nota conceptual:* Se evita el término estricto "Geográfico" para no limitarnos a modelos de coordenadas (Lat/Lon) y se prefiere "Estructural/Sociodemográfico" para englobar de manera más realista las variables de vivienda, saneamiento e identidad que provee la encuesta. El componente ingenieril (la arquitectura ETL o "pipeline") es el motor interno del sistema, pero el producto final es este Sistema Predictivo Integral.
+**Visión de Negocio (Public Policy Triage):** El objetivo de este modelo **NO es diagnosticar clínicamente** a nivel individual (reemplazando a un médico), sino crear un **Sistema de Triaje y Focalización de Recursos para el Estado**. A través del Machine Learning, se busca identificar un "perfil de riesgo sociodemográfico y biológico" que le permita al Ministerio de Salud optimizar la asignación de su presupuesto. En lugar de encuestar ciegamente a millones de hogares, el Estado podría usar este sistema como radar para priorizar visitas, logrando detectar hasta al 80% de los niños desnutridos (Alto Recall) invirtiendo solo una fracción del presupuesto.
 
-**Aporte Ingenieril:** Resolver desafíos computacionales severos (alta dimensionalidad, nulos, desbalance extremo) en bases de datos gubernamentales masivas, aportando rigor de Ingeniería de Sistemas frente al enfoque tradicional de salud pública.
+**Objetivo Analítico:** Desarrollar un **"Sistema de Predicción de Perfil de Riesgo Geográfico de Desnutrición Crónica"** en el Perú utilizando más de 18 años de datos de la ENDES.
+
+**Aporte Ingenieril:** Resolver desafíos computacionales severos (alta dimensionalidad, nulos masivos, desbalance extremo) en bases de datos gubernamentales masivas, aportando rigor de Ingeniería de Sistemas frente al enfoque estadístico tradicional de salud pública.
 
 - [Propuesta Ingenieril y Defensa Académica](file:///Users/abelguevarah/Desktop/invs/malnutrition-research/docs/docs/engineering_proposal.md)
 
@@ -27,7 +28,7 @@ Este documento sirve como el **punto de anclaje (Master Context)** para el asist
 - [x] `RECH1` -> `household_roster` (Demografía y Criterios de Inclusión).
 - [x] `RECH0` -> `household_characteristics` (Datos de Entrevista).
 - [x] `RECH23` -> `rech23` (Características del Hogar y Geografía).
-- [ ] `REC0111` -> `mef` (Salud Materna y Antecedentes). *← PAUSADO por limitantes de tiempo. Queda como trabajo pendiente para agregarse a futuro.*
+- [ ] `REC41` -> `rec41_salud_materna` (Embarazo, Parto, Lactancia y Peso al nacer). *← EN PROGRESO: Integración crítica para aportar peso biológico al modelo.*
 
 *Análisis Exploratorio Profundo (Interim EDA):*
 - [x] **`RECH6` (Análisis del Target):** ¡COMPLETADO! 
@@ -43,25 +44,24 @@ Este documento sirve como el **punto de anclaje (Master Context)** para el asist
 
 ## Fase 3: Preparación de Datos (Data Preparation)
 
-**Estado Actual: SIGUIENTE PASO INMEDIATO**
+**Estado Actual: COMPLETADO (Fase Base) / EN PROGRESO (Inyección REC41)**
 
-- **Consolidación (Merge Final):** Unir todas las tablas limpias auditadas (`RECH6`, `RECH0`, `RECH1`, `RECH23`) mediante llaves foráneas (`HHID`, `HC0`, `HVIDX`, `HV112`).
-- **Feature Engineering:** Imputación de nulos y codificación de categorías basándonos en la distribución real de los datos y en el análisis de Nulidad (eliminar ruido estadístico mayor a 60%).
+- **Consolidación (Merge Final):** Unir todas las tablas limpias auditadas (`RECH6`, `RECH0`, `RECH1`, `RECH23` y el nuevo `REC41`).
+- **Feature Selection Matemática:** Eliminación de colinealidad y variables de ruido estadístico (P-Values > 0.05).
 
 ## Fase 4: Modelado (Modeling)
 
-**Estado Actual: PENDIENTE**
-*Nota: La selección algorítmica dependerá estrictamente de los hallazgos en la Fase 3.*
+**Estado Actual: COMPLETADO (Fase Base)**
 
-- **Enfoque Propuesto:** Algoritmos basados en árboles (Tree-based como XGBoost o LightGBM).
-- **Manejo de Desbalance:** Técnicas (e.g., SMOTE, Class Weights) a definir según la prevalencia final del target (`HC70`).
+- **Enfoque Implementado:** Algoritmos basados en árboles (XGBoost, CatBoost, LightGBM).
+- **Manejo de Desbalance:** Se optó por **Undersampling (Balanceo Físico)** en lugar de pesos algorítmicos por su superioridad y estabilización de métricas.
 
 ## Fase 5: Evaluación (Evaluation)
 
-**Estado Actual: PENDIENTE**
+**Estado Actual: EN PROGRESO**
 
-- **Métricas a considerar:** PR-AUC, F1-Score (idóneas para clases desbalanceadas).
-- **Interpretabilidad (XAI):** Técnicas (SHAP) para garantizar explicabilidad médica.
+- **Optimización de Umbral (Threshold Tuning):** Uso de Curva Precision-Recall para ajustar la sensibilidad médica del modelo en el mundo real.
+- **Interpretabilidad y Evaluación Regional (Meta Final):** Extraer los *Feature Importances* globales y aplicar un **Análisis Geográfico de Importancia Local (SHAP por Región)** para demostrar cómo el perfil de riesgo de desnutrición muta drásticamente según el departamento (ej. Costa vs Sierra).
 
 ## Fase 6: Despliegue (Deployment)
 
@@ -73,4 +73,4 @@ Este documento sirve como el **punto de anclaje (Master Context)** para el asist
 
 ### Próximo Paso Inmediato para la IA (Next Action)
 
-- **Transición a Fase 3 (Preparación y Joins):** Dado que la auditoría de los datos (Fase 2) para el individuo (`RECH6`) y su entorno demográfico y estructural (`RECH0, 1, 23`) ha sido validada exhaustivamente, el siguiente hito clave es construir la **tabla maestra consolidada**. La IA deberá empezar a diseñar el script de `merge` para integrar los *dataframes* sin perder o duplicar filas, preparándolos para la inyección al algoritmo predictivo.
+- **Inyección de Salud Materna (REC41):** Construir el pipeline de limpieza para `REC41` manejando rigurosamente los códigos especiales de ENDES (9996, 9998, 94-98). Posteriormente, realizar el merge con la tabla maestra y re-entrenar los modelos para generar la Evaluación Regional Final.
