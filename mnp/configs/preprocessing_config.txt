@@ -1,0 +1,35 @@
+=========================================================
+      CONFIGURACIÓN DE PREPROCESAMIENTO - ENDES MASTER
+=========================================================
+Basado en la revisión del Head(4) del dataset fusionado.
+
+1. GRUPO: DROP ESTRITO (Identificadores y Fugas de Datos)
+---------------------------------------------------------
+Estas variables no entrarán al entrenamiento del modelo (X), ya sea porque son llaves de cruce que inyectan ruido, o porque causarían "trampa" predictiva (data leakage).
+- Llaves Puras: 'HHID', 'HC0', 'HVIDX', 'HV112', 'HV001', 'HV002', 'HV002A', 'NCONGLOME', 'CODCCPP', 'NOMCCPP', 'ID1'
+- Coordenadas/Metadata: 'UBIGEO', 'LONGITUDX', 'LATITUDY', 'year' -> (Se guardarán en tabla separada para el mapa de calor).
+- Fugas Biológicas (Antropometría): 'HC2', 'HC3', 'HC4', 'HC5', 'HC6', 'HC7', 'HC8', 'HC9', 'HC10', 'HC11', 'HC12', 'HC13', 'HC15', 'HC16', 'HC19', 'HC30', 'HC31', 'HC32', 'HC33', 'HC71', 'HC72', 'HC73', 'HC55'.
+
+2. GRUPO: EL TARGET (Variable Objetivo)
+---------------------------------------------------------
+- 'HC70' (Se convertirá a binario: 1 si < -200, 0 en caso contrario).
+
+3. GRUPO: NOMINALES Y BINARIAS (Para Ordinal/Label Encoding)
+---------------------------------------------------------
+Variables de texto (strings/objetos) que representan categorías de infraestructura, región o respuestas "Sí"/"No". Requerirán codificación a enteros (0, 1, 2...) y la moda para nulos.
+- Geografía: 'HV024' (Región), 'HV025' (Área), 'HV026' (Lugar), 'SHREGION'.
+- Infraestructura: 'HV201' (Fuente agua), 'HV205' (Tipo baño), 'HV213' (Piso), 'HV214' (Pared), 'HV215' (Techo), 'HV226' (Combustible cocinar).
+- Demografía: 'HC27' (Sexo niño), 'HV101' (Parentesco), 'HV217' (Estructura relación), 'HV219' (Sexo jefe hogar).
+- Binarias (Sí/No): 'HV102', 'HV103', 'HV110', 'HV111', 'HV113', 'HV121', 'HV125', 'HV206', 'HV207', 'HV208', 'HV209', 'HV210', 'HV211', 'HV212', 'HV221', 'HV225', 'HV242', 'HV243A', 'HV243B', 'HV243C', 'HV243D', 'HV244', 'HV246'.
+
+4. GRUPO: ORDINALES NATIVOS Y NUMÉRICOS (Para Imputación de Mediana)
+---------------------------------------------------------
+Variables que ya están en formato numérico o de conteo.
+- Niño: 'HC1' (Edad meses).
+- Educativos: 'HC61', 'HC62', 'HV108' (Años educación).
+- Hogar: 'HV105' (Edad individuo), 'HV204' (Tiempo fuente agua), 'HV216' (Habitaciones dormir), 'HV220' (Edad jefe hogar), 'HV270' (Índice riqueza ordinal), 'HV271' (Puntaje riqueza).
+- Clínicos Opcionales: 'HC53' (Hemoglobina), 'HC56' (Hemo ajustada), 'HC57' (Anemia categórica). -> (Evaluar si se dropean).
+
+5. GRUPO: LA GUILLOTINA (>60% NULOS)
+---------------------------------------------------------
+Se calculará matemáticamente en el script. Si cualquiera de las variables arriba mencionadas (especialmente las del bloque SH) superan el 60% de nulos, serán expulsadas sin importar a qué grupo pertenezcan.

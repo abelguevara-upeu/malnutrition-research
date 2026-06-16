@@ -38,7 +38,10 @@ dependencies = [
     "typer",
     "sweetviz",
     "seaborn",
-    "ipywidgets"
+    "ipywidgets",
+    "xgboost",
+    "lightgbm",
+    "catboost"
 ]
 requires-python = "==3.12.13"
 

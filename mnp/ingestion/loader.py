@@ -94,6 +94,9 @@ RECORD_ALIAS = {
     "rech6": "rech6",  # Niños: z-scores talla/peso, hemoglobina
     "rec44": "rec44",  # Datos individuales complementarios
     "rech5": "rech5",  # Mujeres: hemoglobina, anemia
+    # Maternal Health (Embarazo, Parto, Puerperio y Lactancia)
+    "rec41": "rec41",
+    "rec94": "rec94",
 }
 
 
