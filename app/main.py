@@ -79,12 +79,12 @@ st.markdown(
 tab1, tab2 = st.tabs(["Mapa Interactivo", "Predictor"])
 
 # ==========================================
-# TAB 1: PERFILADOR GEOGRÁFICO Y MAPA
+# TAB 1: ANÁLISIS GEOGRÁFICO Y MAPA
 # ==========================================
 with tab1:
-    st.markdown("### Centro de Comando: Perfilador Geográfico")
+    st.markdown("### Riesgo Territorial")
     st.write(
-        "Vista de Dashboard: Mapa Nacional Interactivo (Izquierda) y Radiografía Departamental (Derecha)."
+        "Distribución Geográfica: Impacto Nacional (Izquierda) y Radiografía Departamental (Derecha)."
     )
 
     if df_shap is not None and peru_geojson is not None:
@@ -104,7 +104,7 @@ with tab1:
 
         # Crear copia y renombrar el Top 10 manualmente
         df_map = df_shap.rename(columns=column_mapping)
-        
+
         # Limpiador automático para las 55 variables restantes
         def limpiar_nombre_variable(nombre):
             if nombre in column_mapping.values():
@@ -115,12 +115,12 @@ with tab1:
                 nombre_limpio = partes[1]
             else:
                 nombre_limpio = nombre
-            
+
             # Reemplazar guiones y capitalizar
             texto = nombre_limpio.replace("_", " ").capitalize()
             # Ajustes corporativos solicitados por el investigador
             return texto.replace("Sexo", "Género").replace("sexo", "género")
-            
+
         df_map.columns = [limpiar_nombre_variable(c) for c in df_map.columns]
 
         df_map["NOMBDEP"] = (
@@ -146,14 +146,16 @@ with tab1:
 
             # Preparar texto amigable para el Hover (Pasar el mouse)
             # Convertimos el 0-1 a un porcentaje de Gravedad Relativa
-            df_map['Gravedad Relativa'] = (df_map[selected_factor] * 100).round(1).astype(str) + "% (Respecto al máximo nacional)"
-            
+            df_map["Gravedad Relativa"] = (df_map[selected_factor] * 100).round(1).astype(
+                str
+            ) + "% (Respecto al máximo nacional)"
+
             # Renderizar el Mapa Coroplético con Plotly
             fig = px.choropleth_mapbox(
                 df_map,
                 geojson=peru_geojson,
-                featureidkey='properties.NOMBDEP',
-                locations='NOMBDEP',
+                featureidkey="properties.NOMBDEP",
+                locations="NOMBDEP",
                 color=selected_factor,
                 color_continuous_scale="Reds",
                 range_color=(0, 1),
@@ -161,17 +163,17 @@ with tab1:
                 zoom=4.2,
                 center={"lat": -9.19, "lon": -75.01},
                 opacity=0.7,
-                hover_name='NOMBDEP',
-                hover_data={'NOMBDEP': False, selected_factor: False, 'Gravedad Relativa': True}
+                hover_name="NOMBDEP",
+                hover_data={"NOMBDEP": False, selected_factor: False, "Gravedad Relativa": True},
             )
-            
+
             # Limpiar el diseño de la ventanita (tooltip)
             fig.update_traces(
-                customdata=df_map[['Gravedad Relativa']],
-                hovertemplate="<b>Departamento: %{hovertext}</b><br>Nivel de Alerta: %{customdata[0]}<extra></extra>"
+                customdata=df_map[["Gravedad Relativa"]],
+                hovertemplate="<b>Departamento: %{hovertext}</b><br>Nivel de Alerta: %{customdata[0]}<extra></extra>",
             )
-            
-            fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+
+            fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
             st.plotly_chart(fig, use_container_width=True)
 
         with col_grafico:
