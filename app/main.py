@@ -102,8 +102,27 @@ with tab1:
             "M4_Duracion_de_la_lactancia": "Falta de Lactancia Materna",
         }
 
-        # Crear copia y renombrar columnas
+        # Crear copia y renombrar el Top 10 manualmente
         df_map = df_shap.rename(columns=column_mapping)
+        
+        # Limpiador automático para las 55 variables restantes
+        def limpiar_nombre_variable(nombre):
+            if nombre in column_mapping.values():
+                return nombre
+            partes = nombre.split("_", 1)
+            # Quitar prefijos técnicos de la ENDES (Ej. HV206_)
+            if len(partes) > 1 and len(partes[0]) <= 5 and partes[0].isalnum():
+                nombre_limpio = partes[1]
+            else:
+                nombre_limpio = nombre
+            
+            # Reemplazar guiones y capitalizar
+            texto = nombre_limpio.replace("_", " ").capitalize()
+            # Ajustes corporativos solicitados por el investigador
+            return texto.replace("Sexo", "Género").replace("sexo", "género")
+            
+        df_map.columns = [limpiar_nombre_variable(c) for c in df_map.columns]
+
         df_map["NOMBDEP"] = (
             df_map.index.str.upper()
             .str.replace("Á", "A")
@@ -125,12 +144,16 @@ with tab1:
                 "1. Pinte el Mapa por Factor de Riesgo:", options=available_factors
             )
 
+            # Preparar texto amigable para el Hover (Pasar el mouse)
+            # Convertimos el 0-1 a un porcentaje de Gravedad Relativa
+            df_map['Gravedad Relativa'] = (df_map[selected_factor] * 100).round(1).astype(str) + "% (Respecto al máximo nacional)"
+            
             # Renderizar el Mapa Coroplético con Plotly
             fig = px.choropleth_mapbox(
                 df_map,
                 geojson=peru_geojson,
-                featureidkey="properties.NOMBDEP",
-                locations="NOMBDEP",
+                featureidkey='properties.NOMBDEP',
+                locations='NOMBDEP',
                 color=selected_factor,
                 color_continuous_scale="Reds",
                 range_color=(0, 1),
@@ -138,9 +161,17 @@ with tab1:
                 zoom=4.2,
                 center={"lat": -9.19, "lon": -75.01},
                 opacity=0.7,
-                labels={selected_factor: "Impacto Relativo"},
+                hover_name='NOMBDEP',
+                hover_data={'NOMBDEP': False, selected_factor: False, 'Gravedad Relativa': True}
             )
-            fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+            
+            # Limpiar el diseño de la ventanita (tooltip)
+            fig.update_traces(
+                customdata=df_map[['Gravedad Relativa']],
+                hovertemplate="<b>Departamento: %{hovertext}</b><br>Nivel de Alerta: %{customdata[0]}<extra></extra>"
+            )
+            
+            fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
             st.plotly_chart(fig, use_container_width=True)
 
         with col_grafico:
@@ -153,9 +184,9 @@ with tab1:
 
             st.markdown(f"**Top 5 Problemas en {selected_dept}**")
 
-            # Extraer data del departamento y ordenar
+            # Extraer data del departamento y ordenar (solo variables numéricas)
             dept_data = (
-                df_map.loc[selected_dept].drop("NOMBDEP").sort_values(ascending=False).head(5)
+                df_map.loc[selected_dept, available_factors].sort_values(ascending=False).head(5)
             )
 
             chart_data = pd.DataFrame(
