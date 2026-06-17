@@ -1,0 +1,44 @@
+# TANDA 1: Infiltrados por colinealidad no detectada matemáticamente
+HV104 # Clon de HC27 (Sexo del niño)
+HC61  # Variable de texto, nos quedamos con su versión numérica HC62 (Años de educación)
+HC53  # Hemoglobina sin ajustar, nos quedamos con HC56 (Hemoglobina ajustada por altitud)
+HC57  # Versión categórica (Anemia Leve/Moderada), nos quedamos con HC56 pura
+
+# TANDA 2: Variables lógicamente inválidas para la población
+HV110 # Asiste a escuela (Inválido para < 5 años)
+HV121 # Asistió a escuela este año (Inválido para < 5 años)
+HV125 # Estuvo matriculado año pasado (Inválido para < 5 años)
+HV126 # Nivel matriculado año pasado (Inválido para < 5 años)
+
+# TANDAS 2 Y 3: Sobre-representación (Bienes absorbidos por HV270 - Índice de Riqueza)
+HV206 # Tiene electricidad
+HV207 # Tiene radio
+HV208 # Tiene televisión
+HV209 # Tiene refrigerador
+HV210 # Tiene bicicleta
+HV211 # Tiene motocicleta
+HV212 # Tiene carro o camión
+HV221 # Tiene teléfono
+
+# TANDA 4: Más activos infladores (Dimensionality Bloat) absorbidos por HV270/HV271
+HV243A # Celular
+HV243C # Carreta
+HV243D # Bote
+HV244  # Tierras agrícolas
+HV246  # Ganado
+SH61A  # Sofá
+SH61B  # Vitrina
+SH61C  # Repostero
+SH61D  # Cómoda
+SH61E  # Reloj
+SH61J  # TV por cable
+SH61K  # Licuadora
+SH61L  # Cocina de gas
+SH61M  # Cocina de kerosene
+SH61N  # Microondas
+SH61O  # Lavadora
+SH61P  # Computadora
+SH61Q  # Internet
+SH61R  # Bomba de agua
+SH61S  # Generador
+HV270  # (Opcional) Podemos eliminarlo y quedarnos solo con HV271 que es el puntaje numérico puro.

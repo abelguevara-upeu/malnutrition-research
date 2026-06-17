@@ -97,6 +97,8 @@ RECORD_ALIAS = {
     # Maternal Health (Embarazo, Parto, Puerperio y Lactancia)
     "rec41": "rec41",
     "rec94": "rec94",
+    # Birth History
+    "rec21": "rec21",
 }
 
 

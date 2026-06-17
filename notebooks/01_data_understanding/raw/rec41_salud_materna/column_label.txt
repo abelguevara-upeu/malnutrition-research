@@ -1,0 +1,693 @@
+REPORTE GLOBAL DE MUTACIÓN DE DESCRIPCIONES DE COLUMNAS (COLUMN LABELS)
+
+Total de columnas detectadas: 147
+
+Descripciones estables: 1
+ID1 (Apariciones: 6 años)
+  - Años 2019-2024                  : Año
+
+
+Descripciones mutadas: 146
+CASEID (Apariciones: 18 años)
+  - Años 2007                       : Case identification
+  - Años 2008, 2011, 2013-2017      : Case Identification
+  - Años 2009-2010, 2012            : Identificación de la mujer
+  - Años 2018-2024                  : Identificación Cuestionario Individual
+MIDX (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Index to birth history
+  - Años 2009-2010, 2012, 2018      : Índice de historia de nacimiento
+  - Años 2019-2024                  : Orden de historia de nacimiento
+M1 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Tetanus injections bef. birth
+  - Años 2009-2010, 2012, 2018      : Vacuna antitetánica antes de nacimiento
+  - Años 2019-2024                  : Durante el embarazo cuantas dosis contra el tétano le aplicaron
+M1A (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Tetanus injections before pregnancy
+  - Años 2009-2010, 2012, 2018      : Vacuna antitetánica antes de embarazo
+  - Años 2019-2024                  : Antes del embarazo cuantas dosis de la vacuna contra el tétano recibió
+M1B (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Month last tetanus injection before pregnancy
+  - Años 2009-2010, 2012, 2018      : Último mes de vacunación antitetánica antes de embarazo
+  - Años 2019-2024                  : Mes última inyección contra el tétano antes del embarazo
+M1C (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Year last tetanus injection before pregnancy
+  - Años 2009-2010, 2012, 2018      : Último año de vacunación antitetánica antes de embarazo
+  - Años 2019-2024                  : Año de la última inyección contra el tétano antes del embarazo
+M1D (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Years ago received last tetanus injection before pregnancy
+  - Años 2009-2010, 2012            : Hace cuántos años recibió vacuna contra tétanos antes de embarazo
+  - Años 2018                       : Hace cuantos años recibió vacuna contra tétanos antes de embarazo
+  - Años 2019-2024                  : Hace cuantos años recibió la última inyección contra el tétano antes del embarazo
+M1E (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Last tetanus injection before pregnancy (CMC)
+  - Años 2009, 2018                 : Última vacuna contra tétanos antes del embarazo(CMC)
+  - Años 2010, 2012                 : Última vacuna contra tétanos antes del embarazo (CMC)
+  - Años 2019-2024                  : Última inyección contra el tétano antes del embarazo (CMC)
+M2A (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Prenatal: doctor
+  - Años 2009-2010, 2012, 2018      : Prenatal: médico
+  - Años 2019-2024                  : La chequeó en su control prenatal: Médico
+M2B (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Prenatal: nurse/midwife
+  - Años 2009-2010, 2012            : Prenatal: enfermera
+  - Años 2018                       : Prenatal: enfemera
+  - Años 2019-2024                  : La chequeó en su control prenatal: Enfermera
+M2C (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Prenatal: obstetrician
+  - Años 2009, 2018                 : Prenatal: obstetra
+  - Años 2010, 2012                 : Prenatal: obstetriz
+  - Años 2019-2024                  : La chequeó en su control prenatal: Obstetra
+M2D (Apariciones: 18 años)
+  - Años 2007-2008                  : Prenatal: health specialist (sanitario)
+  - Años 2009                       : Prenatal: Especialista en salud(sanitario)
+  - Años 2010, 2012                 : Prenatal: Especialista en salud (Técnico en enfermería)
+  - Años 2011, 2013-2017            : Prenatal: health specialist (Technical Nurse)
+  - Años 2018                       : Prenatal: Tecnico en enfermeria
+  - Años 2019-2024                  : La chequeó en su control prenatal: Técnico en enfermería
+M2E (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Prenatal: health worker
+  - Años 2009-2010, 2012            : Prenatal: trabajador de salud
+  - Años 2018                       : Prenatal: Promotor de salud
+  - Años 2019-2024                  : La chequeó en su control prenatal: Promotor de salud
+M2F (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Prenatal: trained birth att.
+  - Años 2009-2010, 2012            : Prenatal: Personal entrenado para atención de nacimiento
+  - Años 2018                       : Prenatal: entrenado para atención de nacimiento
+  - Años 2019-2024                  : La chequeó en su control prenatal: Asistente de parto entrenado
+M2G (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Prenatal: trad.birth attendant
+  - Años 2009                       : Prenatal: entrenado para atención de nacimiento
+  - Años 2010, 2012                 : Prenatal: Personal tradicional entrenado para atención de nacimiento
+  - Años 2018                       : Prenatal: Comadrona, partera
+  - Años 2019-2024                  : La chequeó en su control prenatal: Comadrona/partera
+M2H (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Prenatal: relative
+  - Años 2009-2010, 2012, 2018      : Prenatal: pariente
+  - Años 2019-2024                  : La chequeó en su control prenatal: Relativo (no estándar y rara vez se usa)
+M2I (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Prenatal: CS other person
+  - Años 2009-2010, 2012, 2018      : Prenatal: CS otra persona
+  - Años 2019-2024                  : La chequeó en su control prenatal: CS otra persona
+M2J (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Prenatal: CS other person
+  - Años 2009-2010, 2012            : Prenatal: CS otra persona
+  - Años 2018                       : Prenatal: CS otro
+  - Años 2019-2024                  : La chequeó en su control prenatal: CS otra persona
+M2K (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Prenatal: other resp (uncoded)
+  - Años 2009                       : Prenatal: otros responden (sin código)
+  - Años 2010, 2012                 : Prenatal: otra respuesta (sin código)
+  - Años 2018                       : Prenatal: otro respondiente (sin código)
+  - Años 2019-2024                  : La chequeó en su control prenatal: Otro
+M2L (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Prenatal: CS other
+  - Años 2009-2010, 2012, 2018      : Prenatal: CS otro
+  - Años 2019-2024                  : La chequeó en su control prenatal: CS otro
+M2M (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Prenatal: CS other
+  - Años 2009-2010, 2012, 2018      : Prenatal: CS otro
+  - Años 2019-2024                  : La chequeó en su control prenatal: CS otro
+M2N (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Prenatal: no one
+  - Años 2009-2010, 2012, 2018      : Prenatal: nadie
+  - Años 2019-2024                  : La chequeó en su control prenatal: Nadie
+M3A (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Assistance: doctor
+  - Años 2009                       : Asistencia en el parto: médico
+  - Años 2010, 2012                 : Asistencia en parto: médico
+  - Años 2018                       : Asistencia: Médico
+  - Años 2019-2024                  : La atendió en el parto: Médico
+M3B (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Assistance: nurse/midwife
+  - Años 2009-2010, 2012            : Asistencia en parto: enfermera
+  - Años 2018                       : Asistencia: enfermera, partera
+  - Años 2019-2024                  : La atendió en el parto: Enfermera
+M3C (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Assistance: obstetrician
+  - Años 2009                       : Asistencia en parto: Obstetra
+  - Años 2010, 2012                 : Asistencia en parto: Obstetriz
+  - Años 2018                       : Asistencia: obstetra
+  - Años 2019-2024                  : La atendió en el parto: Obstetra
+M3D (Apariciones: 18 años)
+  - Años 2007-2008                  : Assistance: health specilaist (sanitario)
+  - Años 2009                       : Asistencia en parto: Especialista en salud (sanitario)
+  - Años 2010, 2012                 : Asistencia en parto: Especialista en salud (Técnico en enfermería)
+  - Años 2011, 2013-2017            : Assistance: health specialist (Tecnical Nurse)
+  - Años 2018                       : Asistencia: especialista en salud (sanitario)
+  - Años 2019-2024                  : La atendió en el parto: Técnico en enfermería
+M3E (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Assistance: health worker
+  - Años 2009-2010, 2012            : Asistencia en parto: Trabajador de salud
+  - Años 2018                       : Asistencia: trabajador de salud
+  - Años 2019-2024                  : La atendió en el parto: Promotor de salud
+M3F (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Assistance: trained birth att.
+  - Años 2009                       : Asistencia en parto: Entrenado para atención de nacimiento
+  - Años 2010, 2012                 : Asistencia en parto: Personal entrenado para atención de nacimiento
+  - Años 2018                       : Asistencia: entrenado para atención de nacimiento
+  - Años 2019-2024                  : La atendió en el parto: Asistente de parto entrenado
+M3G (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Assistance: trad.birth attend.
+  - Años 2009                       : Asistencia: entrenado para atención de nacimiento
+  - Años 2010, 2012                 : Asistencia: Personal tradicional entrenado para atención de nacimiento
+  - Años 2018                       : Asistencia: trad. para atención de nacimiento
+  - Años 2019-2024                  : La atendió en el parto: Comadrona/partera
+M3H (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Assistance: relative, friend
+  - Años 2009-2010, 2012            : Asistencia en parto: Pariente, amigo
+  - Años 2018                       : Asistencia: pariente, amigo
+  - Años 2019-2024                  : La atendió en el parto: Familiar
+M3I (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Assistance: CS other person
+  - Años 2009-2010, 2012            : Asistencia en parto: CS otra persona
+  - Años 2018                       : Asistencia: CS otra persona
+  - Años 2019-2024                  : La atendió en el parto: CS otra persona
+M3J (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Assistance: CS other person
+  - Años 2009-2010, 2012            : Asistencia en parto: CS otra persona
+  - Años 2018                       : Asistencia: CS otra persona
+  - Años 2019-2024                  : La atendió en el parto: CS otra persona
+M3K (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Assistance: other resp (uncod)
+  - Años 2009                       : Asistencia en parto: otro respondiente (sin código)
+  - Años 2010, 2012                 : Asistencia en parto: otro respuesta (sin código)
+  - Años 2018                       : Asistencia: otro respondiente (sin código)
+  - Años 2019-2024                  : La atendió en el parto: Otro
+M3L (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Assistance: CS other
+  - Años 2009-2010, 2012            : Asistencia en parto: CS otro
+  - Años 2018                       : Asistencia: CS otro
+  - Años 2019-2024                  : La atendió en el parto: CS otro
+M3M (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Assistance: CS other
+  - Años 2009-2010, 2012            : Asistencia en parto: CS otro
+  - Años 2018                       : Asistencia: CS otro
+  - Años 2019-2024                  : La atendió en el parto: CS otro
+M3N (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Assistance: no one
+  - Años 2009-2010, 2012            : Asistencia en parto: nadie
+  - Años 2018                       : Asistencia: nadie
+  - Años 2019-2024                  : La atendió en el parto: Nadie
+M4 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Duration of breastfeeding
+  - Años 2009-2010, 2012, 2018      : Duración de lactancia
+  - Años 2019-2024                  : Duración de la lactancia
+M5 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Months of breastfeeding
+  - Años 2009-2010, 2012, 2018      : Meses de lactancia
+  - Años 2019-2024                  : Meses de amamantamiento
+M6 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Duration of amenorrhea
+  - Años 2009-2010, 2012, 2018      : Duración de amenorrea
+  - Años 2019-2024                  : Duración de la amenorrea
+M7 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Months of amenorrhea
+  - Años 2009-2010, 2012, 2018-2024 : Meses de amenorrea
+M8 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Duration of abstinence
+  - Años 2009-2010, 2012, 2018      : Duración de abstinencia
+  - Años 2019-2024                  : Duración de la abstinencia
+M9 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Months of abstinence
+  - Años 2009-2010, 2012, 2018-2024 : Meses de abstinencia
+M10 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Time wanted pregnancy
+  - Años 2009-2010, 2012, 2018-2024 : Momento que quería quedar embarazada
+M11 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Time would have waited
+  - Años 2009-2010, 2012, 2018-2024 : Tiempo que hubiera querido esperar
+M13 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Timing of 1st antenatal check
+  - Años 2009-2010, 2012, 2018      : Tiempo en el primer control prenatal
+  - Años 2019-2024                  : Momento del primer control prenatal
+M14 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal visits for pregnancy
+  - Años 2009-2010, 2012, 2018      : Visitas prenatales para el embarazo
+  - Años 2019-2024                  : Visitas prenatales por embarazo
+M15 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Place of delivery
+  - Años 2009-2010, 2012, 2018      : Lugar de parto
+  - Años 2019-2024                  : Lugar del parto
+M17 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Delivery by caesarian section
+  - Años 2009-2010, 2012, 2018-2024 : Parto por cesárea
+M18 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Size of child at birth
+  - Años 2009-2010, 2012, 2018-2024 : Tamaño del niño al nacer
+M19 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Birth weight (kilos - 3 dec.)
+  - Años 2009-2010, 2012            : Peso al nacer (kilos - 3 dec)
+  - Años 2018                       : Peso al nacer (kilos - 3 dec.)
+  - Años 2019-2024                  : Peso del niño al nacer (kilos - 3 dec.)
+M19A (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Weight at birth recall
+  - Años 2009-2010, 2012, 2018      : Peso al nacer según recuerda
+  - Años 2019-2024                  : Peso del niño al nacer según recuerda
+M27 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Flag for breastfeeding
+  - Años 2009-2010, 2012, 2018-2024 : Marca para lactancia
+M28 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Flag for amenorrhea
+  - Años 2009-2010, 2012, 2018-2024 : Marca para amenorrea
+M29 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Flag for abstinence
+  - Años 2009-2010, 2012, 2018-2024 : Marca para abstinencia
+M34 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : When child put to breast
+  - Años 2009-2010, 2012            : Cuándo comenzó a lactar
+  - Años 2018                       : Cuando comenzó a lactar
+  - Años 2019-2024                  : Cuando empezó a darle el pecho al niño
+M35 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Times breastfed during night
+  - Años 2009-2010, 2012, 2018      : Veces que lacta durante la noche
+  - Años 2019-2024                  : Cuantas veces le dio pecho durante la noche de ayer
+M36 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Times breastfed during day
+  - Años 2009-2010, 2012, 2018      : Veces que lacta durante el día
+  - Años 2019-2024                  : Cuantas veces le dio pecho durante el día de ayer
+M38 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Drank from bottle with nipple
+  - Años 2009-2010, 2012, 2018      : Bebió del biberón
+  - Años 2019-2024                  : El día de ayer o noche tomó algo en biberón
+M39 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Times ate solid, semi-solid or soft food yesterday
+  - Años 2009                       : Veces que comió sólido, sem.-sólido o comida suave ayer
+  - Años 2010, 2012                 : Veces que comió comida sólida, semisólida o suave ayer
+  - Años 2018                       : Veces que comió sólido, semi sólido o comida suave ayer
+  - Años 2019-2024                  : El día de ayer o durante el dìa o la noche cuantas veces le dio comida sólidas o semisólidas
+M42A (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy - weighed
+  - Años 2009-2010, 2012            : Durante embarazo - La pesaron
+  - Años 2018                       : Durante embarazo - peso
+  - Años 2019-2024                  : Durante su embarazo Durante su embarazo en alguno de sus controles: La pesaron
+M42B (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy - height measured
+  - Años 2009-2010, 2012, 2018      : Durante embarazo - midieron barriga
+  - Años 2019-2024                  : Durante su embarazo en alguno de sus controles: Le midieron la barriga
+M42C (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy - blood pressure taken
+  - Años 2009-2010, 2012, 2018      : Durante embarazo - tomaron presión arterial
+  - Años 2019-2024                  : Durante su embarazo en alguno de sus controles: Le tomaron le presión arterial
+M42D (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy - urine sample taken
+  - Años 2009-2010, 2012, 2018      : Durante embarazo - tomaron examen de orina
+  - Años 2019-2024                  : Durante su embarazo en alguno de sus controles: Le hicieron examen de orina
+M42E (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy - blood sample taken
+  - Años 2009, 2018                 : Durante embarazo - examen de sangre
+  - Años 2010, 2012                 : Durante embarazo - tomaron examen de sangre
+  - Años 2019-2024                  : Durante su embarazo en alguno de sus controles: Le hicieron examen de sangre
+M43 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Told about pregnancy complications
+  - Años 2009-2010, 2012            : Le dijo sobre complicaciones en el embarazo
+  - Años 2018                       : Le informaron sobre complicaciones en el embarazo
+  - Años 2019-2024                  : Le explicaron acerca de las complicaciones que se pueden presentar en el embarazo
+M44 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Told where to go for pregnancy complications
+  - Años 2009-2010, 2012            : Le dijo a donde ir si tenia complicaciones en el embarazo
+  - Años 2018                       : Le informaron sobre donde ir si tenía complicaciones en el embarazo
+  - Años 2019-2024                  : Le dijeron dónde acudir si se presentan complicaciones del embarazo
+M45 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregancy, given or bought iron tablets/syrup
+  - Años 2009, 2018                 : Durante el embarazo, le dieron o compro tabletas, jarabe de hierro
+  - Años 2010, 2012                 : Durante el embarazo, le dieron o compró tabletas, jarabe de hierro
+  - Años 2019-2024                  : Durante el embarazo, le administraron tabletas, jarabe o inyecciones de hierro
+M46 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Days tablets or syrup taken
+  - Años 2009, 2018                 : Días que tomo tabletas, jarabe de hierro
+  - Años 2010, 2012                 : Días que tomó tabletas o jarabe de hierro
+  - Años 2019-2024                  : Por cuantos días tomó hierro y/o cuantas inyecciones recibió
+M47 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy, had difficulty with daylight vision
+  - Años 2009-2010, 2012, 2018      : Durante embarazo, tuvo dificultad con la visión durante el día
+  - Años 2019-2024                  : Durante el embarazo, tuvo dificultad para ver objetos o personas siendo de día
+M48 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy, had difficulty with night blindness
+  - Años 2009-2010, 2012, 2018      : Durante embarazo, tuvo dificultad con ceguera nocturna
+  - Años 2019-2024                  : Durante el embarazo, tuvo dificultad para ver objetos o personas siendo de noche
+M49A (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy - took Fansidar for Malaria
+  - Años 2009-2010, 2012, 2018      : Durante embarazo - tomó Fansidar para la malaria
+  - Años 2019-2024                  : Durante el embarazo - tomó fansidar para la malaria
+M49B (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy - took Chloroquine for Malaria
+  - Años 2009-2010, 2012, 2018      : Durante embarazo - tomó Chloroquine para la malaria
+  - Años 2019-2024                  : Durante el embarazo - tomó cloroquina para la malaria
+M49C (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy - took Unknown Drug for Malaria
+  - Años 2009-2010, 2012            : Durante embarazo - tomó Medicamento desconocido para la Malaria
+  - Años 2018                       : Durante embarazo - tomo Medicamento desconocido para la Malaria
+  - Años 2019-2024                  : Durante el embarazo - tomó medicamento para la malaria
+M49D (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy - took country specific drug for Malaria
+  - Años 2009-2010, 2012            : Durante embarazo - tomó medicamento especifico del país para la Malaria
+  - Años 2018                       : Durante embarazo - tomo medicamento específico del país para la Malaria
+  - Años 2019-2024                  : Durante el embarazo: tomó un medicamento específico del país para la malaria
+M49E (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy - took country specific drug for Malaria
+  - Años 2009-2010, 2012            : Durante embarazo - tomó medicamento especifico del país para la Malaria
+  - Años 2018                       : Durante embarazo - tomo medicamento específico del país para la Malaria
+  - Años 2019-2024                  : Durante el embarazo: tomó un medicamento específico del país para la malaria
+M49F (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy - took country specific drug for Malaria
+  - Años 2009-2010, 2012            : Durante embarazo - tomó medicamento especifico del país para la Malaria
+  - Años 2018                       : Durante embarazo - tomo medicamento específico del país para la Malaria
+  - Años 2019-2024                  : Durante el embarazo: tomó un medicamento específico del país para la malaria
+M49G (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy - took country specific drug for Malaria
+  - Años 2009-2010, 2012            : Durante embarazo - tomó medicamento especifico del país para la Malaria
+  - Años 2018                       : Durante embarazo - tomo medicamento específico del país para la Malaria
+  - Años 2019-2024                  : Durante el embarazo: tomó un medicamento específico del país para la malaria
+M49X (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy - took other drug for Malaria
+  - Años 2009-2010, 2012            : Durante embarazo - tomó otro medicamento para la Malaria
+  - Años 2018                       : Durante embarazo - tomo otro medicamento para la Malaria
+  - Años 2019-2024                  : Durante el embarazo - tomó otro medicamento para la malaria
+M49Z (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : During pregnancy - took no drug for Malaria
+  - Años 2009-2010, 2012            : Durante embarazo - no tomó medicamento para la Malaria
+  - Años 2018                       : Durante embarazo - no tomo medicamento para la Malaria
+  - Años 2019-2024                  : Durante el embarazo: no tomó medicamento para la malaria
+M51A (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Respondent checkup after deliver timing
+  - Años 2009                       : momento del control después del parto
+  - Años 2010, 2012                 : Momento del control después del parto
+  - Años 2018-2024                  : Tiempo en que tuvo control después del parto
+M54 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Received Vitamin A dose in first 2 months after delivery
+  - Años 2009, 2018                 : En 2 primeros meses después del parto recibí dosis de Vitamina A
+  - Años 2010, 2012                 : En los 2 primeros meses después del parto recibió dosis de Vitamina A
+  - Años 2019-2024                  : Recibió una dosis de vitamina A en los primeros 2 meses después del parto
+M55A (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given milk other than breast milk
+  - Años 2009, 2018                 : En 3 primeros días, le dieron cualquier leche diferente a la materna
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron cualquier leche diferente a la materna
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: leche, diferente a la leche materna
+M55B (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given plain water
+  - Años 2009, 2018                 : En 3 primeros días, le dieron agua sola
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron agua sola
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: agua sola
+M55C (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given sugar/glucose water
+  - Años 2009                       : En 3 primeros días, le dieron agua con azúcar,glucosa
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron dextrosa glucosada
+  - Años 2018                       : En 3 primeros días, le dieron agua con azúcar, glucosa
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: dextrosa glucosada
+M55D (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given gripe water
+  - Años 2009, 2018                 : En 3 primeros días, le dieron agua para dolor de estomago
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron solución medicinal para aliviar el cólico en los bebés
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: agua
+M55E (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given sugar/salt/water solution
+  - Años 2009, 2018                 : En 3 primeros días, le dieron solución de agua con azúcar, sal
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron agua azucarada
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: agua azucarada
+M55F (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given fruit juice
+  - Años 2009, 2018                 : En 3 primeros días, le dieron jugo de fruta
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron jugo de fruta
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: jugo de fruta
+M55G (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given infant formula
+  - Años 2009, 2018                 : En 3 primeros días, le dieron fórmula para bebés
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron fórmula para bebés
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: fórmula para bebes
+M55H (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given tea/infusions
+  - Años 2009, 2018                 : En 3 primeros días, le dieron té, infusión
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron té/infusiones
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: té/infusiones
+M55I (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given honey
+  - Años 2009, 2018                 : En 3 primeros días, le dieron miel
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron miel
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: miel
+M55J (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given country specific
+  - Años 2009, 2018                 : En 3 primeros días, le dieron lo especificado por el país
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron lo especificado por el país
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: país específico
+M55K (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given country specific
+  - Años 2009, 2018                 : En 3 primeros días, le dieron lo especificado por el país
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron lo especificado por el país
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: país específico
+M55L (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given country specific
+  - Años 2009, 2018                 : En 3 primeros días, le dieron lo especificado por el país
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron lo especificado por el país
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: país específico
+M55M (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given country specific
+  - Años 2009, 2018                 : En 3 primeros días, le dieron lo especificado por el país
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron lo especificado por el país
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: país específico
+M55N (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given country specific
+  - Años 2009, 2018                 : En 3 primeros días, le dieron lo especificado por el país
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron lo especificado por el país
+  - Años 2019-2024                  : Durante los primeros 3 días, le dieron de tomar: país específico
+M55X (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given other
+  - Años 2009, 2018                 : En 3 primeros días, le dieron otro
+  - Años 2010, 2012                 : En los 3 primeros días, le dieron otro
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: otro
+M55Z (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : First 3 days, given nothing
+  - Años 2009, 2018                 : En 3 primeros días, no le dieron nada
+  - Años 2010, 2012                 : En los 3 primeros días, no le dieron nada
+  - Años 2019-2024                  : Durante los primeros 3 días despues del parto, le dieron de tomar: nada
+M57A (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: your home
+  - Años 2009-2010, 2012, 2018      : Atención prenatal: su casa
+  - Años 2019-2024                  : Cuidado prenatal: su hogar
+M57B (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: other home
+  - Años 2009-2010, 2012, 2018      : Atención prenatal: otro hogar
+  - Años 2019-2024                  : Cuidado prenatal: otro hogar
+M57C (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: CS home
+  - Años 2009-2010, 2012, 2018      : Atención prenatal: hogar CS
+  - Años 2019-2024                  : Cuidado prenatal: CS hogar
+M57D (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: CS home
+  - Años 2009-2010, 2012, 2018      : Atención prenatal: hogar CS
+  - Años 2019-2024                  : Cuidado prenatal: CS hogar
+M57E (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: hospital MINSA
+  - Años 2009-2010, 2012, 2018      : Atención prenatal: hospital MINSA
+  - Años 2019-2024                  : Atención prenatal: Hospital MINSA
+M57F (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: health center MINSA
+  - Años 2009-2010, 2012, 2018      : Atención prenatal: centro de salud MINSA
+  - Años 2019-2024                  : Atención prenatal: Centro de salud MINSA
+M57G (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: health post MINSA
+  - Años 2009-2010, 2012, 2018      : Atención prenatal: posta médica MINSA
+  - Años 2019-2024                  : Atención prenatal: Posta médica MINSA
+M57H (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: mobile clinic
+  - Años 2009-2010, 2012, 2018      : Atención prenatal: clínica móvil
+  - Años 2019-2024                  : Atención prenatal: Clínica móvil
+M57I (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: hospital ESSALUD
+  - Años 2009-2010, 2012, 2018      : Atención prenatal: hospital ESSALUD
+  - Años 2019-2024                  : Atención prenatal: Hospital ESSALUD
+M57J (Apariciones: 18 años)
+  - Años 2007-2008                  : Antenatal care: hospital FF. AA. PN
+  - Años 2009, 2018                 : Atención prenatal: hospital FFAA PNP
+  - Años 2010, 2012                 : Atención prenatal: hospital FFAA y PNP
+  - Años 2011, 2013-2017            : Antenatal care: hospital FF. AA. & PNP
+  - Años 2019-2024                  : Atención prenatal: Hospital FF.AA. y PNP
+M57K (Apariciones: 18 años)
+  - Años 2007-2008                  : Antenatal care: center/posa ESSALUD
+  - Años 2009                       : Atención prenatal: centro, posta ESSALUD
+  - Años 2010, 2012, 2019-2024      : Atención prenatal: Policlínico/centro/posta ESSALUD
+  - Años 2011, 2013-2017            : Antenatal care: Policlinic/center/post ESSALUD
+  - Años 2018                       : Atención prenatal: Policlínico, centro, posta ESSALUD
+M57L (Apariciones: 18 años)
+  - Años 2007-2008                  : Antenatal care: other public
+  - Años 2009                       : Atención prenatal: otro público
+  - Años 2010, 2012                 : Atención prenatal: Hospital/otro de municipalidad
+  - Años 2011, 2013-2017            : Antenatal care: Hospital/Other municipal
+  - Años 2018                       : Atención prenatal: Hospital, Otro municipal
+  - Años 2019-2024                  : Atención prenatal: Hospital/Otro de la Municipalidad
+M57M (Apariciones: 18 años)
+  - Años 2007-2008                  : Antenatal care: pvt. hospital/clinic
+  - Años 2009                       : Atención prenatal: hospital, clínica privada
+  - Años 2010, 2012                 : Atención prenatal: hospital/clínica privada
+  - Años 2011, 2013-2017            : Antenatal care: private hospital/clinic
+  - Años 2018                       : Atención prenatal: hospital, clínica particular
+  - Años 2019-2024                  : Atención prenatal: Hospital privado/clínica
+M57N (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: pvt. mobile clinic
+  - Años 2009-2010, 2012            : Atención prenatal: clínica móvil privada
+  - Años 2018                       : Atención prenatal: clínica móvil particular
+  - Años 2019-2024                  : Atención prenatal: Clínica móvil particular
+M57O (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: private doctor
+  - Años 2009-2010, 2012            : Atención prenatal: médico privado
+  - Años 2018                       : Atención prenatal: médico particular
+  - Años 2019-2024                  : Atención prenatal: Médico particular
+M57P (Apariciones: 18 años)
+  - Años 2007-2008                  : Antenatal care: CS pvt.
+  - Años 2009                       : Atención prenatal: CS priv
+  - Años 2010, 2012                 : Atención prenatal: Clínica/Posta de Salud ONG
+  - Años 2011, 2013-2017            : Antenatal care: Clinic/Post NGO
+  - Años 2018                       : Atención prenatal: Clínica, Posta ONG
+  - Años 2019-2024                  : Atención prenatal: Clínica/Posta de ONG
+M57Q (Apariciones: 18 años)
+  - Años 2007-2008                  : Antenatal care: CS pvt.
+  - Años 2009                       : Atención prenatal: CS privada
+  - Años 2010, 2012                 : Atención prenatal: Hospital/otro de iglesia
+  - Años 2011, 2013-2017            : Antenatal care: Hospital/Other Church
+  - Años 2018                       : Atención prenatal: Hospital, Otro Iglesia
+  - Años 2019-2024                  : Atención prenatal: Hospital/Otro de la Iglesia
+M57R (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: other private
+  - Años 2009-2010, 2012            : Atención prenatal: otro privado
+  - Años 2018                       : Atención prenatal: Otro privado
+  - Años 2019-2024                  : Atención prenatal: Otros privados
+M57S (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: midwife's home
+  - Años 2009-2010, 2012, 2018      : Atención prenatal: casa de partera
+  - Años 2019-2024                  : Atención prenatal: Casa de partera
+M57T (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: CS other
+  - Años 2009-2010, 2012, 2018      : Atención prenatal: otro CS
+  - Años 2019-2024                  : Atención prenatal: Otro CS
+M57U (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: CS other
+  - Años 2009-2010, 2012, 2018      : Atención prenatal: otro CS
+  - Años 2019-2024                  : Atención prenatal: Otro CS
+M57V (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: CS other
+  - Años 2009-2010, 2012, 2018      : Atención prenatal: otro CS
+  - Años 2019-2024                  : Atención prenatal: Otro CS
+M57X (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Antenatal care: other
+  - Años 2009-2010, 2012, 2018      : Atención prenatal: otro
+  - Años 2019-2024                  : Atención prenatal: Otro
+M60 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Drugs for intestinal parasites
+  - Años 2009-2010, 2012, 2018      : Medicamento contra lombrices intestinales
+  - Años 2019-2024                  : Durante el embarazo tomó medicamentos contra parásitos intestinales
+M61 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Time spent at place of delivery
+  - Años 2009-2010, 2012, 2018-2024 : Tiempo que permaneció en el lugar del parto
+M62 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Anyone checked respondent health before discharge
+  - Años 2009, 2018                 : Alguien le hizo un chequeo médico después del parto
+  - Años 2010, 2012                 : Alguien le hizo un chequeo médico antes del parto
+  - Años 2019-2024                  : Alguien verificó su salud antes del alta
+M63 (Apariciones: 18 años)
+  - Años 2007-2008, 2011            : How long before discharging resondent health check took plac
+  - Años 2009                       : Cuánto tiempo después del parto tuvo lugar su chequeo médico
+  - Años 2010, 2012                 : Cuánto tiempo antes del parto tuvo lugar su chequeo médico
+  - Años 2013-2017                  : How long before discharging resondent health check took place
+  - Años 2018                       : Cuanto tiempo después del parto tuvo lugar su chequeo médico
+  - Años 2019-2024                  : Cuánto tiempo antes del parto se realizó un control de salud
+M64 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Who checked respondent health before discharge
+  - Años 2009                       : Quién hizo el control después del parto
+  - Años 2010, 2012                 : Quién hizo el control antes del parto
+  - Años 2018                       : Quien hizo el control después del parto
+  - Años 2019-2024                  : Quién verificó la salud de los encuestados antes del alta
+M65A (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Reason didn't deliver at health facility: cost too much
+  - Años 2009-2010, 2012, 2018      : Razón no fue a centro de salud: cuesta mucho
+  - Años 2019-2024                  : Razón no fue a centro de salud: Cuesta mucho
+M65B (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Reason didn't deliver at health facility: facility not open
+  - Años 2009                       : Razón no fue a centro de salud: no esta abierto
+  - Años 2010, 2012, 2018           : Razón no fue a centro de salud: no está abierto
+  - Años 2019-2024                  : Razón no fue a centro de salud: No está abierto
+M65C (Apariciones: 18 años)
+  - Años 2007-2008, 2011            : Reason didn't deliver at health facility: too far/no transpo
+  - Años 2009-2010, 2012, 2018      : Razón no fue a centro de salud: muy lejos, no hay transporte
+  - Años 2013-2017                  : Reason didn't deliver at health facility: too far/no transport
+  - Años 2019-2024                  : Razón no fue a centro de salud: Muy lejos, no hay transporte
+M65D (Apariciones: 18 años)
+  - Años 2007-2008, 2011            : Reason didn't deliver at health facility: don't trust facili
+  - Años 2009-2010, 2012, 2018      : Razón no fue a centro de salud: no confía en atención
+  - Años 2013-2017                  : Reason didn't deliver at health facility: don't trust facility/poor service
+  - Años 2019-2024                  : Razón no fue a centro de salud: No confía en atención
+M65E (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Reason didn't deliver at health facility: no female provider
+  - Años 2009-2010, 2012, 2018      : Razón no fue a centro de salud: no había personal femenino
+  - Años 2019-2024                  : Razón no fue a centro de salud: No había personal femenino
+M65F (Apariciones: 18 años)
+  - Años 2007-2008, 2011            : Reason didn't deliver at health facility: husband/family did
+  - Años 2009-2010, 2012, 2018      : Razón no fue a centro de salud: esposo, familia no quería
+  - Años 2013-2017                  : Reason didn't deliver at health facility: husband/family didn't allow
+  - Años 2019-2024                  : Razón no fue a centro de salud: Nsposo, familia no quería
+M65G (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Reason didn't deliver at health facility: not necessary
+  - Años 2009-2010, 2012, 2018      : Razón no fue a centro de salud: no fue necesario
+  - Años 2019-2024                  : Razón no fue a centro de salud: No fue necesario
+M65H (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Reason didn't deliver at health facility: not customary
+  - Años 2009-2010, 2012, 2018      : Razón no fue a centro de salud: no acostumbrado
+  - Años 2019-2024                  : Razón no fue a centro de salud: No acostumbrada
+M65I (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Reason didn't deliver at health facility: CS
+  - Años 2009-2010, 2012, 2018-2024 : Razón no fue a centro de salud: CS
+M65J (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Reason didn't deliver at health facility: CS
+  - Años 2009-2010, 2012, 2018-2024 : Razón no fue a centro de salud: CS
+M65K (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Reason didn't deliver at health facility: CS
+  - Años 2009-2010, 2012, 2018-2024 : Razón no fue a centro de salud: CS
+M65L (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Reason didn't deliver at health facility: CS
+  - Años 2009-2010, 2012, 2018-2024 : Razón no fue a centro de salud: CS
+M65X (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Reason didn't deliver at health facility: other
+  - Años 2009-2010, 2012, 2018-2024 : Razón no fue a centro de salud: otro
+M66 (Apariciones: 18 años)
+  - Años 2007-2008, 2011            : After discharge/delivery at home anyone checked respondent h
+  - Años 2009, 2018                 : Después del parto, en casa alguien la examino
+  - Años 2010, 2012                 : Después del parto, en casa alguien la examinó
+  - Años 2013-2017                  : After discharge/delivery at home anyone checked respondent health
+  - Años 2019-2024                  : Después del parto tuvo algún chequeo o revisiòn médica
+M67 (Apariciones: 18 años)
+  - Años 2007-2008, 2011            : How long after discharge/delivery at home respondent health
+  - Años 2009-2010, 2012            : Cuánto tiempo después del parto la examinaron en casa
+  - Años 2013-2017                  : How long after discharge/delivery at home respondent health check took place
+  - Años 2018                       : Cuanto tiempo después del parto la examinaron en casa
+  - Años 2019-2024                  : Cuánto tiempo después del parto se realizó su primer chequeo o revisiòn médica
+M68 (Apariciones: 18 años)
+  - Años 2007-2008, 2011            : Who checked respondent health after discharge/delivery at ho
+  - Años 2009                       : Quién la examino en casa después del parto
+  - Años 2010, 2012                 : Quién la examinó en casa después del parto
+  - Años 2013-2017                  : Who checked respondent health after discharge/delivery at home
+  - Años 2018                       : Quien la examino en casa después del parto
+  - Años 2019-2024                  : Quién le realizó su chequeo o revisión médica después del parto
+M69 (Apariciones: 18 años)
+  - Años 2007-2008, 2011            : Where respondent check after discharge/delivery at home took
+  - Años 2009-2010, 2012            : Dónde se chequeó después del parto en casa
+  - Años 2013-2017                  : Where respondent check after discharge/delivery at home took place
+  - Años 2018                       : Donde se chequeó después del parto en casa
+  - Años 2019-2024                  : Donde se chequeo Ud.
+M70 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Baby postnatal check within 2 months
+  - Años 2009-2010, 2012, 2018      : Control postnatal del bebé dentro de 2 meses
+  - Años 2019-2024                  : Durante el primer mes le hicieron al bebe algún control o revisión médica
+M71 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : How long after delivery postnatal check took place
+  - Años 2009-2010, 2012            : Cuánto tiempo después del parto se realizó el chequeo postnatal
+  - Años 2018                       : Cuanto tiempo después del parto se realizó el chequeo postnatal
+  - Años 2019-2024                  : Cuánto tiempo después del parto se realizó el control postnatal
+M72 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Who performed postnatal checkup
+  - Años 2009-2010, 2012            : Quién hizo el chequeo postnatal
+  - Años 2018                       : Quien hizo el chequeo postnatal
+  - Años 2019-2024                  : Quién realizó el control posnatal
+M73 (Apariciones: 18 años)
+  - Años 2007-2008, 2011, 2013-2017 : Where was the baby checked for the first time
+  - Años 2009-2010, 2012            : Dónde le hicieron el chequeo por primera vez
+  - Años 2018                       : Donde le hicieron el chequeo por primera vez
+  - Años 2019-2024                  : Dónde le hicieron el chequeo o revisión médica al bebé por primera vez
+
