@@ -51,26 +51,29 @@ Este documento sirve como el **punto de anclaje (Master Context)** para el asist
 
 ## Fase 4: Modelado (Modeling)
 
-**Estado Actual: COMPLETADO (Fase Base)**
+**Estado Actual: COMPLETADO AL 100%**
 
-- **Enfoque Implementado:** Algoritmos basados en árboles (XGBoost, CatBoost, LightGBM).
-- **Manejo de Desbalance:** Se optó por **Undersampling (Balanceo Físico)** en lugar de pesos algorítmicos por su superioridad y estabilización de métricas.
+- **Enfoque Implementado:** Benchmarking riguroso de 4 algoritmos (Logistic Regression, XGBoost, LightGBM, CatBoost) usando 5-Fold Cross Validation Estratificado.
+- **Manejo de Desbalance:** Se usó la ponderación demográfica real de la ENDES (`HV005`), eliminando la necesidad de balanceo físico.
+- **Resultado Científico:** LightGBM fue coronado como el Campeón Absoluto (AUC: 0.83), demostrando que procesar variables categóricas de forma nativa supera al clásico One-Hot Encoding de XGBoost/LogReg.
+- **Guardado:** Modelo de producción (`champion_lightgbm.pkl`) exportado con su Umbral Óptimo de 0.4511 (80% Recall).
 
-## Fase 5: Evaluación (Evaluation)
+## Fase 5: Evaluación y Explicabilidad (SHAP)
 
-**Estado Actual: EN PROGRESO**
+**Estado Actual: EN PROGRESO (Próximo paso)**
 
-- **Optimización de Umbral (Threshold Tuning):** Uso de Curva Precision-Recall para ajustar la sensibilidad médica del modelo en el mundo real.
-- **Interpretabilidad y Evaluación Regional (Meta Final):** Extraer los *Feature Importances* globales y aplicar un **Análisis Geográfico de Importancia Local (SHAP por Región)** para demostrar cómo el perfil de riesgo de desnutrición muta drásticamente según el departamento (ej. Costa vs Sierra).
+- **Interpretabilidad (XAI):** Extraer el ADN de la desnutrición utilizando SHAP Values globales.
+- **Evaluación Regional (Perfiles Geográficos):** Aplicar Análisis Geográfico de Importancia Local (SHAP por Región) para demostrar cómo el perfil de riesgo muta drásticamente según el departamento geográfico (Costa vs. Sierra vs. Selva).
 
-## Fase 6: Despliegue (Deployment)
+## Fase 6: Despliegue (Deployment en Streamlit)
 
 **Estado Actual: PENDIENTE**
 
-- Empaquetado de la arquitectura de extracción y el modelo de pronóstico.
+- Construcción de un **Sistema Web Interactivo en Streamlit**.
+- La aplicación permitirá a los tomadores de decisiones del Estado simular perfiles demográficos e identificar visualmente los factores de riesgo geográficos extraídos en la Fase 5.
 
 ---
 
 ### Próximo Paso Inmediato para la IA (Next Action)
 
-- **Inyección de Salud Materna (REC41):** Construir el pipeline de limpieza para `REC41` manejando rigurosamente los códigos especiales de ENDES (9996, 9998, 94-98). Posteriormente, realizar el merge con la tabla maestra y re-entrenar los modelos para generar la Evaluación Regional Final.
+- **Fase 5 (Explicabilidad SHAP):** Crear el notebook `03_model_explainability.ipynb`, cargar el modelo campeón `champion_lightgbm.pkl` e inyectarle la librería SHAP para extraer los perfiles de riesgo globales y geográficos.
