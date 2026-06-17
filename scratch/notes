@@ -1,0 +1,20 @@
+¡Esta es **LA justificación central de tu tesis**! Si le explicas esto bien al jurado, te ganas su respeto absoluto desde el minuto uno.
+
+Aquí tienes la justificación metodológica y académica de por qué mezclaste 18 años de datos y por qué no le pasas el "año" a la IA. Puedes (y te recomiendo) usar este mismo lenguaje en tu documento:
+
+### 1. ¿Por qué mezclar 18 años en un solo dataset? (La Justificación del Volumen)
+*"La desnutrición crónica infantil es un fenómeno multicausal y complejo. Si hubiésemos entrenado el modelo con un solo año (ej. 2021), la Inteligencia Artificial no habría tenido suficientes ejemplos de casos severos o de comunidades extremadamente aisladas para aprender los patrones profundos. Al integrar 18 años de la ENDES (2004-2022), construimos un dataset masivo que captura todo el espectro de variabilidad geográfica, cultural y estructural del Perú. Esto le permite a los algoritmos de Machine Learning (como CatBoost) mapear interacciones no lineales que serían invisibles en una muestra pequeña."*
+
+### 2. ¿Por qué borrar el "Año" al entrenar? (Buscando Reglas Universales)
+*"El objetivo de esta investigación no es hacer un análisis histórico, sino construir un **Sistema Predictivo y de Alerta Temprana** que el Ministerio de Salud pueda usar en el futuro (ej. en 2025 o 2026). Si el modelo utilizara la variable 'Año' para predecir, sufriría de un sesgo temporal: aprendería que haber nacido en 2005 es un riesgo altísimo y haber nacido en 2019 es de bajo riesgo (por las políticas del Estado de esa época).*
+*Al eliminar deliberadamente la variable 'Año', obligamos a la IA a volverse **agnóstica al tiempo**. Obligamos al algoritmo a ignorar el calendario y fijarse únicamente en las causas estructurales y clínicas reales: la falta de lactancia, el peso al nacer, el piso de tierra o la fuente de agua. Así, garantizamos que el modelo aprenda las **reglas biológicas y sociales universales de la desnutrición**, permitiendo que sus predicciones sigan siendo válidas para las nuevas generaciones de niños."*
+
+### 3. ¿Cómo encaja el K-Fold aquí? (La Prueba de Fuego)
+*"Para demostrar estadísticamente que estas 'reglas universales' descubiertas por la IA son robustas y no un simple accidente del azar, aplicamos K-Fold Cross Validation. Al dividir la población aleatoriamente en 5 grupos, mezclando niños del 2005 con niños del 2021 en cada examen, y obteniendo métricas estables (AUC consistente), comprobamos que las causas clínicas detectadas por el modelo son aplicables a cualquier cohorte sin importar su año de origen."*
+
+---
+
+**Resumen para ti:**
+No le digas al jurado *"Junté 18 años para tener más datos"*. Diles: *"Integramos 18 años de historia nacional para extraer las reglas estructurales atemporales de la pobreza infantil en el Perú"*. 
+
+Con esta narrativa, tu enfoque de ocultar el año y usar K-Fold pasa de ser una "duda" a convertirse en la **fortaleza metodológica más grande de tu tesis**. ¿Te sirve este enfoque para redactar tu capítulo?
