@@ -169,8 +169,7 @@ with tab1:
 
             # Limpiar el diseño de la ventanita (tooltip)
             fig.update_traces(
-                customdata=df_map[["Gravedad Relativa"]],
-                hovertemplate="<b>Departamento: %{hovertext}</b><br>Nivel de Alerta: %{customdata[0]}<extra></extra>",
+                hovertemplate="<b>Departamento: %{hovertext}</b><br>Nivel de Alerta: %{customdata[2]}<extra></extra>",
             )
 
             fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
@@ -195,22 +194,40 @@ with tab1:
             dept_data = (
                 (
                     df_map.loc[selected_dept, available_factors]
-                    .sort_values(ascending=False)
-                    .head(top_n)
+                    .sort_values(ascending=True) # Ascendente para que el más alto quede ARRIBA en Plotly
+                    .tail(top_n)
                 )
                 .astype(float)
-                .round(2)
+                .round(3)
             )
 
             chart_data = pd.DataFrame(
-                {"Intensidad": dept_data.values, "Factor": dept_data.index}
-            ).set_index("Factor")
+                {"Nivel de Riesgo (Normalizado)": dept_data.values, "Factor": dept_data.index}
+            )
 
-            # Dibujar gráfico de barras en Streamlit
-            st.bar_chart(chart_data, color="#ff4b4b", height=380)
+            # Dibujar gráfico de barras Horizontal con Plotly (Mucho más profesional)
+            fig_bar = px.bar(
+                chart_data,
+                x="Nivel de Riesgo (Normalizado)",
+                y="Factor",
+                orientation="h",
+                color="Nivel de Riesgo (Normalizado)",
+                color_continuous_scale="Reds",
+                text="Nivel de Riesgo (Normalizado)",
+            )
+            fig_bar.update_traces(textposition="outside", texttemplate="%{text:.2f}")
+            fig_bar.update_layout(
+                margin={"r": 0, "t": 0, "l": 0, "b": 0},
+                xaxis_range=[0, 1.1], # Margen para el texto
+                coloraxis_showscale=False,
+            )
+            st.plotly_chart(fig_bar, use_container_width=True)
 
-            st.caption(
-                f"Si el Estado invierte en {selected_dept}, la Inteligencia Artificial sugiere mitigar prioritariamente la barra más alta."
+            st.info(
+                f"**¿Cómo interpretar esto en {selected_dept}?**\n\n"
+                "La Inteligencia Artificial revela qué factores disparan más las alarmas en esta región:\n\n"
+                "- **Para Focalizar (Variables Demográficas):** Factores inmutables como *Género*, *Edad Crítica* o *Altitud* te indican **a quiénes** y **dónde** buscar primero.\n"
+                "- **Para Intervenir (Variables Modificables):** Factores como *Agua*, *Controles Prenatales* o *Anemia* te indican **en qué invertir** dinero público para romper la cadena de desnutrición."
             )
 
     else:
