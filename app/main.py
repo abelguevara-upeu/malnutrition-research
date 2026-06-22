@@ -71,9 +71,9 @@ model, metadata, df_shap, peru_geojson = load_assets()
 threshold = metadata["optimal_threshold"]
 
 # INTERFAZ PRINCIPAL
-st.title("Sistema de Predicción de Perfil de Riesgo Geográfico")
+st.title("Sistema Predictivo de Riesgo de Desnutrición Crónica")
 st.markdown(
-    "Herramienta de análisis estructural basada en Inteligencia Artificial (LightGBM). Entrenada con datos históricos de la ENDES (2007-2024)."
+    "Herramienta de análisis estructural basada en Machine Learning (LightGBM). Entrenada con datos históricos de la ENDES (2007-2024)."
 )
 
 tab1, tab2 = st.tabs(["Mapa Interactivo", "Predictor"])
@@ -139,9 +139,9 @@ with tab1:
         col_mapa, col_grafico = st.columns([2, 1])
 
         with col_mapa:
-            st.markdown("#### 🗺️ Visión Nacional (Macro)")
+            st.markdown("#### Análisis Estructural a Nivel Nacional")
             selected_factor = st.selectbox(
-                "1. Pinte el Mapa por Factor de Riesgo:", options=available_factors
+                "Seleccione el Determinante Estructural a Visualizar:", options=available_factors
             )
 
             # Preparar texto amigable para el Hover (Pasar el mouse)
@@ -176,9 +176,9 @@ with tab1:
             st.plotly_chart(fig, use_container_width=True)
 
         with col_grafico:
-            st.markdown("#### 📊 Radiografía Local (Micro)")
+            st.markdown("#### Análisis de Impacto a Nivel Departamental")
             selected_dept = st.selectbox(
-                "2. Auditar Departamento Específico:",
+                "Seleccione el Departamento a Analizar:",
                 options=departamentos_list,
                 index=departamentos_list.index("Puno") if "Puno" in departamentos_list else 0,
             )
@@ -225,7 +225,7 @@ with tab1:
 
             st.info(
                 f"**¿Cómo interpretar esto en {selected_dept}?**\n\n"
-                "La Inteligencia Artificial revela qué factores disparan más las alarmas en esta región:\n\n"
+                "El análisis algorítmico (SHAP) revela qué factores disparan más las alarmas en esta región:\n\n"
                 "- **Para Focalizar (Variables Demográficas):** Factores inmutables como *Género*, *Edad Crítica* o *Altitud* te indican **a quiénes** y **dónde** buscar primero.\n"
                 "- **Para Intervenir (Variables Modificables):** Factores como *Agua*, *Controles Prenatales* o *Anemia* te indican **en qué invertir** dinero público para romper la cadena de desnutrición."
             )
@@ -354,7 +354,7 @@ with tab2:
 
     st.markdown("---")
     with st.expander("Parámetros Clínicos Secundarios (Modelo Completo de 65 variables)"):
-        st.caption("Estas variables complementarias fueron auditadas por la Inteligencia Artificial. Puede ajustarlas para una simulación exhaustiva, o dejarlas en cero si no dispone del dato exacto.")
+        st.caption("Estas variables complementarias son evaluadas por el modelo predictivo. Puede ajustarlas para una simulación exhaustiva, o dejarlas en cero si no dispone del dato exacto.")
         
         def limpiar_nombre(nombre):
             partes = nombre.split("_", 1)
