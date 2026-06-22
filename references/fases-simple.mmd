@@ -1,60 +1,76 @@
----
-config:
-  layout: elk
----
+%% ---
+%% config:
+%%   layout: elk
+%% ---
 graph TD
-    %% Fase 1 (Semana 1)
-    subgraph "1. Negocio (W1 - Finalizado)"
-        A1[Definición de Indicadores]
-        A2[Estudio de Determinantes]
+    %% Fase 1 (CRISP-DM: Business Understanding)
+    subgraph "1. Comprensión del Negocio (Finalizado)"
+        A1[Definición de Target: Desnutrición Infantil]
+        A2[Mapeo Temático de Módulos ENDES]
     end
 
-    %% Fase 2 (Semana 2)
-    subgraph "2. Datos (W2 - Finalizado)"
-        B1[Mapeo de Módulos]
-        B2[Fichas Técnicas]
-    end
-
-    %% Fase 3 (Semana 3-4: ACTUAL)
-    subgraph "3. Preparación (W3 - W4)"
+    %% Fase 2 (CRISP-DM: Data Understanding)
+    subgraph "2. Comprensión de los Datos (Finalizado)"
         direction TB
-        C0[Ingesta Automática]
-        C1[Integración / Joins]
-        C2[Normalización Haven]
-        C3[Limpieza Outliers/Perdidos]
-        C4[<b>Feature Selection & Engineering</b>]
+        B1[Auditoría Longitudinal 18 Años]
+        B2[Extracción de Esquemas y Tipos de Datos]
+        B3[Definición de Reglas de Retención de Variables]
+        B4[Estandarización y Manejo de Nulos]
         
-        C0 --> C1 --> C2 --> C3 --> C4
+        B1 --> B2 --> B3 --> B4
     end
 
-    %% Fase 4 (Semana 5-6)
-    subgraph "4. Modelado (W5 - W6)"
-        D1[GLM Ponderado]
-        D2[Modelos Espaciales]
-        D3[Modelos ML]
+    %% Fase 3 (CRISP-DM: Data Preparation)
+    subgraph "3. Preparación de los Datos (Finalizado)"
+        direction TB
+        C1[Análisis Exploratorio y Sesgos]
+        C2[Consolidación Longitudinal]
+        C3[Criterios de Inclusión y Exclusión de Muestra]
+        C4[Ingeniería y Selección de Variables]
+        
+        C1 --> C2 --> C3 --> C4
     end
 
-    %% Fase 5 (Semana 7)
-    subgraph "5. Evaluación (W7)"
-        E1[Validación Cruzada]
-        E2[Validación Espacial]
+    %% Fase 4 (CRISP-DM: Modeling)
+    subgraph "4. Modelado (Finalizado)"
+        direction TB
+        D1[Evaluación Comparativa de Modelos]
+        D2[Optimización de Hiperparámetros]
+        D3[Selección del Modelo Óptimo: LightGBM]
+        
+        D1 --> D2 --> D3
     end
 
-    %% Fase 6 (Semana 8-9)
-    subgraph "6. Despliegue (W8 - W9)"
-        F1[Escritura Artículo Empírico]
-        F2[Finalización Mapa de Calor]
+    %% Fase 5 (CRISP-DM: Evaluation)
+    subgraph "5. Evaluación y Explicabilidad (Finalizado)"
+        direction TB
+        E1[Validación Cruzada Ponderada 5-Fold]
+        E2[Interpretabilidad del Modelo: Valores SHAP]
+        E3[Análisis de Impacto Geográfico]
+        
+        E1 --> E2 --> E3
     end
 
-    %% --- CONEXIONES ---
+    %% Fase 6 (CRISP-DM: Deployment)
+    subgraph "6. Despliegue (ACTUAL)"
+        direction TB
+        F1[<b>Implementación de Dashboard Interactivo</b>]
+        F2[Simulación Predictiva y Análisis Geográfico]
+        
+        F1 --> F2
+    end
+
+    %% --- CONEXIONES GLOBALES ---
     A2 --> B1
-    B2 --> C0
+    B4 --> C1
     C4 --> D1
     D3 --> E1
-    E1 --> F1
+    E3 --> F1
 
-    %% LOOPS (Tus iteraciones actuales)
-    D1 -. "Feature Selection" .-> C4
+    %% --- LOOPS E ITERACIONES CRISP-DM ---
+    D1 -. "Ajuste de Variables" .-> C4
     E1 -. "Re-entrenamiento" .-> D1
 
-    style C4 fill:#fff176,stroke:#fbc02d,stroke-width:4px
+    %% ESTILOS (El foco de trabajo actual)
+    style F1 fill:#fff176,stroke:#fbc02d,stroke-width:4px
+    style F2 fill:#fff176,stroke:#fbc02d,stroke-width:4px
