@@ -184,11 +184,22 @@ with tab1:
                 index=departamentos_list.index("Puno") if "Puno" in departamentos_list else 0,
             )
 
-            st.markdown(f"**Top 5 Problemas en {selected_dept}**")
+            # Slider interactivo para no dejar el gráfico "hardcodeado"
+            top_n = st.slider(
+                "Cantidad de variables a auditar:", min_value=3, max_value=20, value=5
+            )
+
+            st.markdown(f"**Top {top_n} Problemas en {selected_dept}**")
 
             # Extraer data del departamento y ordenar (solo variables numéricas)
             dept_data = (
-                df_map.loc[selected_dept, available_factors].sort_values(ascending=False).head(5)
+                (
+                    df_map.loc[selected_dept, available_factors]
+                    .sort_values(ascending=False)
+                    .head(top_n)
+                )
+                .astype(float)
+                .round(2)
             )
 
             chart_data = pd.DataFrame(
@@ -234,6 +245,17 @@ with tab2:
             help="Menos de 2.5kg se considera Bajo Peso al Nacer.",
         )
 
+        tamano_nacer_text = st.selectbox(
+            "Tamaño al nacer (Estimación materna)",
+            options=["Muy grande", "Más grande que el promedio", "Promedio", "Más pequeño que el promedio", "Muy pequeño"],
+            index=2
+        )
+        tamano_map = {
+            "Muy grande": 1, "Más grande que el promedio": 2, "Promedio": 3, 
+            "Más pequeño que el promedio": 4, "Muy pequeño": 5
+        }
+        tamano_nacer_val = tamano_map[tamano_nacer_text]
+
         hemo = st.number_input(
             "Resultado de Hemoglobina (g/dL multiplicado por 10)",
             min_value=50,
@@ -248,6 +270,22 @@ with tab2:
             max_value=36,
             value=6,
             help="Factor protector inmunológico primario.",
+        )
+
+        dias_hierro = st.number_input(
+            "Días que tomó suplemento de hierro durante el embarazo",
+            min_value=0,
+            max_value=300,
+            value=90,
+            help="A mayor consumo de hierro materno, menor riesgo de anemia fetal.",
+        )
+
+        intervalo_nac = st.number_input(
+            "Intervalo de meses desde el nacimiento anterior",
+            min_value=0,
+            max_value=200,
+            value=24,
+            help="Periodos muy cortos no permiten la recuperación nutricional de la madre.",
         )
 
     with col2:
@@ -282,6 +320,14 @@ with tab2:
             help="Indicador de hacinamiento y competencia de recursos.",
         )
 
+        edad_jefe = st.number_input(
+            "Edad del jefe del hogar (años)",
+            min_value=15,
+            max_value=99,
+            value=35,
+            help="Jefes de hogar muy jóvenes o de tercera edad representan vulnerabilidad económica.",
+        )
+
         chimenea_str = st.radio(
             "¿La cocina cuenta con extracción de humo (chimenea)?",
             options=["Sí, tiene extracción", "No, el humo se encierra"],
@@ -289,19 +335,56 @@ with tab2:
         )
         chimenea_val = 1 if chimenea_str == "Sí, tiene extracción" else 0
 
+    st.markdown("---")
+    with st.expander("Parámetros Clínicos Secundarios (Modelo Completo de 65 variables)"):
+        st.caption("Estas variables complementarias fueron auditadas por la Inteligencia Artificial. Puede ajustarlas para una simulación exhaustiva, o dejarlas en cero si no dispone del dato exacto.")
+        
+        def limpiar_nombre(nombre):
+            partes = nombre.split("_", 1)
+            if len(partes) > 1 and len(partes[0]) <= 5 and partes[0].isalnum():
+                return partes[1].replace("_", " ").capitalize().replace("Sexo", "Género").replace("sexo", "género")
+            return nombre.replace("_", " ").capitalize().replace("Sexo", "Género").replace("sexo", "género")
+            
+        hardcoded = [
+            "HC1_Edad_en_meses", "m19_Peso_al_nacer_kg", "HC56_Nivel_de_hemoglobina_ajustado_por_altitud",
+            "HV040_Altitud_del_conglomerado_en_metros", "HV271_Factor_de_puntuacion_del_indice_de_riqueza",
+            "HV012_Miembros_habituales_De_jure", "HV240_Tiene_chimenea_o_campana", "M4_Duracion_de_la_lactancia",
+            "HC63_Intervalo_de_nacimientos_anteriores_al_nino", "HV220_Edad_del_jefe_del_hogar",
+            "M46_Dias_que_tomo_hierro", "M18_Tamano_al_nacer"
+        ]
+        
+        remaining = [f for f in metadata["features"] if f not in hardcoded]
+        dynamic_inputs = {}
+        
+        cols_sec = st.columns(3)
+        for idx, feat in enumerate(remaining):
+            with cols_sec[idx % 3]:
+                dynamic_inputs[feat] = st.number_input(limpiar_nombre(feat), value=0, step=1, key=f"dyn_{feat}")
+                
     st.markdown("<br>", unsafe_allow_html=True)
 
     # Botón principal
     if st.button("Ejecutar Diagnóstico Estructural"):
         input_dict = {col: 0 for col in metadata["features"]}
+        
+        # 1. Asignar las 12 principales (Top 12 Historial)
         input_dict["HC1_Edad_en_meses"] = edad
         input_dict["m19_Peso_al_nacer_kg"] = peso_nacer
+        input_dict["M18_Tamano_al_nacer"] = tamano_nacer_val
         input_dict["HC56_Nivel_de_hemoglobina_ajustado_por_altitud"] = hemo
+        input_dict["M4_Duracion_de_la_lactancia"] = lactancia
+        input_dict["M46_Dias_que_tomo_hierro"] = dias_hierro
+        input_dict["HC63_Intervalo_de_nacimientos_anteriores_al_nino"] = intervalo_nac
+        
         input_dict["HV040_Altitud_del_conglomerado_en_metros"] = altitud
         input_dict["HV271_Factor_de_puntuacion_del_indice_de_riqueza"] = riqueza_val
         input_dict["HV012_Miembros_habituales_De_jure"] = miembros
+        input_dict["HV220_Edad_del_jefe_del_hogar"] = edad_jefe
         input_dict["HV240_Tiene_chimenea_o_campana"] = chimenea_val
-        input_dict["M4_Duracion_de_la_lactancia"] = lactancia
+        
+        # 2. Inyectar las 57 dinámicas
+        for k, v in dynamic_inputs.items():
+            input_dict[k] = v
 
         df_input = pd.DataFrame([input_dict])
         for col in metadata["cat_features"]:
