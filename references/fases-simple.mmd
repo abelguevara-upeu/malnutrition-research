@@ -35,21 +35,21 @@ graph TD
     %% Fase 4 (CRISP-DM: Modeling)
     subgraph "4. Modelado (Finalizado)"
         direction TB
+        D0[Validación Cruzada Ponderada 5-Fold]
         D1[Evaluación Comparativa de Modelos]
         D2[Selección de Variables por Umbral de Importancia Algorítmica]
         D3[Selección del Modelo Óptimo: LightGBM]
 
-        D1 --> D2 --> D3
+        D0 --> D1 --> D2 --> D3
     end
 
     %% Fase 5 (CRISP-DM: Evaluation)
-    subgraph "5. Evaluación y Explicabilidad (Finalizado)"
+    subgraph "5. Evaluación (Finalizado)"
         direction TB
-        E1[Validación Cruzada Ponderada 5-Fold]
         E2[Interpretabilidad del Modelo: Valores SHAP]
         E3[Análisis de Impacto Geográfico]
-        
-        E1 --> E2 --> E3
+
+        E2 --> E3
     end
 
     %% Fase 6 (CRISP-DM: Deployment)
@@ -65,12 +65,12 @@ graph TD
     A2 --> B1
     B5 --> C1
     C4 --> D1
-    D3 --> E1
+    D3 --> E2
     E3 --> F1
 
     %% --- LOOPS E ITERACIONES CRISP-DM ---
     D1 -. "Ajuste de Variables" .-> C4
-    E1 -. "Re-entrenamiento" .-> D1
+    E2 -. "Re-entrenamiento" .-> D1
 
     %% ESTILOS (El foco de trabajo actual)
     style F1 fill:#fff176,stroke:#fbc02d,stroke-width:4px

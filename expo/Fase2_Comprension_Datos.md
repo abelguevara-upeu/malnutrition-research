@@ -42,6 +42,9 @@
 | Ventana crítica     | Caída nutricional mes 6-20, escalón de recuperación en mes 24 (artefacto OMS) → justifica algoritmos no lineales |
 | Anemia (`HC57`)    | ~30% de niños afectados en 2024 — predictor estable sin drift                                                      |
 
+> `[INSERTAR: reports/figures/rech6/output3.2.1.png` — Distribución de Clases (Target). Barras Desnutrido (<-2.0) vs Sano. Evidencia visual del desbalance 16%/84% que hace inválido el Accuracy como métrica.]`
+> ![output3.2.1](../reports/figures/rech6/output3.2.1.png)
+
 > `[INSERTAR: notebooks/01_data_understanding/clean/01_eda_interim_rech6.ipynb` — lineplot "HC70 promedio por edad en meses". Muestra el valle entre mes 6-20 y el escalón abrupto en mes 24.`]`
 > ![1782298169048](image/Fase2_Comprension_Datos/1782298169048.png)
 
@@ -89,6 +92,9 @@
 - `HC2` Peso crudo, `HC3` Talla cruda — con estas variables el diagnóstico es trivial
 - `HC71`, `HC72`, `HC73` — Z-scores derivados del mismo cálculo que el target
 - `HC15` — método de medición (acostado / de pie): correlación espuria con la edad del niño
+
+> `[INSERTAR: reports/figures/rech6/output3.1.5.png` — Distribución Global de HC70 / HC71 / HC72 / HC73 (Z-Score). 4 paneles con histograma + curva normal. Línea roja punteada en -2.0 (umbral clínico de desnutrición). Muestra que HC71–HC73 tienen la misma distribución que HC70 — son redundantes matemáticamente y constituyen leakage.]`
+> ![output3.1.5](../reports/figures/rech6/output3.1.5.png)
 
 **Guion del Expositor:**
 
