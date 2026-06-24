@@ -21,49 +21,60 @@ Este documento sirve como el **punto de anclaje (Master Context)** para el asist
 
 ## Fase 2: Comprensión de los Datos (Data Understanding)
 
-**Estado Actual: COMPLETADO (Fase de variables base finalizada)**
+**Estado Actual: COMPLETADO**
 
 *Exploración RAW (Limpieza Básica):*
-- [x] `RECH6` -> `rech6` (Diagnóstico Clínico / Target).
-- [x] `RECH1` -> `household_roster` (Demografía y Criterios de Inclusión).
-- [x] `RECH0` -> `household_characteristics` (Datos de Entrevista).
-- [x] `RECH23` -> `rech23` (Características del Hogar y Geografía).
-- [ ] `REC41` -> `rec41_salud_materna` (Embarazo, Parto, Lactancia y Peso al nacer). *← EN PROGRESO: Integración crítica para aportar peso biológico al modelo.*
+
+- [X] `RECH6` -> `rech6` (Diagnóstico Clínico / Target).
+- [X] `RECH1` -> `household_roster` (Demografía y Criterios de Inclusión).
+- [X] `RECH0` -> `household_characteristics` (Datos de Entrevista).
+- [X] `RECH23` -> `rech23` (Características del Hogar y Geografía).
+- [X] `REC41` -> `rec41_salud_materna` (Embarazo, Parto, Lactancia y Peso al nacer). *Integración completada mediante tabla puente REC21. Auditoría biológica: 99.99% coincidencia de sexo, 99.67% año de nacimiento.*
 
 *Análisis Exploratorio Profundo (Interim EDA):*
-- [x] **`RECH6` (Análisis del Target):** ¡COMPLETADO! 
+
+- [X] **`RECH6` (Análisis del Target):** ¡COMPLETADO!
   - Se validó `HC70` (Z-score Talla/Edad) como target.
   - Se identificó un salto masivo en el muestreo post-2015, exigiendo el uso de un **Time-Series Split**.
   - Se demostró la no-linealidad biológica de la caída nutricional, forzando algoritmos basados en árboles (RF, XGBoost).
   - La Anemia (`HC57`) fue coronada como *Super-Predictor*, mientras que Peso y Talla cruda fueron vetados (*Data Leakage*).
-- [x] **`RECH0` y `RECH1` (Criterios Base):** COMPLETADOS. Filtros estructurales de participación y residentes habituales validados, listos para hacer los *joins* correctos.
-- [x] **`RECH23` (Hogares y Geografía):** ¡COMPLETADO!
+- [X] **`RECH0` y `RECH1` (Criterios Base):** COMPLETADOS. Filtros estructurales de participación y residentes habituales validados, listos para hacer los *joins* correctos.
+- [X] **`RECH23` (Hogares y Geografía):** ¡COMPLETADO!
   - 93 variables auditadas y categorizadas.
   - Se identificaron dinámicas históricas críticas: el estancamiento de cocinar con leña (Humo) en un 25%, y cómo el celular ya no sirve para medir riqueza (96% cobertura) comparado con tener refrigeradora.
   - Se estableció la guillotina del 60% para los Valores Nulos en todos los módulos pasados.
 
 ## Fase 3: Preparación de Datos (Data Preparation)
 
-**Estado Actual: COMPLETADO (Fase Base) / EN PROGRESO (Inyección REC41)**
+**Estado Actual: COMPLETADO**
 
-- **Consolidación (Merge Final):** Unir todas las tablas limpias auditadas (`RECH6`, `RECH0`, `RECH1`, `RECH23` y el nuevo `REC41`).
-- **Feature Selection Matemática:** Eliminación de colinealidad y variables de ruido estadístico (P-Values > 0.05).
+- **Consolidación (Merge Final):** 4 módulos + REC41 (vía puente REC21) unificados en `master_merged_v2.parquet`. Dataset resultante: 294,109 niños × 189 columnas.
+- **Feature Selection Matemática:** Pipeline completo ejecutado en `02_feature_selection_v3.ipynb`:
+  - Guillotina de nulos (>60%): eliminadas las columnas con datos insuficientes.
+  - Eliminación de colinealidad: 43 columnas redundantes descartadas.
+  - Pruebas bivariadas (Kruskal-Wallis + Chi²): 74 variables relevantes confirmadas.
+  - Validación multivariada (XGBoost): 7 variables con cero poder predictivo eliminadas.
+  - Dataset final para modelado: `master_preprocessed_v2.parquet` — 285,284 filas × 79 columnas.
+- **Deuda técnica pendiente:** `kpi5_lactancia_exclusiva` resultó con cero varianza (todos los valores = 0). Investigar si es un bug de la condición `M4 == 95.0 & HC1 < 6` o un artefacto del cruce con REC41.
 
 ## Fase 4: Modelado (Modeling)
 
-**Estado Actual: COMPLETADO AL 100%**
+**Estado Actual: COMPLETADO**
 
-- **Enfoque Implementado:** Benchmarking riguroso de 4 algoritmos (Logistic Regression, XGBoost, LightGBM, CatBoost) usando 5-Fold Cross Validation Estratificado.
+- **Enfoque Implementado:** Benchmarking riguroso de 6 algoritmos (Logistic Regression, XGBoost, LightGBM, CatBoost, Decision Tree, Neural Network MLP 3×200) usando 5-Fold Cross Validation Estratificado.
 - **Manejo de Desbalance:** Se usó la ponderación demográfica real de la ENDES (`HV005`), eliminando la necesidad de balanceo físico.
-- **Resultado Científico:** LightGBM fue coronado como el Campeón Absoluto (AUC: 0.83), demostrando que procesar variables categóricas de forma nativa supera al clásico One-Hot Encoding de XGBoost/LogReg.
-- **Guardado:** Modelo de producción (`champion_lightgbm.pkl`) exportado con su Umbral Óptimo de 0.4511 (80% Recall).
+- **Resultado Científico:** LightGBM fue coronado como el Campeón Absoluto (AUC: 0.8308, Recall: 76.49%), demostrando que procesar variables categóricas de forma nativa supera al clásico One-Hot Encoding de XGBoost/LogReg.
+- **Reducción de variables:** El modelo con Top 43 features (peso algorítmico ≥ 10) igualó al modelo con las 74 variables completas — sin pérdida de rendimiento al eliminar ruido.
+- **Guardado:** Modelo de producción (`champion_lightgbm.pkl`) y metadatos (`champion_metadata.json`) exportados con 43 variables.
+- **Deuda técnica pendiente:** El umbral de decisión actual es **0.5** (exportado en el JSON). Falta ejecutar la búsqueda matemática del umbral óptimo que maximice el Recall al 80% objetivo de política pública, y actualizar `champion_metadata.json` con el valor correcto.
 
 ## Fase 5: Evaluación y Explicabilidad (SHAP)
 
-**Estado Actual: EN PROGRESO (Próximo paso)**
+**Estado Actual: COMPLETADO**
 
-- **Interpretabilidad (XAI):** Extraer el ADN de la desnutrición utilizando SHAP Values globales.
-- **Evaluación Regional (Perfiles Geográficos):** Aplicar Análisis Geográfico de Importancia Local (SHAP por Región) para demostrar cómo el perfil de riesgo muta drásticamente según el departamento geográfico (Costa vs. Sierra vs. Selva).
+- **Interpretabilidad (XAI):** Summary Plot global ejecutado sobre muestra representativa de 10,000 niños. Se extrajo el ADN de la desnutrición con SHAP Values (TreeExplainer).
+- **Evaluación Regional (Perfiles Geográficos):** Análisis de impacto por Región Natural (Costa / Sierra / Selva) y mapa de calor normalizado por Departamento completados. El análisis confirma que los factores de riesgo mutan drásticamente según la geografía (ej. la Altitud es letal en Sierra, irrelevante en Selva).
+- **Exportación:** `shap_dept_impact.csv` generado y listo para consumo por la app Streamlit.
 
 ## Fase 6: Despliegue (Deployment en Streamlit)
 
@@ -76,4 +87,8 @@ Este documento sirve como el **punto de anclaje (Master Context)** para el asist
 
 ### Próximo Paso Inmediato para la IA (Next Action)
 
-- **Fase 5 (Explicabilidad SHAP):** Crear el notebook `03_model_explainability.ipynb`, cargar el modelo campeón `champion_lightgbm.pkl` e inyectarle la librería SHAP para extraer los perfiles de riesgo globales y geográficos.
+**Fase 6 (Deployment Streamlit):** El modelo, el umbral y los datos SHAP geográficos ya están listos. Construir la app interactiva en Streamlit.
+
+Antes de arrancar Streamlit, resolver la deuda técnica de la Fase 4:
+
+- **Umbral óptimo:** Iterar sobre el rango [0.3, 0.6] en el dataset de validación para encontrar el umbral que maximice Recall ≥ 80%, y actualizar `models/champion_metadata.json`.
