@@ -110,3 +110,36 @@ TARGET_DESNUTRICION = (HC70 < -2.0).astype(int)
 **Guion del Expositor:**
 
 > "La ENDES es la encuesta de salud más completa del Perú y la fuente oficial del INEI. Trabajar con 18 años de datos en formato SPSS implica un desafío de ingeniería concreto: los nombres de columnas y las etiquetas de valores cambian entre ediciones de la encuesta — no se puede simplemente concatenar archivos. Fue necesario auditar registro por registro, año por año, cómo evolucionó la estructura del dato antes de poder procesarlo. De los 13 módulos disponibles en la ENDES, seleccionamos estratégicamente 4, de los cuales extrajimos 5 registros activos: RECH0 y RECH1 comparten módulo pero capturan niveles distintos — uno el hogar como unidad y otro cada miembro de forma individual. La selección cubre los cuatro determinantes clave del ecosistema materno-infantil: la biometría del niño, el entorno del hogar, el contexto territorial y la historia clínica de la madre."
+
+---
+
+### Diapositiva 1.5: Diseño Metodológico
+
+**Contenido Visual:**
+
+**Diseño de la investigación:**
+
+| Dimensión | Definición |
+|---|---|
+| Tipo de investigación | Cuantitativa |
+| Nivel | Predictivo |
+| Diseño | No experimental, transversal |
+| Fuente de datos | ENDES — INEI (2007–2024) |
+| Alcance temporal | 18 años de encuestas anuales independientes |
+| Unidad de análisis | Niño menor de 5 años con registro antropométrico válido |
+| Marco metodológico | CRISP-DM (6 fases) |
+
+**Diseño del sistema de Machine Learning:**
+
+| Dimensión | Decisión |
+|---|---|
+| Tipo de problema | Clasificación binaria supervisada |
+| Familias de algoritmos evaluadas | Gradient Boosting (LightGBM, CatBoost, XGBoost) · Red Neuronal · Regresión Logística · Árbol de Decisión |
+| Hiperparámetros | Valores por defecto — comparación en condiciones iguales |
+| Framework de validación | Validación Cruzada Estratificada 5-Fold con pesos muestrales `HV005` |
+| Métrica primaria | AUC-ROC |
+| Métrica de política | Recall (Sensibilidad) |
+
+**Guion del Expositor:**
+
+> "Antes de entrar a las fases del proceso, establecemos el marco formal del estudio. La investigación es cuantitativa y de nivel predictivo: buscamos estimar la probabilidad de un estado de salud a partir de variables de perfil. El diseño es no experimental porque no manipulamos ninguna variable — trabajamos con datos observacionales de la ENDES. Y es transversal porque cada niño representa una observación en un punto del tiempo; los 18 años de encuestas no implican seguimiento del mismo individuo, sino que amplían la diversidad poblacional del entrenamiento. El marco metodológico es CRISP-DM, el estándar de la industria para proyectos de ciencia de datos, que organiza el trabajo en seis fases iterativas. En cuanto al diseño del sistema de Machine Learning: el problema es de clasificación binaria supervisada — el modelo aprende de ejemplos etiquetados a distinguir entre desnutrido y sano. Evaluamos seis algoritmos representando tres familias distintas: gradient boosting, redes neuronales y regresión logística como baseline lineal. Todos se entrenaron con los mismos hiperparámetros por defecto para garantizar una comparación honesta. La validación cruzada estratificada de 5 folds asegura que cada evaluación respeta la proporción de clases y los pesos de expansión de la encuesta."
