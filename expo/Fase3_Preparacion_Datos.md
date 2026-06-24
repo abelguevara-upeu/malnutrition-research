@@ -34,10 +34,10 @@
 
 **Dimensiones del merge por etapa:**
 
-```
+```Shell
 RECH6 + RECH1 + RECH0 + RECH23  →  294,109 × 183
 + REC41 vía REC21                →  294,109 × 211
-- Umbral 70% nulos (23 columnas) →  294,109 × 189  ← master_merged_v2.parquet
+- Umbral 70% nulos (23 columnas) →  294,109 × 189  ← master_merged.parquet
 ```
 
 **Guion del Expositor:**
@@ -94,7 +94,7 @@ TARGET_DESNUTRICION = (HC70 < -2.0).astype(int)
 189 cols (master_merged)
  → drop leakage + drop HC70 NaN  →  285,284 filas × 129 cols
  → colinealidad > 0.85 (−43)     →  285,284 × 86
- → bivariate + XGBoost (−7)      →  285,284 × 79  ← master_preprocessed_v2.parquet
+ → bivariate + XGBoost (−7)      →  285,284 × 79  ← master_preprocessed.parquet
 ```
 
 > `[INSERTAR: notebooks/02_data_preparation/02_feature_selection_v3.ipynb` — Celda 2: barplot seaborn "Top 30 Variables con Mayor Porcentaje de Nulos". Eje X: variables (rotadas 90°), Eje Y: % de nulos. Línea horizontal roja en 60% ("Umbral Crítico"). Ninguna variable supera el umbral — todas quedan por debajo.]`
