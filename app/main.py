@@ -224,7 +224,7 @@ with tab2:
     tamano_map = {"Muy grande": 1, "Más grande que el promedio": 2, "Promedio": 3,
                   "Más pequeño que el promedio": 4, "Muy pequeño": 5}
     riqueza_map = {"Pobreza Extrema": -150000, "Pobre": -50000, "Medio": 0, "Rico": 50000, "Muy Rico": 150000}
-    educ_map = {"Sin educación": 0, "Primaria": 2, "Secundaria incompleta": 3, "Secundaria": 5, "Superior": 8}
+
 
     # Layout: formulario (izquierda amplia) | panel de resultado (derecha fija)
     form_col, result_col = st.columns([2, 1])
@@ -235,7 +235,8 @@ with tab2:
 
         with c1:
             st.markdown("##### Datos del Niño")
-            sexo_str = st.selectbox("Sexo", options=["Mujer", "Hombre"])
+            sexo_ui = st.selectbox("Género", options=["Masculino", "Femenino"])
+            sexo_str = "Hombre" if sexo_ui == "Masculino" else "Mujer"
             edad = st.number_input("Edad (meses)", min_value=0, max_value=59, value=24,
                 help="Riesgo máximo meses 6–20.")
             peso_nacer = st.number_input("Peso al nacer (kg)", min_value=0.5, max_value=6.0,
@@ -245,8 +246,12 @@ with tab2:
                          "Más pequeño que el promedio", "Muy pequeño"], index=2)
             hemo = st.number_input("Hemoglobina ajustada (g/dL)", min_value=1.0,
                 max_value=20.0, value=11.3, step=0.1, help="Normal en niños: > 11.0 g/dL.")
-            intervalo_nac = st.number_input("Intervalo nacimientos (meses)",
-                min_value=0, max_value=200, value=24)
+            intervalo_nac = st.number_input(
+                "Meses desde el nacimiento anterior",
+                min_value=0, max_value=200, value=24,
+                help="¿Cuántos meses pasaron entre el hijo anterior y este niño? "
+                     "Si es el primer hijo, ingrese 0. "
+                     "OMS recomienda mínimo 24 meses.")
 
         with c2:
             st.markdown("##### Historia Materna")
@@ -254,9 +259,9 @@ with tab2:
             dias_hierro = st.number_input("Días de hierro en el embarazo", min_value=0, max_value=300, value=90)
             visitas_prenatales = st.number_input("Visitas prenatales", min_value=0, max_value=20, value=6,
                 help="OMS recomienda mínimo 8.")
-            educ_madre = st.select_slider("Educación de la madre",
-                options=["Sin educación", "Primaria", "Secundaria incompleta", "Secundaria", "Superior"],
-                value="Secundaria")
+            educ_madre = st.number_input("Años de educación de la madre",
+                min_value=0, max_value=20, value=8,
+                help="0 = sin educación · 6 = primaria · 11 = secundaria · 16+ = superior")
             lugar_parto_str = st.selectbox("Lugar del parto",
                 options=["Institucional", "Domiciliario"], index=0)
 
@@ -349,7 +354,7 @@ with tab2:
             input_dict["M4_Duracion_de_la_lactancia"] = lactancia
             input_dict["M46_Dias_que_tomo_hierro"] = dias_hierro
             input_dict["M14_Numero_de_visitas_prenatales"] = visitas_prenatales
-            input_dict["HC62_Ano_mas_alto_de_educacion_de_la_madre"] = educ_map[educ_madre]
+            input_dict["HC62_Ano_mas_alto_de_educacion_de_la_madre"] = educ_madre
             input_dict["m15_Lugar_del_parto_agrupado"] = lugar_parto_str
             input_dict["HV271_Factor_de_puntuacion_del_indice_de_riqueza"] = riqueza_map[riqueza_text]
             input_dict["HV025_Area_de_residencia"] = area_str

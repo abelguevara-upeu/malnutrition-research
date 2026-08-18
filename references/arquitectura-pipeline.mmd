@@ -1,0 +1,60 @@
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#003865", "primaryTextColor": "#ffffff", "lineColor": "#6B7280"}}}%%
+flowchart LR
+
+    subgraph FUENTES["ENDES · INEI 2007–2024"]
+        direction TB
+        S1["RECH6\nAntropometría"]
+        S2["RECH1\nIndividuos"]
+        S3["RECH0\nHogar"]
+        S4["RECH23\nVivienda"]
+        S5["REC41\nSalud Materna"]
+    end
+
+    subgraph PREP["Fase 3 · Preparación"]
+        direction TB
+        P1["Merge + REC21\n294,109 × 189"]
+        P2["Ingeniería\nHC56 · m19 · m34 · m15"]
+        P3["Selección\nPearson · KW · Chi² · XGB"]
+        P4[("master_preprocessed\n285,284 × 79")]
+    end
+
+    subgraph MODEL["Fase 4 · Modelado"]
+        direction TB
+        M1["5-Fold CV\n+ pesos HV005"]
+        M2["6 modelos\nLGBM ★ · CB · NN · XGB · LR · DT"]
+        M3[("LightGBM\n43 vars · AUC 0.8308\nRecall 76.49%")]
+    end
+
+    subgraph EVAL["Fase 5 · Evaluación"]
+        direction TB
+        E1["SHAP TreeExplainer\n10,000 niños"]
+        E2[("shap_dept_impact\n25 deptos × 15 vars")]
+    end
+
+    subgraph DEPLOY["Fase 6 · Despliegue"]
+        direction TB
+        D1[("threshold_recall\n_curve.json")]
+        D2["Tab 1\nMapa territorial"]
+        D3["Tab 2\nPredictor individual"]
+    end
+
+    FUENTES --> P1
+    P1 --> P2 --> P3 --> P4
+    P4 --> M1 --> M2 --> M3
+    M3 --> E1 --> E2
+    M3 --> D1
+    M3 & E2 & D1 --> D2
+    M3 & E2 & D1 --> D3
+
+    style FUENTES fill:#EFF6FF,stroke:#003865,stroke-width:2px
+    style PREP    fill:#F0FDF4,stroke:#166534,stroke-width:2px
+    style MODEL   fill:#FFF7ED,stroke:#9A3412,stroke-width:2px
+    style EVAL    fill:#FAF5FF,stroke:#6B21A8,stroke-width:2px
+    style DEPLOY  fill:#F0F9FF,stroke:#0369A1,stroke-width:2px
+
+    style M3 fill:#003865,color:#fff,stroke:#003865
+    style P4 fill:#166534,color:#fff,stroke:#166534
+    style E2 fill:#6B21A8,color:#fff,stroke:#6B21A8
+    style D1 fill:#0369A1,color:#fff,stroke:#0369A1
+    style D2 fill:#0369A1,color:#fff,stroke:#0369A1
+    style D3 fill:#0369A1,color:#fff,stroke:#0369A1
