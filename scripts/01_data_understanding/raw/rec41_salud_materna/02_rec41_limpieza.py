@@ -14,7 +14,7 @@
 
 # %%
 import pandas as pd
-from mnp.config import INTERIM_DATA_DIR
+from mnp.config import analysis_years, INTERIM_DATA_DIR
 import numpy as np
 import gc
 from mnp.ingestion.loader import load_endes
@@ -29,7 +29,7 @@ print("[OK]")
 # %%
 # Carga de datos
 history = load_endes(
-        year=range(2007, 2025),
+        year=analysis_years(),
         module="maternal_health",
         record="rec41",
         meta=True

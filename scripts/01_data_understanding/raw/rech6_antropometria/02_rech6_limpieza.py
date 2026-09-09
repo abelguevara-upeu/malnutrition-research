@@ -27,7 +27,7 @@ print("[OK]")
 # %%
 # Carga de datos
 history = load_endes(
-        year=range(2007, 2025),
+        year=analysis_years(),
         module="anthropometry",
         record="rech6",
         meta=True
@@ -83,7 +83,7 @@ df_final.head(15)
 df_final['HC10'].value_counts(dropna=False)
 
 # %%
-from mnp.config import INTERIM_DATA_DIR
+from mnp.config import analysis_years, INTERIM_DATA_DIR
 import os
 # Aseguramos que la carpeta interim exista
 os.makedirs(INTERIM_DATA_DIR, exist_ok=True)

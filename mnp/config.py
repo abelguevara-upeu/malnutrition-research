@@ -34,6 +34,28 @@ ENDES_SURVEY_NAME = "Encuesta Demográfica y de Salud Familiar - ENDES"
 ENDES_YEAR_START = 1996
 ENDES_YEAR_END = date.today().year
 
+# Rango analítico del estudio. Arranca en 2007 porque es desde ese año que la
+# ENDES es continua y comparable; el tope se descubre solo (ver ENDES_YEAR_END),
+# de modo que los scripts recogen cada año nuevo sin editar el rango a mano.
+# Uso: load_endes(year=ANALYSIS_YEARS, ...)
+ANALYSIS_YEAR_START = 2007
+
+
+def analysis_years() -> range:
+    """Años 2007..N con datos ENDES efectivamente descargados en data/raw.
+
+    Se cierra sobre lo que hay en disco y no sobre el año del reloj: el INEI
+    publica la ENDES del año N durante N+1, asi que el año en curso suele estar
+    vacio todavia. Devolver un rango que incluya años inexistentes haria que
+    cada script arrastrase avisos de módulo no encontrado.
+    """
+    years = [
+        int(d.name)
+        for d in RAW_DATA_DIR.iterdir()
+        if d.is_dir() and d.name.isdigit() and int(d.name) >= ANALYSIS_YEAR_START
+    ]
+    return range(ANALYSIS_YEAR_START, (max(years) if years else ANALYSIS_YEAR_START) + 1)
+
 # --- Global Data Science Settings ---
 RANDOM_SEED = 42
 TEST_SIZE = 0.2  # Proporción estándar para división de train/test (80/20)

@@ -27,7 +27,7 @@ print("[OK]")
 # %%
 # Carga de datos
 history = load_endes(
-        year=range(2007, 2025),
+        year=analysis_years(),
         module="housing",
         record="rech23h",
         meta=True
@@ -139,7 +139,7 @@ df_final.head(15)
 
 
 # %%
-from mnp.config import INTERIM_DATA_DIR
+from mnp.config import analysis_years, INTERIM_DATA_DIR
 import os
 # Aseguramos que la carpeta interim exista
 os.makedirs(INTERIM_DATA_DIR, exist_ok=True)

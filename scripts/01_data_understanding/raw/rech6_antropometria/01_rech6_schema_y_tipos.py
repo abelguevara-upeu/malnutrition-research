@@ -27,12 +27,13 @@ pd.set_option("display.max_rows", None)
 pd.set_option("display.max_columns", None)
 pd.set_option("display.max_colwidth", None)
 import gc
+from mnp.config import analysis_years
 from mnp.ingestion.loader import load_endes
 from mnp.utils.figures import save_fig
 
 # Carga de historial desde 2007 para RECH6
 history = load_endes(
-        year=range(2007, 2025),
+        year=analysis_years(),
         module="anthropometry",
         record="rech6",
         meta=True
