@@ -396,10 +396,13 @@ def analyze_nulls_evolution(df, cols, group_name="Grupo", latest_year_labels=Non
     # Ajuste automático del figsize si son muchas variables para que no se apriete el texto
     adjusted_height = max(figsize[1], len(vars_cat) * 0.4)
     
-    plt.figure(figsize=(figsize[0], adjusted_height))
+    fig = plt.figure(figsize=(figsize[0], adjusted_height))
     sns.heatmap(df_nulos.T, annot=True, fmt=".0f", cmap=cmap, vmin=0, vmax=100, cbar_kws={'label': '% de Nulos'})
     plt.title(f"Evolución de Nulos por Año: {group_name}", pad=20, fontsize=14)
     plt.xlabel("Año", fontsize=12)
     plt.ylabel("Variables", fontsize=12)
     plt.tight_layout()
-    plt.show()
+    # Se devuelve la figura en lugar de cerrarla con plt.show(): asi el script
+    # que llama puede guardarla con save_fig(). En notebook se sigue mostrando
+    # sola al ser el ultimo valor de la celda.
+    return fig
