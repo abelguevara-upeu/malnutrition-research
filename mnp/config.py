@@ -1,3 +1,4 @@
+from datetime import date
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -25,9 +26,13 @@ FIGURES_DIR = REPORTS_DIR / "figures"
 INEI_BASE_URL = "https://proyectos.inei.gob.pe"
 ENDES_SURVEY_NAME = "Encuesta Demográfica y de Salud Familiar - ENDES"
 
-# Rango histórico de datos disponibles
+# Rango histórico de datos disponibles.
+# El tope se calcula con el año actual para que la ingesta descubra por sí sola
+# los años nuevos que publique el INEI, sin tener que editar esta constante.
+# El INEI publica la ENDES del año N durante N+1, así que el año en curso suele
+# estar vacío todavía: get_module_links() devuelve [] y la ingesta lo omite.
 ENDES_YEAR_START = 1996
-ENDES_YEAR_END = 2024
+ENDES_YEAR_END = date.today().year
 
 # --- Global Data Science Settings ---
 RANDOM_SEED = 42
@@ -37,11 +42,11 @@ TEST_SIZE = 0.2  # Proporción estándar para división de train/test (80/20)
 LOGS_DIR = PROJ_ROOT / "logs"
 LOGS_DIR.mkdir(parents=True, exist_ok=True)  # Crea la carpeta /logs si no existe
 logger.add(
-    LOGS_DIR / "pipeline.log", 
-    rotation="10 MB",       # Crea un archivo nuevo al llegar a 10MB
-    retention="10 days",    # Conserva logs de los últimos 10 días
+    LOGS_DIR / "pipeline.log",
+    rotation="10 MB",  # Crea un archivo nuevo al llegar a 10MB
+    retention="10 days",  # Conserva logs de los últimos 10 días
     level="INFO",
-    encoding="utf-8"
+    encoding="utf-8",
 )
 
 # If tqdm is installed, configure loguru with tqdm.write
