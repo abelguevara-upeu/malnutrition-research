@@ -30,7 +30,8 @@ pd.set_option('display.max_columns', None)
 
 # 1. Cargar datos
 print("Cargando datos...")
-master = pd.read_parquet('../../data/interim/master_merged_v2.parquet')
+from mnp.config import INTERIM_DATA_DIR, PROCESSED_DATA_DIR
+master = pd.read_parquet(INTERIM_DATA_DIR / 'master_merged_v2.parquet')
 
 # Filtramos filas sin target (Desnutrición)
 master = master.dropna(subset=['HC70']).copy()
@@ -255,7 +256,7 @@ print("\n👀 VISTAZO AL DATASET (Primeras 3 filas):")
 print(df_final.head(3))
 
 # Guardamos en la carpeta processed
-output_path = '../../data/processed/master_preprocessed_v2.parquet'
+output_path = PROCESSED_DATA_DIR / 'master_preprocessed_v2.parquet'
 df_final.to_parquet(output_path, index=False)
 print(f"\n Dataset definitivo guardado exitosamente en:\n{output_path}")
 

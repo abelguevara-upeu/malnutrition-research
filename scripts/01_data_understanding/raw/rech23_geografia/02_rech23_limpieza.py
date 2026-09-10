@@ -16,6 +16,7 @@
 import pandas as pd
 import numpy as np
 import gc
+from mnp.config import analysis_years
 from mnp.ingestion.loader import load_endes
 from mnp.utils.cleaning import run_phase1_engine
 # Configuración visual
@@ -139,7 +140,7 @@ df_final.head(15)
 
 
 # %%
-from mnp.config import analysis_years, INTERIM_DATA_DIR
+from mnp.config import INTERIM_DATA_DIR
 import os
 # Aseguramos que la carpeta interim exista
 os.makedirs(INTERIM_DATA_DIR, exist_ok=True)
