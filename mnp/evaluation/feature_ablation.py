@@ -37,7 +37,7 @@ METADATA_COLS = ["year", "SHREGION", "HV005", "HV024"]
 WASH_VIVIENDA = ["HV213", "HV214", "HV215", "HV201", "HV205", "SH227", "HV226"]
 # HV024 y SHREGION son metadatos pasivos en el notebook; se reinyectan aqui
 # de forma deliberada para medir su aporte como atributo territorial.
-TERRITORIO = ["HV024", "HV026", "SHREGION", "SH77F"]
+TERRITORIO = ["HV024", "HV026", "SHREGION"]
 
 
 def flatten(col: str) -> str:

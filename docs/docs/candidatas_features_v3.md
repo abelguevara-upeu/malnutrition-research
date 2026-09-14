@@ -55,65 +55,68 @@ individual sugiere. Medir el delta de AUC, no asumirlo.
 
 ---
 
-# RESULTADO EXPERIMENTAL (ablación en `develop`)
+# RESULTADO EXPERIMENTAL (19 años, ENDES 2007-2025)
 
 Script: `mnp/evaluation/feature_ablation.py` · Resultados: `reports/feature_ablation_results.json`
-
-Protocolo: replica EXACTA del notebook 03_model_benchmarking_extended (celda 11).
-Incluye drop de metadatos pasivos (year, SHREGION, HV005, HV024), rename vía
-`mnp.configs.column_labels.LABELS`, aplanado ASCII de nombres,
-StratifiedKFold(5, shuffle, seed=42) y **ponderación HV005 tanto en el
-entrenamiento como en el cálculo de métricas**.
+Dataset: 304,271 x 79 · prevalencia 15.81% · campeon de 45 variables.
 
 | Experimento | Feats | AUC | Recall | Precision | dAUC |
 |---|---:|---:|---:|---:|---:|
-| BASELINE Top43 | 43 | 0.8308 | 76.49% | 36.89% | — |
-| + WASH/vivienda | 50 | 0.8308 | 76.49% | 36.89% | +0.0000 |
-| + territorio | 47 | 0.8308 | 76.51% | 36.90% | +0.0000 |
-| + bloque A completo | 54 | 0.8308 | 76.51% | 36.90% | +0.0000 |
+| BASELINE Top45 | 45 | 0.8295 | 76.44% | 36.36% | — |
+| + WASH/vivienda | 52 | 0.8295 | 76.44% | 36.36% | +0.0000 |
+| + territorio | 48 | 0.8295 | 76.44% | 36.36% | +0.0000 |
+| + bloque A completo | 55 | 0.8295 | 76.44% | 36.36% | +0.0000 |
 
-El baseline reproduce exactamente el AUC 0.8308 / Recall 76.49% del manuscrito.
+El baseline reproduce exactamente el AUC 0.8295 / Recall 76.44% del modelo
+reentrenado. **Las candidatas no aportan: delta nulo hasta la cuarta decimal.**
 
-**Conclusión: las candidatas NO aportan. Delta de AUC nulo.**
+## El resultado se sostiene al pasar de 18 a 19 años
 
-## Diagnóstico de por qué
+La ablacion con 18 años dio identico delta nulo sobre un baseline de 43
+variables y AUC 0.8308. Repetirla sobre un dataset 6.7% mayor y un campeon
+distinto devuelve la misma conclusion, lo que descarta que fuera un artefacto
+de la muestra.
 
-1. Entrenando SOLO con las 7 candidatas WASH/vivienda: AUC 0.6733 — tienen
+Dos de las candidatas de la corrida anterior ya no lo son: **HV219** (sexo del
+jefe del hogar) y **SH77F** (otro tipo de transporte) cruzaron el umbral de
+importancia >= 10 al entrenar con 19 años y entraron al modelo por merito
+propio. Las candidatas bajan de 35 a 33 y el campeon sube de 43 a 45.
+
+Esto refuerza el argumento de suficiencia: cuando una variable descartada tiene
+señal real, el propio criterio de importancia la recupera al haber mas datos —
+no hace falta reinyectarla a mano.
+
+## Diagnostico (recalculado sobre 19 años)
+
+1. Entrenando SOLO con las 7 candidatas WASH/vivienda: AUC 0.6895 — tienen
    señal real y sustancial.
-2. Pero dentro del modelo completo reciben `feature_importance = 0`:
-   LightGBM no hace ni un split con ellas.
-3. No es redundancia con riqueza: eta^2 de HV271 explicado por cada candidata
-   es sólo 0.04-0.10.
-4. La causa es que el baseline YA cubre el constructo vivienda/agua/saneamiento
-   con 19 de sus 43 features (HV237, HV237A, HV237G, HV204, HV225, HV242,
-   HV216, SH42, SH48, SH49, SH63, SH70, SH71, SH76B/C/D, HV234, HV240, HV220).
-   Las candidatas son información redundante ya capturada.
+2. Pero dentro del modelo completo reciben `feature_importance = 0`.
+3. No es redundancia lineal con riqueza: eta^2 de HV271 explicado por cada
+   candidata va de 0.038 a 0.098.
+4. La causa es que el baseline ya cubre el constructo vivienda/agua/saneamiento
+   con 19 atributos correlacionados (HV237, HV237A, HV237G, HV204, HV225,
+   HV242, HV216, SH42, SH48, SH49, SH63, SH70, SH71, SH76B/C/D, HV234, HV240,
+   HV220). Las candidatas aportan informacion ya capturada.
 
-## Lección de reproducibilidad
+## Leccion de reproducibilidad
 
 El primer intento dio AUC 0.8206 en lugar de 0.8308. La causa NO era el
-preprocesamiento sino que las métricas se calculaban sin ponderar: el notebook
-pasa `sample_weight=w_val` también a `roc_auc_score` y `recall_score`. Sin esa
-ponderación las métricas describen la muestra cruda (sesgada a lo urbano) y no
-la población expandida. Documentado aquí porque afecta a cualquier script que
-reproduzca métricas del manuscrito, incluido el Bootstrap del Eje 1.
+preprocesamiento sino que las metricas se calculaban sin ponderar: el notebook
+pasa `sample_weight=w_val` tambien a `roc_auc_score` y `recall_score`. Sin esa
+ponderacion las metricas describen la muestra cruda (sesgada a lo urbano) y no
+la poblacion expandida. Afecta a cualquier script que reproduzca metricas del
+manuscrito, incluido el Bootstrap del Eje 1.
 
-## Hallazgo secundario (relevante para tuning)
+## Hallazgo secundario (vigente)
 
-Con la config por defecto, LightGBM usa 1 de 7 categóricas. Con
-`cat_smooth=1, cat_l2=1` usa 2 y el AUC solo-WASH sube de 0.6733 a 0.7085.
-La regularización de categóricas por defecto está suprimiendo variables con
-señal. Esto sugiere que **Optuna sobre los hiperparámetros de categóricas
-(`cat_smooth`, `cat_l2`, `min_data_per_group`, `max_cat_threshold`) es una
-vía más prometedora que agregar features**, dado que 15 de las 43 del
-campeón son categóricas.
+Con la config por defecto LightGBM usa 1 de 7 categoricas; con
+`cat_smooth=1, cat_l2=1` usa 2. La regularizacion de categoricas por defecto
+suprime variables con señal, y 15 de las 45 del campeon son categoricas: Optuna
+sobre esos hiperparametros sigue siendo la via mas prometedora para subir AUC.
 
-## Umbral de decisión
+## Umbral de decision
 
-Verificado contra `models/threshold_recall_curve.json`:
-- tau = 0.35 → Recall 87.95%, Precision 29.36%
-- tau = 0.46 → Recall 80.10%, Precision 34.33%  ← mínimo que cumple Recall >= 80%
-
-Los documentos de expo/ (Sesión 1 y Momento 6) afirman tau ~ 0.35 para una meta
-de 80%; el valor correcto es 0.46. Corregido en `metodologia_articulo.md`,
-pendiente en `expo/semestre2/`.
+Recalculado con el modelo de 19 años (`mnp/evaluation/threshold_curve.py`):
+**tau = 0.45 -> Recall 80.46%, Precision 34.04%** (antes 0.46 con 18 años).
+Corregido en `metodologia_articulo.md`; pendiente en `expo/semestre2/`, que
+ademas arrastra el valor incorrecto 0.35.
