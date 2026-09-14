@@ -260,8 +260,8 @@ html_content = """<!DOCTYPE html>
     <!-- Metadata -->
     <div class="metadata-grid">
         <div class="metadata-item">
-            <strong>Proyecto:</strong> Sistema Predictivo de Riesgo de Desnutrición Crónica Infantil (ENDES 2007–2024)<br>
-            <strong>Línea Base:</strong> LightGBM Top 43 Vars (5-Fold CV + Pesos HV005 · AUC: 0.8308 · Recall: 76.49%)
+            <strong>Proyecto:</strong> Sistema Predictivo de Riesgo de Desnutrición Crónica Infantil (ENDES 2007–2025)<br>
+            <strong>Línea Base:</strong> LightGBM Top 45 Vars (5-Fold CV + Pesos HV005 · AUC: 0.8295 · Recall: 76.44%)
         </div>
         <div class="metadata-item">
             <strong>Equipo de Trabajo:</strong> Abel Guevara Huasco, Verónica Vergara Rojas, Pamela Vallejos Cotrina<br>
@@ -284,7 +284,7 @@ html_content = """<!DOCTYPE html>
                 <li><strong>Base lista:</strong> 5-Fold CV + Pesos <code>HV005</code>.</li>
                 <li><strong>Bootstrapping:</strong> 1,000 iteraciones para IC 95% de AUC y Recall.</li>
                 <li><strong>Test de DeLong:</strong> Comparación estadística de curvas ROC (p &lt; 0.001).</li>
-                <li><strong>Calibración Umbral:</strong> Ajuste a &tau; &approx; 0.35 para <strong>Recall &ge; 80%</strong>.</li>
+                <li><strong>Calibración Umbral:</strong> Ajuste a &tau; = 0.45 para <strong>Recall &ge; 80%</strong>.</li>
                 <li><strong>Metadatos:</strong> Actualizar <code>champion_metadata.json</code>.</li>
             </ul>
         </div>
@@ -325,7 +325,7 @@ html_content = """<!DOCTYPE html>
             <tr>
                 <td><strong>Línea Base (Completada)</strong></td>
                 <td>Stratified 5-Fold CV con ponderación muestral <code>HV005 / 1,000,000</code>.</td>
-                <td><span class="tag-success">AUC = 0.8308 · Recall = 76.49%</span></td>
+                <td><span class="tag-success">AUC = 0.8295 · Recall = 76.44%</span></td>
             </tr>
             <tr>
                 <td><strong>Bootstrap Non-Paramétrico</strong></td>
@@ -340,7 +340,7 @@ html_content = """<!DOCTYPE html>
             <tr>
                 <td><strong>Calibración de Umbral (&tau;)</strong></td>
                 <td>Barrido en rango [0.25, 0.50] para priorizar detección de desnutridos.</td>
-                <td><span class="tag-target">Recall &ge; 80.0% (&tau; &approx; 0.35)</span></td>
+                <td><span class="tag-target">Recall &ge; 80.0% (&tau; = 0.45)</span></td>
             </tr>
             <tr>
                 <td><strong>Actualización de Metadatos</strong></td>
@@ -389,7 +389,7 @@ html_content = """<!DOCTYPE html>
             <tr>
                 <td><strong>EXP-01</strong></td>
                 <td>Calidad de Pipeline ETL y nulos.</td>
-                <td>Pipeline modular en <code>mnp/</code> con 18 años ENDES.</td>
+                <td>Pipeline modular en <code>mnp/</code> con 19 años ENDES.</td>
                 <td>V de Aiken &ge; 0.80 en Ficha Técnica.</td>
             </tr>
             <tr>
@@ -477,7 +477,7 @@ html_content = """<!DOCTYPE html>
             <tr>
                 <td><strong>4. Coherencia</strong></td>
                 <td><span class="tag-success">Cumplido</span></td>
-                <td>Adaptado directamente a los datos ENDES (285k niños) y enfoque de Sistemas / Applied ML.</td>
+                <td>Adaptado directamente a los datos ENDES (304k niños) y enfoque de Sistemas / Applied ML.</td>
             </tr>
             <tr>
                 <td><strong>5. Cronograma</strong></td>
