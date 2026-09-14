@@ -4,7 +4,7 @@
 **Asignatura:** Investigación V (Ciclo X – 2026-II)  
 **Docente:** Mg. Nemias Saboya Rios  
 **Institución:** Universidad Peruana Unión (UPeU)  
-**Título del Proyecto:** *Sistema Predictivo de Riesgo de Desnutrición Crónica Infantil en el Perú mediante Machine Learning (ENDES 2007–2024)*  
+**Título del Proyecto:** *Sistema Predictivo de Riesgo de Desnutrición Crónica Infantil en el Perú mediante Machine Learning (ENDES 2007–2025)*  
 **Equipo de Trabajo:**
 - Abel Guevara Huasco
 - Verónica Vergara Rojas
@@ -14,7 +14,7 @@
 
 ## 1. RESUMEN Y ALCANCE DEL PLAN
 
-El objetivo de este plan es completar las actividades de validación técnica del modelo predictivo (*LightGBM con 43 variables*), estructurado en **3 ejes fundamentales de ingeniería**:
+El objetivo de este plan es completar las actividades de validación técnica del modelo predictivo (*LightGBM con 45 variables*), estructurado en **3 ejes fundamentales de ingeniería**:
 1. **Confiabilidad:** Pasar de estimaciones puntuales a Intervalos de Confianza al 95% (Bootstrapping), verificar la significancia estadística del modelo campeón (Test de DeLong) y calibrar el umbral para alcanzar $\ge 80\%$ de Recall.
 2. **Replicabilidad:** Migrar la lógica final de preparación, entrenamiento y explicabilidad desde los Jupyter Notebooks hacia módulos de Python limpios (`mnp/`), asegurando la ejecución reproducible mediante Docker y Makefile.
 3. **Pertinencia Técnica:** Evaluar la solidez de la arquitectura, la prevención de *Data Leakage*, la explicabilidad (SHAP) y la usabilidad de la app Streamlit mediante un **Juicio de Expertos con 3 profesionales en Ciencia de Datos y Machine Learning** (V de Aiken $\ge 0.80$ y escala SUS $\ge 75$).
@@ -42,14 +42,15 @@ El plan está diseñado para ejecutarse en **3 semanas**, garantizando rigor met
 
 ### EJE 1: Confiabilidad Estadística y Computacional
 
-* **Línea Base (Completada en ciclo anterior):** Validación cruzada *Stratified 5-Fold* con ponderación demográfica (`HV005`), obteniendo AUC de 0.8308 y Recall de 76.49% con semilla fija (`random_state = 42`).
+* **Línea Base (Actualizada — ENDES 2007–2025):** Validación cruzada *Stratified 5-Fold* con ponderación demográfica (`HV005`), obteniendo **AUC de 0.8295 y Recall de 76.44%** con semilla fija (`random_state = 42`) sobre **304,271 niños**.
+  > **Nota de avance (14/09/2026):** la línea base se recalculó al incorporar la ENDES 2025, que el INEI publicó durante la ejecución del plan. El horizonte pasa de 18 a 19 años y la muestra de 285,284 a 304,271 niños. LightGBM se mantiene como campeón y el orden del *benchmarking* no varía; el desplazamiento del AUC (−0.0013) queda dentro de la dispersión entre pliegues (0.8230–0.8353), lo que evidencia estabilidad del modelo. El subconjunto pasa de 43 a 45 variables: `HV219` y `SH77F` cruzan el umbral de importancia con el año adicional, sin que ninguna de las 43 originales sea descartada.
 * **Actividades de Validación a Ejecutar (Semana 1):**
 
 | Actividad / Técnica | Procedimiento Específico | Umbral / Meta de Aceptación | Justificación Teórica |
 |---|---|---|---|
 | **1. Bootstrapping No Paramétrico** | Remuestreo con reemplazo ($B = 1,000$ iteraciones) sobre el test set para calcular Intervalos de Confianza al 95%. | IC 95% AUC: $[0.820, 0.840]$<br>IC 95% Recall: $[75.0\%, 78.5\%]$. | Reporta la variabilidad estadística real más allá de una estimación puntual (Efron & Tibshirani, 1994). |
 | **2. Test de DeLong** | Contraste de hipótesis estadística entre la curva ROC de LightGBM vs. XGBoost y Regresión Logística. | $p\text{-value} < 0.001$ | Demuestra si la superioridad del modelo campeón es estadísticamente significativa (DeLong et al., 1988). |
-| **3. Calibración del Umbral ($\tau$)** | Barrido en el rango $\tau \in [0.25, 0.50]$ sobre el conjunto de validación para optimizar la sensibilidad. | **Recall $\ge 80.0\%$** (fijado en $\tau \approx 0.35$). | Prioriza la detección de la mayoría de niños en riesgo para triaje preventivo (Lipton et al., 2014). |
+| **3. Calibración del Umbral ($\tau$)** | Barrido en el rango $\tau \in [0.25, 0.50]$ sobre el conjunto de validación para optimizar la sensibilidad. | **Recall $\ge 80.0\%$** (fijado en $\tau = 0.45$; cobertura 80.46%, precisión 34.04%). | Prioriza la detección de la mayoría de niños en riesgo para triaje preventivo (Lipton et al., 2014). |
 | **4. Actualización de Metadatos** | Reemplazar el umbral por defecto (`0.50`) en el archivo `models/champion_metadata.json`. | JSON actualizado con $\tau$ calibrado y métricas asociadas. | Asegura que la app Streamlit opere con el umbral óptimo de producción. |
 
 ---
@@ -77,7 +78,7 @@ Certifica el rigor metodológico, la ausencia de sesgos y la calidad de la soluc
   - Experto 2: Ingeniero de Machine Learning / MLOps.
   - Experto 3: Docente / Investigador en Ingeniería de Sistemas y Computación.
 * **Instrumento 1: Ficha de Validación Técnica en Data Science (Escala 1–5):**
-  - Criterio 1: *Rigor del Pipeline de Datos (ETL):* Manejo adecuado de 18 años de datos ENDES y tratamiento de nulos.
+  - Criterio 1: *Rigor del Pipeline de Datos (ETL):* Manejo adecuado de 19 años de datos ENDES y tratamiento de nulos.
   - Criterio 2: *Prevención de Data Leakage:* Exclusión rigurosa de variables antropométricas crudas directas.
   - Criterio 3: *Idoneidad del Modelo (LightGBM):* Elección algorítmica, manejo de variables categóricas nativas y calibración de umbrales.
   - Criterio 4: *Interpretabilidad (XAI):* Coherencia matemática y semántica de los valores SHAP regionales.
@@ -94,7 +95,7 @@ Certifica el rigor metodológico, la ausencia de sesgos y la calidad de la soluc
 | **REQ-01** | Triaje rápido sin requerir encuestas masivas. | LightGBM calibrado para Recall $\ge 80\%$. | Evaluación de la matriz de confusión y curva Costo-Beneficio. |
 | **REQ-02** | Explicabilidad algorítmica de la predicción. | Módulo SHAP local en tiempo real en la app. | Revisión de consistencia del TreeExplainer en la Ficha de Expertos. |
 | **REQ-03** | Análisis de heterogeneidad territorial. | Mapas coropléticos interactivos GeoJSON en Streamlit. | Validación de la visualización y consistencia de datos por departamento. |
-| **REQ-04** | Integridad del modelo (Cero Data Leakage). | Selección de 43 variables exclusivamente de encuesta. | Auditoría del diccionario de variables por el panel de expertos. |
+| **REQ-04** | Integridad del modelo (Cero Data Leakage). | Selección de 45 variables exclusivamente de encuesta. | Auditoría del diccionario de variables por el panel de expertos. |
 
 ---
 
@@ -135,7 +136,7 @@ gantt
 | **1. Método de Confiabilidad** | **Cumplido** | Pruebas cuantitativas específicas (Bootstrap IC 95%, Test de DeLong y calibración de $\tau$ para Recall $\ge 80\%$) fundamentadas con literatura (Kohavi, 1995; DeLong et al., 1988; Lipton et al., 2014). |
 | **2. Plan de Replicabilidad** | **Cumplido** | Migración explícita de notebooks a módulos `mnp/`, repositorio GitHub con Licencia MIT, Docker multi-SO, dependencias fijadas y DOI en Zenodo (Wilkinson et al., 2016). |
 | **3. Plan de Pertinencia** | **Cumplido** | Protocolo de Juicio de Expertos con 3 profesionales en Ciencia de Datos / ML usando coeficiente V de Aiken ($\ge 0.80$) y escala SUS ($\ge 75$). |
-| **4. Coherencia con el Proyecto** | **Cumplido** | Los 3 ejes responden de forma directa a la estructura tabular de la ENDES (285k registros, 18 años) y al enfoque de triaje preventivo de salud pública desde la Ingeniería de Sistemas. |
+| **4. Coherencia con el Proyecto** | **Cumplido** | Los 3 ejes responden de forma directa a la estructura tabular de la ENDES (304k registros, 19 años) y al enfoque de triaje preventivo de salud pública desde la Ingeniería de Sistemas. |
 | **5. Cronograma** | **Cumplido** | Plan pragmático de 3 semanas distribuido por fases y con entregables tangibles semana a semana, compatible con el tiempo de redacción del artículo. |
 | **6. Redacción y Formato** | **Cumplido** | Redacción clara, sobria y estructurada en tablas técnicas y diagramas, sin verbosidad ni exageraciones. |
 

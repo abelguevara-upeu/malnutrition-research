@@ -16,7 +16,7 @@
 **Fecha:** Agosto 2026
 
 **Título del Proyecto de Tesis:**
-*Sistema Predictivo de Riesgo de Desnutrición Crónica Infantil en el Perú mediante Machine Learning y Datos de Encuesta de Hogar (ENDES 2007–2024)*
+*Sistema Predictivo de Riesgo de Desnutrición Crónica Infantil en el Perú mediante Machine Learning y Datos de Encuesta de Hogar (ENDES 2007–2025)*
 
 **Equipo de Trabajo:**
 
@@ -37,7 +37,7 @@ A continuación se presenta la Ficha de Auditoría de Validación completada par
 | **1. Confiabilidad estadística reportada (Alfa, Kappa u otra)** | Se implementó**Stratified 5-Fold Cross-Validation** incorporando ponderación muestral demográfica (`HV005 / 1,000,000`). Se reporta métricas robustas: **AUC-ROC = 0.8308**, **Recall = 76.49%**, **Precision = 37.05%** y **F1-Score = 0.4976**. Adicionalmente, se auditó la consistencia biológica en el cruce de tablas (99.99% en sexo y 99.67% en año de nacimiento). |   **3 / 4**   |
 | **2. Método de validación de resultados declarado**            | Se declaró y ejecutó un benchmarking riguroso de 6 algoritmos (Logistic Regression, XGBoost, LightGBM, CatBoost, Decision Tree, MLP 3×200). Se aplicó partición por folds preservando la prevalencia del target (16%) y se identificó la necesidad de un**Time-Series Split** post-2015 debido a cambios de diseño muestral en la ENDES.                                                              |   **3 / 4**   |
 | **3. Confiabilidad de sistema / determinismo (si aplica)**       | Control estricto de semillas aleatorias (`random_state = 42`) en todas las etapas de preprocesamiento, selección de variables (`XGBoost`) y entrenamiento (`champion_lightgbm.pkl`). El pipeline produce resultados 100% deterministas en re-ejecución.                                                                                                                                                    |   **3 / 3**   |
-| **4. Datos y/o código disponibles públicamente**               | Proyecto configurado con estructura open-source estándar (*Cookiecutter Data Science*). Código disponible en repositorio público GitHub. Datos primarios provienen del portal de libre acceso del INEI (ENDES 2007–2024), con pipeline de web scraping automatizado (`mnp.utils.extractor`).                                                                                                               |   **3 / 3**   |
+| **4. Datos y/o código disponibles públicamente**               | Proyecto configurado con estructura open-source estándar (*Cookiecutter Data Science*). Código disponible en repositorio público GitHub. Datos primarios provienen del portal de libre acceso del INEI (ENDES 2007–2025), con pipeline de web scraping automatizado (`mnp.utils.extractor`).                                                                                                               |   **3 / 3**   |
 | **5. Entorno y dependencias documentadas**                       | Proyecto totalmente contenedorizado con**Docker** (`Dockerfile` y `docker-compose.yml`), aislamiento de entorno con `pyproject.toml` (Python 3.12) y reproducción completa del flujo mediante `Makefile` (`make pipeline`, `make clean_data`, `make validate_data`).                                                                                                                          |   **3 / 3**   |
 | **6. Pertinencia validada con usuarios o stakeholders reales**   | El objetivo se definió en función de las necesidades operativas del Estado (triaje y focalización de visitas domiciliarias para MINSA/MIDIS). Se diseñó una **Matriz de Trazabilidad** que vincula las 43 variables de encuesta con decisiones presupuestales. Prototipo funcional interactivo desarrollado en **Streamlit** para tomadores de decisión.                                        |   **1 / 3**   |
 | **PUNTAJE TOTAL ALCANZADO**                                      | **EVALUACIÓN DE SOLIDEZ METODOLÓGICA MÁXIMA**                                                                                                                                                                                                                                                                                                                                                             |  **14 / 20**  |
@@ -69,7 +69,7 @@ La confiabilidad evalúa si las predicciones son consistentes, estables y no pro
    - **Umbral de Aceptación:** Valor de $p < 0.001$, confirmando la superioridad estadísticamente significativa de LightGBM.
 4. **Optimización Matemática del Umbral de Decisión (Threshold Optimization):**
    - **Método:** Barrido del umbral de clasificación en el rango $\tau \in [0.25, 0.50]$ para maximizar el Recall manteniendo la Precisión por encima del 35%.
-   - **Umbral Target de Política Pública:** Fijar el umbral óptimo en $\tau \approx 0.35$ para alcanzar un **Recall $\ge 80\%$** (cobertura requerida por MINSA para triaje preventivo).
+   - **Umbral Target de Política Pública:** Fijar el umbral óptimo en $\tau = 0.45$ para alcanzar un **Recall $\ge 80\%$** (cobertura 80.46%, precisión 34.04%), por encima del umbral requerido por MINSA para triaje preventivo.
 
 #### B. Confiabilidad Computacional y Determinismo del Sistema
 
@@ -100,7 +100,7 @@ La replicabilidad garantiza que cualquier investigador independiente pueda ejecu
 
 #### C. Publicación de Datos y Metadatos (Zenodo / OSF)
 
-- **Dataset Procesado:** Depósito del dataset anonimizado `master_preprocessed_v2.parquet` (285,284 registros × 43 variables) en el repositorio académico **Zenodo**, generando un **DOI (Digital Object Identifier)** único y citable.
+- **Dataset Procesado:** Depósito del dataset anonimizado `master_preprocessed_v2.parquet` (304,271 registros × 45 variables) en el repositorio académico **Zenodo**, generando un **DOI (Digital Object Identifier)** único y citable.
 - **Artefactos del Modelo:** Registro público en Zenodo del archivo binario del modelo (`champion_lightgbm.pkl`) y sus metadatos asociados (`champion_metadata.json`).
 - **Automatización de Pipeline (Makefile):**
   - Comando `make extract`: Descarga automatizada de microdatos desde INEI.
@@ -134,7 +134,7 @@ Verificación de que el 100% de los requisitos del problema de triaje nacional e
 | **REQ-01** | Priorizar visitas en zonas de alto riesgo sin encuestar al 100% de hogares. | Clasificador LightGBM optimizado para Recall.                               | Simulación de cobertura en Streamlit con Recall$\ge 80\%$ (curva Costo-Beneficio).   |
 | **REQ-02** | Explicar al profesional de salud*por qué* un niño tiene alto riesgo.    | Módulo XAI con explicabilidad local y global SHAP.                         | Prueba de usuario: comprensión correcta del gráfico SHAP por el 90% de participantes. |
 | **REQ-03** | Identificar heterogeneidad regional del riesgo (Costa, Sierra, Selva).      | Heatmaps departamentales y filtros geográficos en Streamlit.               | Trazabilidad con perfiles geográficos confirmados por literatura epidemiológica.      |
-| **REQ-04** | Operar sin requerir datos clínicos invasivos (peso/talla directa).         | Selección de 43 variables exclusivamente sociodemográficas y de encuesta. | Auditoría de variables para garantizar cero*Data Leakage* biológico directo.        |
+| **REQ-04** | Operar sin requerir datos clínicos invasivos (peso/talla directa).         | Selección de 45 variables exclusivamente sociodemográficas y de encuesta. | Auditoría de variables para garantizar cero*Data Leakage* biológico directo.        |
 
 ---
 
@@ -183,7 +183,7 @@ gantt
 | **1. Método de Confiabilidad**   | **Logro Destacado** | Pruebas cuantitativas rigurosas (Stratified 5-Fold CV con pesos`HV005`, Bootstrapping para IC 95%, Test de DeLong y optimización de umbral para Recall $\ge 80\%$) justificados ampliamente con literatura (Kohavi, 1995; Lundberg & Lee, 2017). |
 | **2. Plan de Replicabilidad**     | **Logro Destacado** | Especificación completa de repositorio público GitHub (Licencia MIT), depósito formal en Zenodo con DOI citable, contenedorización completa en Docker, dependencias bloqueadas y automatización vía`Makefile`.                                |
 | **3. Plan de Pertinencia**        | **Logro Destacado** | Definición de evaluación con usuarios reales mediante el Modelo TAM y la escala estandarizada**SUS (meta $\ge 75$)**, respaldada por una Matriz de Trazabilidad de Requisitos orientada a políticas públicas del MINSA/MIDIS.             |
-| **4. Coherencia con el Proyecto** | **Logro Destacado** | Cada uno de los 3 ejes está adaptado específicamente a la naturaleza, complejidad sociodemográfica y estructura de datos de la ENDES (285,284 niños, 18 años de datos).                                                                          |
+| **4. Coherencia con el Proyecto** | **Logro Destacado** | Cada uno de los 3 ejes está adaptado específicamente a la naturaleza, complejidad sociodemográfica y estructura de datos de la ENDES (304,271 niños, 19 años de datos).                                                                          |
 | **5. Cronograma**                 | **Logro Destacado** | Cronograma realista de 8 semanas estructurado mediante diagrama de Gantt y matriz de entregables verificables por semana.                                                                                                                             |
 | **6. Redacción y Formato**       | **Logro Destacado** | Redacción académica clara, precisa, estructurada profesionalmente con tablas explicativas, diagramas en Mermaid y cumplimiento estricto del formato solicitado por la UPeU.                                                                         |
 
