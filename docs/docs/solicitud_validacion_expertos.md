@@ -233,6 +233,63 @@ degradada en silencio. Por eso el formato importa tanto como la variable misma.
 
 ---
 
+## 3.ter. Variables adicionales deseables
+
+Las 45 variables anteriores son las que el modelo **usa hoy** y constituyen el mínimo necesario para
+contrastarlo. Las que siguen **no están en el modelo actual** y se solicitan porque la literatura
+epidemiológica las identifica como determinantes de la desnutrición crónica que la ENDES no permite
+cubrir con suficiente completitud.
+
+Su inclusión es **opcional**: el sistema funciona sin ellas. Pero cada dimensión que el conjunto de
+datos externo pueda aportar abre la posibilidad de una versión mejorada del modelo, y su ausencia es
+hoy una limitación declarada del estudio.
+
+El marco de referencia es el **modelo conceptual de UNICEF** sobre desnutrición infantil, que ordena
+las causas en tres niveles. El modelo actual cubre bien los niveles básico y subyacente —pobreza,
+educación, agua y saneamiento, vivienda— pero tiene un vacío en el **nivel inmediato**, que es
+precisamente donde actúa la intervención nutricional.
+
+### Prioridad alta — nivel inmediato (el vacío principal)
+
+| Dimensión | Campo sugerido | Por qué importa |
+|---|---|---|
+| Morbilidad reciente | Episodios de diarrea en las últimas 2 semanas (sí/no) | Vía infecciosa hacia la malabsorción de nutrientes |
+| Morbilidad reciente | Infección respiratoria aguda en las últimas 2 semanas (sí/no) | Impacto directo sobre el estado nutricional |
+| Ingesta | Diversidad dietética mínima (número de grupos de alimentos en 24 h) | Indicador OMS de calidad de la alimentación |
+| Ingesta | Frecuencia mínima de comidas según edad | Complemento del anterior |
+| Suplementación | Recibe micronutrientes o hierro (sí/no, frecuencia) | Intervención directa y modificable |
+
+### Prioridad media — estado nutricional materno y servicios
+
+| Dimensión | Campo sugerido | Por qué importa |
+|---|---|---|
+| Antropometría materna | Talla de la madre (cm) | Predictor consistente de retraso del crecimiento intergeneracional |
+| Antropometría materna | Peso / IMC de la madre | Estado nutricional del hogar |
+| Servicios de salud | Controles CRED al día (sí/no, número) | Seguimiento del crecimiento en el sistema peruano |
+| Servicios de salud | Esquema de vacunación completo para la edad (sí/no) | *Proxy* de acceso efectivo a servicios |
+
+### Prioridad media — contexto social
+
+| Dimensión | Campo sugerido | Por qué importa |
+|---|---|---|
+| Etnicidad | Lengua materna de la madre | Marcador de exclusión estructural especialmente relevante en el Perú |
+| Seguridad alimentaria | Escala de inseguridad alimentaria del hogar (ELCSA o similar) | Acceso efectivo a alimentos, no solo capacidad económica |
+| Cuidado | Situación laboral de la madre / cuidador principal | Tiempo disponible para prácticas de cuidado |
+| Programas sociales | Beneficiario de Juntos, Cuna Más, Qali Warma (sí/no) | Permite evaluar cobertura frente a necesidad |
+
+> **Sobre el formato.** Estas variables no requieren la codificación estricta de la sección 3.bis, ya
+> que aún no forman parte del modelo. Basta con entregarlas tal como estén registradas, acompañadas de
+> su diccionario de valores. El equipo se encarga de homologarlas.
+
+> **Una aclaración necesaria.** Las variables de morbilidad reciente (diarrea, IRA) son causas
+> inmediatas, pero también son *concurrentes* con el desenlace: si un agente de salud ya sabe que el
+> niño tuvo diarrea, es porque hubo contacto previo con el sistema. Por eso se solicitan para
+> **análisis explicativo** y para una eventual versión del modelo orientada a seguimiento, no
+> necesariamente para el triaje anticipado, cuyo valor reside justamente en operar sin visita previa.
+
+
+---
+
 ## 4. Qué esperamos de esta validación
 
 Solicitamos la participación de **cinco especialistas** en nutrición, salud pública, epidemiología o
