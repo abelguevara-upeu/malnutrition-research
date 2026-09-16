@@ -145,88 +145,95 @@ modelo compara valores de forma literal: una categoría escrita de otra manera (
 degradada en silencio. Por eso el formato importa tanto como la variable misma.
 
 **Convenciones**
-- *Categórica*: texto, exactamente uno de los valores listados (sensible a mayúsculas y tildes).
-- *Código*: número entero que representa una categoría, **no una cantidad**.
-- *Numérica*: magnitud continua o discreta, en la unidad indicada.
+- *Categórica nominal*: texto, exactamente uno de los valores listados. No hay orden entre ellos.
+- *Categórica ordinal*: texto, con orden implícito (de mayor a menor, según se lista).
+- *Binaria*: texto, `Sí` o `No`.
+- *Numérica*: magnitud real, en la unidad indicada. Aquí el número **sí** representa una cantidad.
 - Un campo ausente debe dejarse **vacío**, nunca rellenarse con 0, 999 o "NA": el modelo maneja
   valores faltantes de forma nativa y cada variable tolera el porcentaje de vacíos que se indica.
+
+Las categorías se entregan **en texto, no en código numérico**. El `1` de una variable nominal no es
+una cantidad sino una etiqueta arbitraria, y su significado cambia entre ediciones de la encuesta: es
+preferible escribir `Electricidad` antes que `1`. Si el sistema de origen almacena códigos, basta con
+adjuntar su diccionario de valores.
 
 ### Niño
 | Código | Tipo | Valores admitidos | Unidad | % nulos tolerado |
 |---|---|---|---|---:|
 | `HC1` | Numérica | 0 – 59 | meses | 0.0 |
-| `HC27` | Categórica | `Hombre` / `Mujer` | — | 0.0 |
+| `HC27` | Categórica nominal | `Hombre` / `Mujer` | sexo del niño | 0.0 |
 | `HC56` | Numérica | 4 – 20 (hemoglobina ajustada) | g/dL | 9.6 |
 | `HC63` | Numérica | 7 – 388 | meses desde el parto anterior | 36.3 |
 
 ### Salud materna, embarazo y lactancia
 | Código | Tipo | Valores admitidos | Unidad | % nulos tolerado |
 |---|---|---|---|---:|
-| `M13` | Código | 0 – 9 | mes de gestación del 1.er control | 19.7 |
+| `M13` | Numérica | 0 – 9 | mes de gestación del 1.er control | 19.7 |
 | `M14` | Numérica | 0 – 20 | número de visitas | 18.6 |
-| `m15` | Categórica | `Institucional` / `Domiciliario` | — | 6.6 |
-| `M17` | Código | `1` = cesárea, `0` = no | — | 5.8 |
-| `M18` | Código | 1 = muy grande … 5 = muy pequeño | — | 5.8 |
+| `m15` | Categórica nominal | `Institucional` / `Domiciliario` | lugar del parto | 6.6 |
+| `M17` | Binaria | `Sí` / `No` | ¿el parto fue por cesárea? | 5.8 |
+| `M18` | Categórica ordinal | `Muy grande` / `Grande` / `Mediano (normal)` / `Pequeño` / `Muy pequeño` | tamaño percibido al nacer | 5.8 |
 | `m19` | Numérica | 0.5 – 6.0 | kilogramos (decimal) | 10.6 |
 | `M4` | Numérica | 0 – 59 | meses de lactancia | 5.8 |
 | `m34` | Numérica | 0 – 2352 | horas hasta iniciar lactancia | 6.2 |
 | `M46` | Numérica | 0 – 364 | días que tomó hierro | 18.7 |
-| `M54` | Código | `1` = sí, `0` = no | vitamina A post parto | 19.7 |
-| `M55G` | Código | `1` = sí, `0` = no | fórmula en los 3 primeros días | 6.8 |
-| `M60` | Código | `1` = sí, `0` = no | antiparasitarios en el embarazo | 19.9 |
-| `HC62` | Código | 0 – 9 | año más alto de educación materna | 4.8 |
+| `M54` | Binaria | `Sí` / `No` | vitamina A en los 2 meses post parto | 19.7 |
+| `M55G` | Binaria | `Sí` / `No` | fórmula en los 3 primeros días | 6.8 |
+| `M60` | Binaria | `Sí` / `No` | antiparasitarios durante el embarazo | 19.9 |
+| `HC62` | Numérica | 0 – 9 | años de educación aprobados por la madre | 4.8 |
 
 ### Hogar y nivel socioeconómico
 | Código | Tipo | Valores admitidos | Unidad | % nulos tolerado |
 |---|---|---|---|---:|
 | `HV271` | Numérica | −215987 a 205316 | índice de riqueza (escala INEI ×10⁵) | 0.8 |
 | `HV012` | Numérica | 0 – 25 | personas | 0.0 |
-| `HV014` | Código | 0 – 10 | niños menores de 5 años | 0.0 |
-| `HV219` | Categórica | `Masculino` / `Femenino` | sexo del jefe del hogar | 0.0 |
+| `HV014` | Numérica | 0 – 10 | niños menores de 5 años en el hogar | 0.0 |
+| `HV219` | Categórica nominal | `Masculino` / `Femenino` | sexo del jefe del hogar | 0.0 |
 | `HV220` | Numérica | 12 – 97 | años | 0.0 |
-| `HV102` | Categórica | `Sí` / `No` | **con tilde** | 2.4 |
-| `HV025` | Categórica | `Urbano` / `Rural` | — | 0.0 |
+| `HV102` | Binaria | `Sí` / `No` | residente habitual del hogar | 2.4 |
+| `HV025` | Categórica nominal | `Urbano` / `Rural` | área de residencia | 0.0 |
 
 ### Agua, saneamiento e higiene (WASH)
 | Código | Tipo | Valores admitidos | Unidad | % nulos tolerado |
 |---|---|---|---|---:|
 | `HV204` | Numérica | 0 – 600 | minutos hasta la fuente | 0.1 |
-| `HV225` | Categórica | `Si` / `No` | **sin tilde** | 10.8 |
-| `HV234` | Código | 0, 7, 15, 30 | yodo en sal (ppm por colorimetría) | 4.8 |
-| `HV237` | Categórica | `Si` / `No` | **sin tilde** | 0.0 |
-| `HV237A` | Categórica | `Si` / `No` | **sin tilde** | 0.0 |
-| `HV237G` | Categórica | `Si` / `No` | **sin tilde** | 8.1 |
-| `SH42` | Categórica | `Sí` / `No` | **con tilde** | 20.4 |
-| `SH48` | Categórica | `Sí` / `No` | **con tilde** | 15.8 |
-| `SH49` | Código | 0 – 8, 96, 98 | tipo de recipiente | 20.4 |
-| `SH50` | Código | 0 – 8 | lo usa con tapa | 19.3 |
+| `HV225` | Binaria | `Sí` / `No` | ¿comparte servicio higiénico? | 10.8 |
+| `HV234` | Numérica | 0, 7, 15, 30 | yodo en sal (ppm por colorimetría) | 4.8 |
+| `HV237` | Binaria | `Sí` / `No` | ¿trata el agua? | 0.0 |
+| `HV237A` | Binaria | `Sí` / `No` | ¿hierve el agua? | 0.0 |
+| `HV237G` | Binaria | `Sí` / `No` | ¿consume agua embotellada? | 8.1 |
+| `SH42` | Binaria | `Sí` / `No` | ¿dispone de agua todo el día? | 20.4 |
+| `SH48` | Binaria | `Sí` / `No` | ¿conserva agua? | 15.8 |
+| `SH49` | Categórica nominal | `Olla, tetera` / `Balde` / `Jarra` / `Bidón` / `Otro` | recipiente donde conserva el agua | 20.4 |
+| `SH50` | Binaria | `Sí` / `No` | ¿usa el recipiente con tapa? | 19.3 |
 
 ### Vivienda y entorno
 | Código | Tipo | Valores admitidos | Unidad | % nulos tolerado |
 |---|---|---|---|---:|
 | `HV040` | Numérica | 0 – 5053 | metros sobre el nivel del mar | 0.0 |
 | `HV216` | Numérica | 0 – 14 | habitaciones para dormir | 0.0 |
-| `HV240` | Código | 0, 1, 2 | tiene chimenea o campana | 55.9 |
-| `HV242` | Categórica | `Si` / `No` | **sin tilde** | 9.3 |
-| `SH63` | Categórica | `Si` / `No` | **sin tilde** | 2.1 |
-| `SH70` | Código | 1 – 6, 96, 99 | fuente de luz | 1.6 |
+| `HV240` | Categórica nominal | `Ni chimenea ni campana` / `Tubo de lámpara` / `Capucha` | extracción de humo en la cocina | 55.9 |
+| `HV242` | Binaria | `Sí` / `No` | ¿cuarto separado para cocinar? | 9.3 |
+| `SH63` | Binaria | `Sí` / `No` | ¿usa otro combustible para cocinar? | 2.1 |
+| `SH70` | Categórica nominal | `Electricidad` / `GLP` / `Gas natural` / `Kerosene` / `Velas` / `Batería` / `Otro` | tipo de alumbrado | 1.6 |
 | `SH71` | Numérica | 1 – 30 | habitaciones del hogar | 0.0 |
-| `SH76B` | Categórica | `Si` / `No` | ventanas con cristal | 16.2 |
-| `SH76C` | Categórica | `Si` / `No` | ventanas de madera | 16.2 |
-| `SH76D` | Categórica | `Si` / `No` | ventanas con malla | 16.2 |
-| `SH77F` | Categórica | `Si` / `No` | otro tipo de transporte | 0.0 |
+| `SH76B` | Binaria | `Sí` / `No` | ventanas con cristal | 16.2 |
+| `SH76C` | Binaria | `Sí` / `No` | ventanas de madera | 16.2 |
+| `SH76D` | Binaria | `Sí` / `No` | ventanas con malla | 16.2 |
+| `SH77F` | Binaria | `Sí` / `No` | otro tipo de transporte | 0.0 |
 
 > **Advertencia sobre la codificación heredada.** Las tres irregularidades que siguen provienen de la
 > propia ENDES y se conservaron para no alterar la fuente; se señalan aquí porque condicionan el
 > formato de entrega:
 >
-> 1. **`Si` frente a `Sí`.** Unas variables llevan tilde y otras no, según el módulo de origen. La
->    tabla indica cuál corresponde en cada caso y la distinción debe respetarse.
-> 2. **Binarias en dos formatos.** `M17`, `M54`, `M55G` y `M60` se codifican `1`/`0`, mientras que el
->    resto de las dicotómicas usan texto `Si`/`No`.
-> 3. **Códigos especiales en campos numéricos.** `SH49` (96, 98) y `SH70` (96, 99)
->    reservan esos valores para *otro* o *no sabe*. No representan magnitudes y deben transcribirse
->    tal cual, sin convertirlos ni sustituirlos por promedios.
+> 1. **`Si` frente a `Sí`.** Internamente unas variables llevan tilde y otras no, según el módulo de
+>    origen. Para la entrega esto es indiferente: basta escribir `Sí` de forma uniforme.
+> 2. **Binarias en dos formatos internos.** `M17`, `M54`, `M55G` y `M60` viajan como `1`/`0` dentro del
+>    sistema, mientras que el resto de las dicotómicas usan texto. Para la entrega basta con `Sí`/`No`
+>    en todas: la homologación corre por cuenta del equipo.
+> 3. **Códigos especiales.** Internamente `SH49` y `SH70` reservan 96, 98 y 99 para *otro* y *no
+>    sabe*. Al entregarse como texto esto deja de ser un problema: escriba `Otro` cuando corresponda y
+>    deje la celda **vacía** cuando el dato no se pudo obtener.
 >
 > Si el conjunto de datos externo emplea otra codificación, basta con entregarlo acompañado de su
 > diccionario de valores: el equipo se encarga de la homologación.
