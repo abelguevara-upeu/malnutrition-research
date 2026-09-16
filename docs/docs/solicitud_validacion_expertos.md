@@ -137,7 +137,7 @@ sistema.**
 
 ---
 
-## 3.bis. Especificación de campos
+## 4. Especificación de campos
 
 Esta tabla define **cómo debe venir codificada cada variable** en un conjunto de datos externo. El
 modelo compara valores de forma literal: una categoría escrita de otra manera (`"URBANO"` en lugar de
@@ -240,7 +240,7 @@ adjuntar su diccionario de valores.
 
 ---
 
-## 3.ter. Variables adicionales deseables
+## 5. Variables adicionales deseables
 
 Las 45 variables anteriores son las que el modelo **usa hoy** y constituyen el mínimo necesario para
 contrastarlo. Las que siguen **no están en el modelo actual** y se solicitan porque la literatura
@@ -284,7 +284,7 @@ precisamente donde actúa la intervención nutricional.
 | Cuidado | Situación laboral de la madre / cuidador principal | Tiempo disponible para prácticas de cuidado |
 | Programas sociales | Beneficiario de Juntos, Cuna Más, Qali Warma (sí/no) | Permite evaluar cobertura frente a necesidad |
 
-> **Sobre el formato.** Estas variables no requieren la codificación estricta de la sección 3.bis, ya
+> **Sobre el formato.** Estas variables no requieren la codificación estricta de la sección 4, ya
 > que aún no forman parte del modelo. Basta con entregarlas tal como estén registradas, acompañadas de
 > su diccionario de valores. El equipo se encarga de homologarlas.
 
@@ -297,13 +297,13 @@ precisamente donde actúa la intervención nutricional.
 
 ---
 
-## 4. Qué esperamos de esta validación
+## 6. Qué esperamos de esta validación
 
 Solicitamos la participación de **cinco especialistas** en nutrición, salud pública, epidemiología o
 enfermería, idealmente con representación territorial (**2 de costa, 2 de sierra, 1 de selva**), para
 dos procesos complementarios:
 
-### 4.1 Pertinencia
+### 6.1 Pertinencia
 Valoración de la **utilidad percibida** del sistema mediante un instrumento estructurado que el
 especialista completará tras una demostración del aplicativo. Se evalúa si la herramienta resulta útil,
 comprensible y aplicable en la práctica real de focalización sanitaria, y qué limitaciones o variables
@@ -312,7 +312,7 @@ faltantes identifica desde su experiencia profesional.
 *Modalidad:* sesión virtual, coordinada según disponibilidad. El equipo provee el protocolo, conduce la
 demostración y registra la sesión.
 
-### 4.2 Replicabilidad
+### 6.2 Replicabilidad
 Contraste del modelo frente a **datos externos** distintos de la ENDES. El procedimiento consiste en que
 el especialista aporte registros de su ámbito —incluyendo casos con y sin desnutrición diagnosticada—,
 el sistema emita su estimación de riesgo, y se compare con el diagnóstico clínico conocido.
@@ -323,7 +323,7 @@ sección 3.
 
 ---
 
-## 5. Consideraciones éticas
+## 7. Consideraciones éticas
 
 Los datos con los que se construyó el modelo son de **acceso público y libre** (portal de microdatos del
 INEI), por lo que su tratamiento no requirió aprobación de comité de ética.
@@ -335,7 +335,7 @@ no serán publicados ni compartidos con terceros.
 
 ---
 
-## 6. Contribución esperada para los participantes
+## 8. Contribución esperada para los participantes
 
 Los especialistas que participen serán reconocidos en el artículo científico resultante. Asimismo, el
 equipo queda disponible para integrarse como soporte técnico en investigaciones posteriores que deseen
