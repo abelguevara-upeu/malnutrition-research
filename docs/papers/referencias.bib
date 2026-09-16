@@ -2,171 +2,192 @@
 % Referencias del manuscrito
 % Sistema Predictivo de Riesgo de Desnutricion Cronica Infantil (ENDES 2007-2025)
 %
-% Fuente unica: busqueda con Scopus AI / LeapSpace (carpeta leapspace/).
-% Los DOI, titulos, años y revistas estan verificados contra los CSV y los
-% informes .md exportados por LeapSpace.
-%
-% AVISO SOBRE AUTORES
-% Ni los CSV ni los informes .md de LeapSpace exponen los autores: el propio
-% informe los marca como "Not surfaced in excerpt" / "No visibles en el
-% extracto". Por eso los campos author quedan como {COMPLETAR} en vez de
-% rellenarse por aproximacion. Abrir el EID indicado en Scopus y copiar la
-% lista de autores.
-%
-% El informe de LeapSpace atribuye el articulo de data leakage a Domingos y
-% Pazzani; esa atribucion es incorrecta (el trabajo es de Kaufman, Rosset,
-% Perlich y Stitelman), de modo que conviene verificar cada autoria en la
-% ficha original antes de compilar.
+% Seleccion: busqueda con Scopus AI / LeapSpace (carpeta leapspace/).
+% Metadatos: resueltos abriendo cada DOI contra la API de CrossRef, y contra
+% PubMed para la entrada sin DOI. Autores, revista, volumen y paginas provienen
+% del registro oficial del editor, no del extracto de LeapSpace.
 % =====================================================================
 
 % ---------- A. Trabajo relacionado: ML sobre datos DHS ----------
 
-@article{rwanda2025stunting,
-  author  = {COMPLETAR},
+@article{ndagijimana2025rwanda,
+  author  = {Ndagijimana, Similien and Kabano, Ignace and Masabo, Emmanuel and
+             Ntaganda, Jean Marie},
   title   = {Predicting stunting status among under-5 children in {Rwanda} using
              neural network model: Evidence from 2020 {Rwanda} demographic and
              health survey},
   journal = {F1000Research},
   year    = {2025},
+  volume  = {13},
+  pages   = {128},
   doi     = {10.12688/f1000research.141458.2},
-  note    = {EID 2-s2.0-85218502706. Open Access. DHS 2020; ANN/MLP;
-             AUC-ROC 0.84 y 72.0\% de exactitud; talla materna e inicio temprano
-             de la lactancia como predictores principales}
+  note    = {DHS 2020; ANN/MLP; AUC-ROC 0.84 y 72.0\% de exactitud;
+             talla materna e inicio temprano de la lactancia como predictores}
 }
 
-@article{ethiopia2022undernutrition,
-  author  = {COMPLETAR},
+@article{bitew2021ethiopia,
+  author  = {Bitew, Fikrewold H. and Sparks, Corey S. and Nyarko, Samuel H.},
   title   = {Machine learning algorithms for predicting undernutrition among
              under-five children in {Ethiopia}},
   journal = {Public Health Nutrition},
-  year    = {2022},
+  year    = {2021},
+  pages   = {1--12},
   doi     = {10.1017/S1368980021004262},
-  note    = {EID 2-s2.0-85117102429. Open Access. EDHS 2016, n=9471;
-             xgbTree como campeon; tiempo a la fuente de agua, anemia previa,
-             edad mayor a 30 meses y bajo tamano al nacer como predictores}
+  note    = {EDHS 2016, n=9471; xgbTree como campeon; tiempo a la fuente de agua
+             y anemia previa entre los predictores principales}
 }
 
-@article{zambia2022stunting,
-  author  = {COMPLETAR},
+@article{chilyabanyama2022zambia,
+  author  = {Chilyabanyama, Obvious Nchimunya and Chilengi, Roma and
+             Simuyandi, Michelo and Chisenga, Caroline C. and Chirwa, Masuzyo and
+             Hamusonde, Kalongo and Saroj, Rakesh Kumar and Iqbal, Najeeha Talat and
+             Ngaruye, Innocent},
   title   = {Performance of machine learning classifiers in classifying stunting
              among under-five children in {Zambia}},
   journal = {Children},
   year    = {2022},
+  volume  = {9},
+  number  = {7},
+  pages   = {1082},
   doi     = {10.3390/children9071082},
-  note    = {EID 2-s2.0-85135607643. Open Access. ZDHS 2018, n=2327;
-             Random Forest selecciona 13 de 58 variables con 79\% de exactitud}
+  note    = {ZDHS 2018, n=2327; Random Forest selecciona 13 de 58 variables
+             con 79\% de exactitud}
 }
 
-@article{bangladesh2020malnutrition,
-  author  = {COMPLETAR},
+@article{talukder2020bangladesh,
+  author  = {Talukder, Ashis and Ahammed, Benojir},
   title   = {Machine learning algorithms for predicting malnutrition among
              under-five children in {Bangladesh}},
   journal = {Nutrition},
   year    = {2020},
+  volume  = {78},
+  pages   = {110861},
   doi     = {10.1016/j.nut.2020.110861},
-  note    = {EID 2-s2.0-85086743601. BDHS 2014, n=6863; Random Forest con
-             sensibilidad 94.66\% y kappa de Cohen 0.24}
+  note    = {BDHS 2014, n=6863; Random Forest con sensibilidad 94.66\%
+             y kappa de Cohen 0.24}
 }
 
 % ---------- B. Contexto peruano ----------
 
-@article{peru2021doubleburden,
-  author  = {COMPLETAR},
+@article{santos2021peru,
+  author  = {Santos, Maria P. and Turner, Beja and Chaparro, M. Pia},
   title   = {The double burden of malnutrition in {Peru}: an update with a focus
              on social inequities},
   journal = {The American Journal of Clinical Nutrition},
   year    = {2021},
+  volume  = {113},
+  number  = {4},
+  pages   = {865--873},
   doi     = {10.1093/ajcn/nqaa387},
-  note    = {Open Access. Serie 1992-2017; el stunting cae mas rapido en zona
-             urbana que rural (AAPC -4.5\% frente a -2.6\%)}
+  note    = {Serie 1992-2017; el stunting cae mas rapido en zona urbana que
+             rural (AAPC -4.5\% frente a -2.6\%)}
 }
 
-@article{peru2020anemia,
-  author  = {COMPLETAR},
+@article{accinelli2020anemia,
+  author  = {Accinelli, Roberto Alfonso and Leon-Abarca, Juan Alonso},
   title   = {Age and altitude of residence determine anemia prevalence in
              {Peruvian} 6 to 35 months old children},
-  journal = {PLoS ONE},
+  journal = {PLOS ONE},
   year    = {2020},
+  volume  = {15},
+  number  = {1},
+  pages   = {e0226846},
   doi     = {10.1371/journal.pone.0226846},
-  note    = {Open Access. ENDES 2016-2017; la hemoglobina aumenta con la edad y
-             la altitud. Respalda el uso de HC56 ajustada y de HV040}
+  note    = {ENDES 2016-2017; la hemoglobina aumenta con la edad y la altitud.
+             Respalda el uso de HC56 ajustada por altitud y de HV040}
 }
 
-@article{peru2014trends,
-  author  = {COMPLETAR},
-  title   = {Child malnutrition in children under 5 years of age in {Peru}:
-             trends and determinants},
+@article{sobrino2014peru,
+  author  = {Sobrino, Manuel and Guti{\'e}rrez, C{\'e}sar and Cunha, Antonio J. and
+             D{\'a}vila, Miguel and Alarc{\'o}n, Jorge},
+  title   = {Desnutrici{\'o}n infantil en menores de cinco a{\~n}os en {Per{\'u}}:
+             tendencias y factores determinantes},
   journal = {Revista Panamericana de Salud P{\'u}blica},
   year    = {2014},
-  note    = {Sin DOI en el registro de LeapSpace; completar desde la ficha.
-             ENDES 2000-2011: desnutricion cronica de 31.6\% a 19.6\%}
+  volume  = {35},
+  number  = {2},
+  pages   = {104--112},
+  note    = {PMID 24781091. Sin DOI registrado. ENDES 2000-2011: la desnutricion
+             cronica desciende de 31.6\% a 19.6\%}
 }
 
 % ---------- C. Marco conceptual ----------
 
-@article{lancet2013undernutrition,
-  author  = {COMPLETAR},
+@article{black2013lancet,
+  author  = {Black, Robert E. and Victora, Cesar G. and Walker, Susan P. and
+             Bhutta, Zulfiqar A. and Christian, Parul and de Onis, Mercedes and
+             Ezzati, Majid and Grantham-McGregor, Sally and Katz, Joanne and
+             Martorell, Reynaldo and Uauy, Ricardo},
   title   = {Maternal and child undernutrition and overweight in low-income and
              middle-income countries},
   journal = {The Lancet},
   year    = {2013},
+  volume  = {382},
+  number  = {9890},
+  pages   = {427--451},
   doi     = {10.1016/S0140-6736(13)60937-X},
-  note    = {Serie de Nutricion Materno-Infantil. Cubre los niveles inmediato,
-             subyacente y basico del marco de causas}
+  note    = {Serie de Nutricion Materno-Infantil. Marco de causas inmediatas,
+             subyacentes y basicas}
 }
 
-@article{lancet2021revisiting,
-  author  = {COMPLETAR},
+@article{victora2021lancet,
+  author  = {Victora, Cesar G. and Christian, Parul and Vidaletti, Luis Paulo and
+             Gatica-Dom{\'i}nguez, Giovanna and Menon, Purnima and Black, Robert E.},
   title   = {Revisiting maternal and child undernutrition in low-income and
              middle-income countries: variable progress towards an unfinished
              agenda},
   journal = {The Lancet},
   year    = {2021},
+  volume  = {397},
+  number  = {10282},
+  pages   = {1388--1399},
   doi     = {10.1016/S0140-6736(21)00394-9},
   note    = {Actualizacion 2021 de la serie de nutricion}
 }
 
 % ---------- D. Metodo de modelado ----------
 
-@article{kaufman2011leakage,
-  author  = {COMPLETAR: verificar. LeapSpace atribuye a Domingos y Pazzani,
-             pero el trabajo es de Kaufman, Rosset, Perlich y Stitelman},
-  title   = {Leakage in data mining: formulation, detection, and avoidance},
-  journal = {ACM Transactions on Knowledge Discovery from Data},
-  year    = {2011},
-  doi     = {10.1145/2020408.2020496},
-  note    = {Sustenta la exclusion de HC2, HC3 y los Z-scores derivados}
+@inproceedings{kaufman2011leakage,
+  author    = {Kaufman, Shachar and Rosset, Saharon and Perlich, Claudia},
+  title     = {Leakage in data mining: formulation, detection, and avoidance},
+  booktitle = {Proceedings of the 17th {ACM} {SIGKDD} International Conference on
+               Knowledge Discovery and Data Mining},
+  year      = {2011},
+  pages     = {556--563},
+  doi       = {10.1145/2020408.2020496},
+  note      = {Sustenta la exclusion de HC2, HC3 y los Z-scores derivados}
 }
 
-@article{collins2015tripod,
-  author  = {Collins, G. S. and others},
+@article{moons2015tripod,
+  author  = {Moons, Karel G. M. and Altman, Douglas G. and Reitsma, Johannes B. and
+             Ioannidis, John P. A. and Macaskill, Petra and Steyerberg, Ewout W. and
+             Vickers, Andrew J. and Ransohoff, David F. and Collins, Gary S.},
   title   = {Transparent reporting of a multivariable prediction model for
              individual prognosis or diagnosis ({TRIPOD}): explanation and
              elaboration},
   journal = {Annals of Internal Medicine},
   year    = {2015},
+  volume  = {162},
+  number  = {1},
+  pages   = {W1--W73},
   doi     = {10.7326/M14-0698},
-  note    = {Unica entrada cuyo autor aparece en el informe de LeapSpace;
-             completar la lista con los coautores}
+  note    = {Estandar de reporte de modelos predictivos en salud}
 }
 
-@article{gradientboosting2021,
-  author  = {Ke, G. and others},
+@article{bentejac2021gradientboosting,
+  author  = {Bent{\'e}jac, Candice and Cs{\"o}rg{\H{o}}, Anna and
+             Mart{\'i}nez-Mu{\~n}oz, Gonzalo},
   title   = {A comparative analysis of gradient boosting algorithms},
   journal = {Artificial Intelligence Review},
   year    = {2021},
+  volume  = {54},
+  number  = {3},
+  pages   = {1937--1967},
   doi     = {10.1007/s10462-020-09896-5},
-  note    = {Compara LightGBM, XGBoost y CatBoost. VERIFICAR la autoria: el
-             informe de LeapSpace la asocia a Ke, G. et al. al hablar de
-             LightGBM, lo que puede ser una confusion con el paper fundacional}
+  note    = {Compara LightGBM, XGBoost y CatBoost}
 }
 
-% ---------- PENDIENTES ----------
-% LeapSpace identifica estos dos trabajos por titulo pero no expone su DOI,
-% y su propio informe advierte que no conviene inventarlos:
-%
-%   - SHAP: Lundberg, S. M. y Lee, S.-I. (2017). A unified approach to
-%     interpreting model predictions. NeurIPS 30. IMPRESCINDIBLE para la Fase 5.
-%   - LightGBM: Ke, G. et al. (2017). LightGBM: a highly efficient gradient
-%     boosting decision tree. NeurIPS 30. Conviene citarlo si se nombra al
-%     algoritmo campeon.
+% ---------- PENDIENTE ----------
+% El paper original de SHAP (Lundberg y Lee, 2017, NeurIPS 30) no figura en los
+% resultados de LeapSpace: los CSV solo contienen trabajos que lo aplican o lo
+% revisan. Es imprescindible para la Fase 5 y debe recuperarse aparte.

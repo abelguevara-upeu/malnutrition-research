@@ -59,16 +59,21 @@ El archivo `docs/papers/referencias.bib` contiene **estas 12 y solo estas**, tod
 búsqueda con Scopus AI. Las referencias metodológicas que figuraban en el Momento 6 (Aiken, Bangor,
 Davis, DeLong, Efron & Tibshirani, Kohavi, Lipton, Wilkinson) quedan fuera del archivo.
 
-### Autores pendientes
+### Autores: resueltos
 
-Ni los CSV ni los informes `.md` de LeapSpace exponen los autores: el propio informe los marca como
-*"Not surfaced in excerpt"*. Los campos `author` quedan como `{COMPLETAR}` y deben rellenarse abriendo
-cada EID en Scopus. Rellenarlos por aproximación produciría citas falsas que compilan sin error.
+LeapSpace no expone los autores —su informe los marca como *"Not surfaced in excerpt"*—, de modo que se
+resolvió cada DOI contra la API de CrossRef, y contra PubMed la entrada que no tiene DOI. El archivo
+`.bib` está completo: autores, revista, volumen, número y páginas provienen del registro del editor.
 
-> **Un error detectado en el informe de LeapSpace.** Atribuye *Leakage in data mining* a Domingos y
-> Pazzani, cuando el trabajo es de Kaufman, Rosset, Perlich y Stitelman. Conviene verificar cada
-> autoría en la ficha original antes de compilar: la herramienta acierta en DOI y títulos, pero no es
-> fiable en atribución.
+> **Tres discrepancias con el informe de LeapSpace**, detectadas al verificar:
+>
+> - *Leakage in data mining* se atribuía a Domingos y Pazzani; es de **Kaufman, Rosset y Perlich**
+>   (SIGKDD 2011, no revista).
+> - *A comparative analysis of gradient boosting algorithms* se asociaba a "Ke, G. et al.", confusión
+>   con el paper de LightGBM; es de **Bentéjac, Csörgő y Martínez-Muñoz**.
+> - TRIPOD figuraba encabezado por Collins; el orden real empieza por **Moons**, y Collins va último.
+>
+> La herramienta acierta en DOI y títulos, pero no es fiable en atribución de autoría.
 
 ## Descartadas y por qué
 
