@@ -1,0 +1,33 @@
+Para los dos más urgentes (trabajo relacionado — es lo que el jurado mira primero):
+
+Machine learning models predicting child stunting or chronic
+malnutrition using Demographic and Health Survey (DHS) data.
+Return a matrix with: authors, year, journal, country, sample size,
+algorithms compared, best AUC/accuracy, and key predictors found.
+Limit to 2019-2025.
+
+Determinantes y factores asociados a la desnutrición crónica
+infantil en Perú usando datos ENDES. Matriz con: autores, año,
+revista, periodo de datos analizado, método estadístico y
+factores significativos encontrados.
+Para el marco conceptual:
+
+
+UNICEF conceptual framework for child undernutrition: immediate,
+underlying and basic causes. Include the Lancet Maternal and Child
+Nutrition Series. Matrix with: authors, year, journal, framework
+level addressed, and main contribution.
+Para método (estos son papers únicos y conocidos, basta confirmarlos):
+
+
+Find the original papers for: (1) LightGBM gradient boosting
+framework, (2) SHAP unified approach to interpreting model
+predictions, (3) TRIPOD statement for reporting prediction models,
+(4) data leakage in data mining. Give full citation with DOI.
+Para cerrar el argumento de utilidad:
+
+
+Machine learning for targeting and prioritization of public health
+interventions or social programs in low and middle income countries.
+Matrix with: authors, year, journal, application domain, and
+reported operational benefit.

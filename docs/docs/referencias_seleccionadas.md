@@ -55,9 +55,20 @@ Sin estas, la discusión no aterriza en el país. Las tres usan ENDES o datos pe
 
 ## Cómo queda el conjunto
 
-Sumadas a las 8 metodológicas que ya tenías (Aiken, Bangor, Davis, DeLong, Efron & Tibshirani,
-Kohavi, Lipton, Wilkinson), el manuscrito queda con **20 referencias**: método estadístico cubierto por
-las previas, y dominio, contexto y estado del arte por estas 12.
+El archivo `docs/papers/referencias.bib` contiene **estas 12 y solo estas**, todas provenientes de la
+búsqueda con Scopus AI. Las referencias metodológicas que figuraban en el Momento 6 (Aiken, Bangor,
+Davis, DeLong, Efron & Tibshirani, Kohavi, Lipton, Wilkinson) quedan fuera del archivo.
+
+### Autores pendientes
+
+Ni los CSV ni los informes `.md` de LeapSpace exponen los autores: el propio informe los marca como
+*"Not surfaced in excerpt"*. Los campos `author` quedan como `{COMPLETAR}` y deben rellenarse abriendo
+cada EID en Scopus. Rellenarlos por aproximación produciría citas falsas que compilan sin error.
+
+> **Un error detectado en el informe de LeapSpace.** Atribuye *Leakage in data mining* a Domingos y
+> Pazzani, cuando el trabajo es de Kaufman, Rosset, Perlich y Stitelman. Conviene verificar cada
+> autoría en la ficha original antes de compilar: la herramienta acierta en DOI y títulos, pero no es
+> fiable en atribución.
 
 ## Descartadas y por qué
 
