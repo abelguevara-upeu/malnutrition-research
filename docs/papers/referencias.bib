@@ -187,7 +187,19 @@
   note    = {Compara LightGBM, XGBoost y CatBoost}
 }
 
-% ---------- PENDIENTE ----------
-% El paper original de SHAP (Lundberg y Lee, 2017, NeurIPS 30) no figura en los
-% resultados de LeapSpace: los CSV solo contienen trabajos que lo aplican o lo
-% revisan. Es imprescindible para la Fase 5 y debe recuperarse aparte.
+@inproceedings{lundberg2017shap,
+  author    = {Lundberg, Scott M. and Lee, Su-In},
+  title     = {A unified approach to interpreting model predictions},
+  booktitle = {Advances in Neural Information Processing Systems 30 ({NIPS} 2017)},
+  year      = {2017},
+  url       = {https://proceedings.neurips.cc/paper_files/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html},
+  note      = {Fundamento de la Fase 5 (TreeExplainer y valores SHAP).
+               Fuera de los resultados de LeapSpace: NeurIPS 2017 no deposito
+               DOI, de modo que se verifico contra las actas oficiales}
+}
+
+% ---------- NOTA SOBRE ESTA ENTRADA ----------
+% lundberg2017shap es la unica referencia ajena a la busqueda de LeapSpace. Se
+% incorpora porque los CSV solo contienen trabajos que aplican o revisan SHAP,
+% no el original, y toda la explicabilidad del estudio se apoya en el.
+% Al carecer de DOI se cita por URL de las actas, que es la forma habitual.

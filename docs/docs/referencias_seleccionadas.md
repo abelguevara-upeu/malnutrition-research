@@ -88,5 +88,13 @@ resolvió cada DOI contra la API de CrossRef, y contra PubMed la entrada que no 
 - **Egipto (2025):** reporta AUC 0.994 sobre *wasting*; una cifra tan alta sugiere fuga de información
   y citarla como comparación te perjudicaría.
 - **SHAP → RGE (2025) y aplicación en cáncer de próstata (2020):** el primero es una revisión
-  tangencial y el segundo un dominio ajeno. **Falta el paper original de SHAP (Lundberg & Lee, 2017)**,
-  que no apareció en esta búsqueda y conviene recuperar aparte: es imprescindible para tu Fase 5.
+  tangencial y el segundo un dominio ajeno.
+
+## Una referencia añadida fuera de LeapSpace
+
+El paper original de SHAP —**Lundberg & Lee (2017), NeurIPS 30**— no figura en los CSV: solo aparecen
+trabajos que lo aplican o lo revisan. Como toda la Fase 5 se apoya en él, se incorporó al `.bib`
+verificado contra las actas oficiales de NeurIPS. NeurIPS 2017 no depositó DOI, así que se cita por URL
+de las actas, que es la forma habitual para ese congreso.
+
+Con ella el archivo queda en **13 entradas**.
