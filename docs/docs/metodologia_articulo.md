@@ -95,3 +95,47 @@ graph TD
     L1 <--> D2
     L2 <--> D2
 ```
+
+---
+
+## REFERENCIAS
+
+> Al compilar con pandoc, esta sección se genera automáticamente desde
+> `docs/papers/referencias.bib` (`--bibliography=docs/papers/referencias.bib --citeproc`).
+> Se transcribe a continuación para consulta directa del documento en Markdown.
+
+1. Accinelli, R. A., & Leon-Abarca, J. A. (2020). Age and altitude of residence determine anemia
+   prevalence in Peruvian 6 to 35 months old children. *PLOS ONE*, 15(1), e0226846.
+2. Bentéjac, C., Csörgő, A., & Martínez-Muñoz, G. (2021). A comparative analysis of gradient boosting
+   algorithms. *Artificial Intelligence Review*, 54(3), 1937–1967.
+3. Bitew, F. H., Sparks, C. S., & Nyarko, S. H. (2021). Machine learning algorithms for predicting
+   undernutrition among under-five children in Ethiopia. *Public Health Nutrition*, 1–12.
+4. Black, R. E., Victora, C. G., Walker, S. P., Bhutta, Z. A., Christian, P., de Onis, M., Ezzati, M.,
+   Grantham-McGregor, S., Katz, J., Martorell, R., & Uauy, R. (2013). Maternal and child undernutrition
+   and overweight in low-income and middle-income countries. *The Lancet*, 382(9890), 427–451.
+5. Chilyabanyama, O. N., Chilengi, R., Simuyandi, M., Chisenga, C. C., Chirwa, M., Hamusonde, K.,
+   Saroj, R. K., Iqbal, N. T., & Ngaruye, I. (2022). Performance of machine learning classifiers in
+   classifying stunting among under-five children in Zambia. *Children*, 9(7), 1082.
+6. Kaufman, S., Rosset, S., & Perlich, C. (2011). Leakage in data mining: formulation, detection, and
+   avoidance. *Proceedings of the 17th ACM SIGKDD International Conference on Knowledge Discovery and
+   Data Mining*, 556–563.
+7. Lundberg, S. M., & Lee, S.-I. (2017). A unified approach to interpreting model predictions.
+   *Advances in Neural Information Processing Systems 30 (NIPS 2017)*.
+8. Moons, K. G. M., Altman, D. G., Reitsma, J. B., Ioannidis, J. P. A., Macaskill, P., Steyerberg, E. W.,
+   Vickers, A. J., Ransohoff, D. F., & Collins, G. S. (2015). Transparent reporting of a multivariable
+   prediction model for individual prognosis or diagnosis (TRIPOD): explanation and elaboration.
+   *Annals of Internal Medicine*, 162(1), W1–W73.
+9. Ndagijimana, S., Kabano, I., Masabo, E., & Ntaganda, J. M. (2025). Predicting stunting status among
+   under-5 children in Rwanda using neural network model: evidence from 2020 Rwanda demographic and
+   health survey. *F1000Research*, 13, 128.
+10. Santos, M. P., Turner, B., & Chaparro, M. P. (2021). The double burden of malnutrition in Peru: an
+    update with a focus on social inequities. *The American Journal of Clinical Nutrition*, 113(4),
+    865–873.
+11. Sobrino, M., Gutiérrez, C., Cunha, A. J., Dávila, M., & Alarcón, J. (2014). Desnutrición infantil en
+    menores de cinco años en Perú: tendencias y factores determinantes. *Revista Panamericana de Salud
+    Pública*, 35(2), 104–112.
+12. Talukder, A., & Ahammed, B. (2020). Machine learning algorithms for predicting malnutrition among
+    under-five children in Bangladesh. *Nutrition*, 78, 110861.
+13. Victora, C. G., Christian, P., Vidaletti, L. P., Gatica-Domínguez, G., Menon, P., & Black, R. E.
+    (2021). Revisiting maternal and child undernutrition in low-income and middle-income countries:
+    variable progress towards an unfinished agenda. *The Lancet*, 397(10282), 1388–1399.
