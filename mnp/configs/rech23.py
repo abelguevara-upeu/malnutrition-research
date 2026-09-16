@@ -65,6 +65,14 @@ config_f1: Dict[str, Any] = {
         994.0,
         995.0
     ],
+    # SH224 alimenta a HV234 por coalesce, asi que necesita la misma limpieza:
+    # de lo contrario reintroduce 994/995 despues de que HV234 ya fue limpiada.
+    "SH224": [
+        5.0,
+        9.0,
+        994.0,
+        995.0
+    ],
     "HV220": [
         98.0
     ],
@@ -98,6 +106,10 @@ config_f1: Dict[str, Any] = {
     ]
 },
     'replace_values': {
+        # SH224 codifica la prueba de yodo como indice ordinal (1-4) mientras que
+        # HV234 la guarda en ppm. Se homologa antes del coalesce, segun la fila
+        # SH224 de decisiones-de-limpieza.md.
+        "SH224": {1.0: 0.0, 2.0: 7.0, 3.0: 15.0, 4.0: 30.0},
         "HV204": {996.0: 0.0},
         "SH227": {6.0: 3.0},
         "SHREGION": {5.0: 4.0}

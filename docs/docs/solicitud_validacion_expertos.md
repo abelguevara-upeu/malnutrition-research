@@ -192,7 +192,7 @@ degradada en silencio. Por eso el formato importa tanto como la variable misma.
 |---|---|---|---|---:|
 | `HV204` | Numérica | 0 – 600 | minutos hasta la fuente | 0.1 |
 | `HV225` | Categórica | `Si` / `No` | **sin tilde** | 10.8 |
-| `HV234` | Código | 0, 7, 15, 30, 994, 995 | prueba de yodo en sal | 4.8 |
+| `HV234` | Código | 0, 7, 15, 30 | yodo en sal (ppm por colorimetría) | 4.8 |
 | `HV237` | Categórica | `Si` / `No` | **sin tilde** | 0.0 |
 | `HV237A` | Categórica | `Si` / `No` | **sin tilde** | 0.0 |
 | `HV237G` | Categórica | `Si` / `No` | **sin tilde** | 8.1 |
@@ -224,7 +224,7 @@ degradada en silencio. Por eso el formato importa tanto como la variable misma.
 >    tabla indica cuál corresponde en cada caso y la distinción debe respetarse.
 > 2. **Binarias en dos formatos.** `M17`, `M54`, `M55G` y `M60` se codifican `1`/`0`, mientras que el
 >    resto de las dicotómicas usan texto `Si`/`No`.
-> 3. **Códigos especiales en campos numéricos.** `HV234` (994, 995), `SH49` (96, 98) y `SH70` (96, 99)
+> 3. **Códigos especiales en campos numéricos.** `SH49` (96, 98) y `SH70` (96, 99)
 >    reservan esos valores para *otro* o *no sabe*. No representan magnitudes y deben transcribirse
 >    tal cual, sin convertirlos ni sustituirlos por promedios.
 >
