@@ -49,7 +49,8 @@ para proyectos de ciencia de datos, organizado en seis fases:
 | Validación | Validación cruzada estratificada 5-*fold* con ponderación muestral del INEI (`HV005`) |
 
 **Decisión metodológica central:** se **excluyeron deliberadamente el peso y la talla directos del
-niño** (`HC2`, `HC3`) y los Z-scores derivados. Si el modelo conociera la talla, el diagnóstico sería
+niño** (`HC2`, `HC3`) y los Z-scores derivados, siguiendo el criterio de prevención de fuga de
+información (Kaufman et al., 2011). Si el modelo conociera la talla, el diagnóstico sería
 trivial y no habría predicción. El modelo aprende únicamente de variables *no obvias* —condiciones del
 hogar, historia materna y entorno— que la encuesta puede recoger sin medir al niño.
 
@@ -252,7 +253,8 @@ datos externo pueda aportar abre la posibilidad de una versión mejorada del mod
 hoy una limitación declarada del estudio.
 
 El marco de referencia es el **modelo conceptual de UNICEF** sobre desnutrición infantil, que ordena
-las causas en tres niveles. El modelo actual cubre bien los niveles básico y subyacente —pobreza,
+las causas en tres niveles y que la serie de nutrición materno-infantil de *The Lancet* sistematiza
+(Black et al., 2013; Victora et al., 2021). El modelo actual cubre bien los niveles básico y subyacente —pobreza,
 educación, agua y saneamiento, vivienda— pero tiene un vacío en el **nivel inmediato**, que es
 precisamente donde actúa la intervención nutricional.
 
@@ -270,7 +272,7 @@ precisamente donde actúa la intervención nutricional.
 
 | Dimensión | Campo sugerido | Por qué importa |
 |---|---|---|
-| Antropometría materna | Talla de la madre (cm) | Predictor consistente de retraso del crecimiento intergeneracional |
+| Antropometría materna | Talla de la madre (cm) | Predictor consistente de retraso del crecimiento intergeneracional; resultó la variable más influyente en un modelo equivalente sobre datos DHS (Ndagijimana et al., 2025) |
 | Antropometría materna | Peso / IMC de la madre | Estado nutricional del hogar |
 | Servicios de salud | Controles CRED al día (sí/no, número) | Seguimiento del crecimiento en el sistema peruano |
 | Servicios de salud | Esquema de vacunación completo para la edad (sí/no) | *Proxy* de acceso efectivo a servicios |
@@ -344,3 +346,16 @@ aplicar el modelo en estudios de campo, intervención o gestión sanitaria.
 ---
 
 *Contacto: equipo de investigación — EP Ingeniería de Sistemas, Universidad Peruana Unión.*
+
+---
+
+## Referencias citadas
+
+- Black, R. E., Victora, C. G., Walker, S. P., *et al.* (2013). Maternal and child undernutrition and
+  overweight in low-income and middle-income countries. *The Lancet*, 382(9890), 427–451.
+- Kaufman, S., Rosset, S., & Perlich, C. (2011). Leakage in data mining: formulation, detection, and
+  avoidance. *Proceedings of the 17th ACM SIGKDD*, 556–563.
+- Ndagijimana, S., Kabano, I., Masabo, E., & Ntaganda, J. M. (2025). Predicting stunting status among
+  under-5 children in Rwanda using neural network model. *F1000Research*, 13, 128.
+- Victora, C. G., Christian, P., Vidaletti, L. P., *et al.* (2021). Revisiting maternal and child
+  undernutrition in low-income and middle-income countries. *The Lancet*, 397(10282), 1388–1399.
