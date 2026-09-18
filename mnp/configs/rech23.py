@@ -114,7 +114,11 @@ config_f1: Dict[str, Any] = {
         "SH227": {6.0: 3.0},
         "SHREGION": {5.0: 4.0}
     },
-    'divide_by_100000': ['HV271'],
+    # En 2015 y 2016 el INEI entrega esta columna en minuscula ('hv271'), y el
+    # escalado corre antes del coalesce: si solo se declara la mayuscula, esos
+    # dos anios entran sin dividir y el indice mezcla dos escalas (+-215987
+    # frente a +-10).
+    'divide_by_100000': ['HV271', 'hv271'],
     'cols_to_drop': [
     "SHTRIMES",
     "HV246H",

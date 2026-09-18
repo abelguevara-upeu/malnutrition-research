@@ -15,13 +15,24 @@ variables sociodemográficas, del hogar y de salud materna recogidas por encuest
 **orientar la focalización de recursos** en salud pública.
 
 El sistema **no reemplaza el diagnóstico clínico ni la medición antropométrica**. Funciona como una
-herramienta de **triaje previo**: dado el perfil de un hogar, estima la probabilidad de que el niño
-presente desnutrición crónica, permitiendo priorizar a quién visitar primero cuando el presupuesto no
-alcanza para cubrir a toda la población.
+herramienta de **triaje**: dado el perfil de un hogar, estima la probabilidad de que el niño presente
+desnutrición crónica, permitiendo priorizar a quién atender primero cuando el presupuesto no alcanza
+para cubrir a toda la población.
 
-**Pregunta de investigación:** ¿Puede un modelo de *Machine Learning* identificar, con datos de
-encuesta de hogar, qué niños tienen mayor riesgo de desnutrición crónica antes de que un agente de
-salud llegue al domicilio?
+**Qué datos necesita y cuáles no.** El modelo **no utiliza el peso ni la talla actuales del niño**: esas
+dos mediciones definen el diagnóstico, de modo que incluirlas convertiría la predicción en una
+tautología. Sí emplea el **peso y el tamaño al nacer**, que son antecedentes recogidos por entrevista o
+disponibles en el carné de control.
+
+La única variable que exige un procedimiento de laboratorio es la **hemoglobina ajustada por altitud**,
+habitualmente disponible en el tamizaje de anemia de los controles CRED. El resto son respuestas de
+encuesta sobre el hogar, la vivienda y la historia materna. En consecuencia, el sistema opera sobre
+información que en su mayor parte puede obtenerse sin medir al niño, pero no es un instrumento
+enteramente ajeno al registro clínico previo.
+
+**Pregunta de investigación:** ¿Puede un modelo de *Machine Learning* identificar, a partir del perfil
+sociodemográfico del hogar y la historia materna, qué niños tienen mayor riesgo de desnutrición crónica
+sin recurrir a la medición antropométrica que define el diagnóstico?
 
 ---
 
@@ -30,13 +41,31 @@ salud llegue al domicilio?
 Se siguió **CRISP-DM** (*Cross-Industry Standard Process for Data Mining*), estándar de la industria
 para proyectos de ciencia de datos, organizado en seis fases:
 
+```mermaid
+flowchart TB
+  F1["<b>1. Comprensión del negocio</b><br/>Focalización de recursos<br/>en salud pública"]
+  F2["<b>2. Comprensión de los datos</b><br/>Auditoría de 19 años<br/>de ENDES"]
+  F3["<b>3. Preparación de los datos</b><br/>Integración, limpieza y<br/>selección de variables"]
+  F4["<b>4. Modelado</b><br/>Seis algoritmos<br/>comparados"]
+  F5["<b>5. Evaluación</b><br/>Desempeño y<br/>explicabilidad"]
+  F6["<b>6. Despliegue</b><br/>Aplicativo web<br/>de consulta"]
+
+  F1 --> F2 --> F3 --> F4 --> F5 --> F6
+
+  F2 -. "los datos obligan a replantear el objetivo" .-> F1
+  F4 -. "faltan variables o requieren otro formato" .-> F3
+  F5 -. "el desempeño no alcanza la meta" .-> F4
+  F5 -. "no responde a la necesidad" .-> F1
+  F6 -. "el uso real revela nuevas necesidades" .-> F1
+
+  classDef fase fill:#eef3f9,stroke:#003366,stroke-width:1.5px,color:#1a2530
+  class F1,F2,F3,F4,F5,F6 fase
 ```
-1. Comprensión    2. Comprensión    3. Preparación
-   del Negocio   →   de los Datos  →   de los Datos
-                                            ↓
-6. Despliegue  ←  5. Evaluación   ←   4. Modelado
-   (aplicativo)     (explicabilidad)     (algoritmos)
-```
+
+Las flechas continuas marcan el avance y las punteadas los **retornos**: el proceso no es lineal, y
+cada fase puede obligar a rehacer una anterior. Los dos retornos que más pesaron en este proyecto
+fueron el de modelado a preparación —al detectar variables que exigían otra codificación— y el de
+evaluación a modelado, al calibrar el umbral de decisión para alcanzar la sensibilidad requerida.
 
 | Aspecto | Definición |
 |---|---|
@@ -54,12 +83,27 @@ información (Kaufman et al., 2011). Si el modelo conociera la talla, el diagnó
 trivial y no habría predicción. El modelo aprende únicamente de variables *no obvias* —condiciones del
 hogar, historia materna y entorno— que la encuesta puede recoger sin medir al niño.
 
-**Resultados actuales:** LightGBM resultó el algoritmo campeón entre seis evaluados, con
-**AUC-ROC 0.8294** (IC 95%: 0.8267 – 0.8324) y **sensibilidad 76.43%** (IC 95%: 75.88% – 76.98%),
-verificados mediante *bootstrap* de 1,000 repeticiones. El umbral de decisión es ajustable: elevando la
-sensibilidad a ≥ 80% el sistema detecta más casos reales a costa de más falsos positivos, criterio
-deliberado en triaje preventivo, donde no detectar a un niño desnutrido es más costoso que una visita
-de verificación innecesaria.
+### Resultados actuales
+
+Entre seis algoritmos evaluados resultó campeón **LightGBM**. La tabla traduce cada métrica a lo que
+significa en la práctica:
+
+| Métrica | Valor (IC 95%) | Qué significa en la práctica |
+|---|---|---|
+| Capacidad de discriminación (AUC-ROC) | **0.829** (0.827 – 0.832) | Tomados al azar un niño con desnutrición crónica y otro sin ella, el sistema asigna mayor riesgo al primero en **83 de cada 100 casos** |
+| Sensibilidad o cobertura | **76.4%** (75.9% – 77.0%) | De cada 100 niños que sí tienen desnutrición crónica, el sistema señala a **76** |
+| Casos no detectados | 23.6% | **24 de cada 100** niños afectados pasarían inadvertidos con el umbral actual |
+| Precisión de la alerta | 36.4% | De cada 100 niños señalados como riesgo, **36 lo confirman**; los demás requieren verificación |
+
+**Sobre el margen de error.** Los intervalos de confianza se estimaron con *bootstrap* de 1,000
+remuestreos. Su amplitud es inferior a medio punto porcentual, lo que indica que las cifras no dependen
+de qué subconjunto de niños se use para evaluar: el desempeño es estable.
+
+**Sobre el equilibrio entre cobertura y precisión.** El punto de corte es ajustable y los dos valores se
+mueven en direcciones opuestas. Elevando la cobertura al 80% el sistema detecta más casos reales, pero
+también emite más alertas que luego no se confirman. La decisión se tomó deliberadamente a favor de la
+cobertura: en un esquema de priorización, dejar sin detectar a un niño con desnutrición es más costoso
+que una visita de verificación innecesaria.
 
 ---
 
@@ -110,7 +154,7 @@ adjuntar su diccionario de valores.
 ### Hogar y nivel socioeconómico
 | Código | Tipo | Valores admitidos | Unidad | % nulos tolerado |
 |---|---|---|---|---:|
-| `HV271` | Numérica | −215987 a 205316 | índice de riqueza (escala INEI ×10⁵) | 0.8 |
+| `HV271` | Numérica | −2.2 a 2.2 (aprox.) | índice de riqueza del hogar, en desviaciones respecto a la media nacional | 0.8 |
 | `HV012` | Numérica | 0 – 25 | personas | 0.0 |
 | `HV014` | Numérica | 0 – 10 | niños menores de 5 años en el hogar | 0.0 |
 | `HV219` | Categórica nominal | `Masculino` / `Femenino` | sexo del jefe del hogar | 0.0 |
