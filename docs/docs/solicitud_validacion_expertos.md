@@ -4,7 +4,13 @@
 
 **Institución:** Universidad Peruana Unión (UPeU) — Facultad de Ingeniería y Arquitectura, EP Ingeniería de Sistemas
 **Asignatura:** Investigación V (Ciclo X – 2026-II) · **Docente:** Mg. Nemias Saboya Rios
-**Equipo:** Abel Guevara Huasco · Verónica Vergara Rojas · Pamela Vallejos Cotrina
+**Equipo de investigación:**
+
+| Integrante | Correo institucional |
+|---|---|
+| Abel Guevara Huasco | abelguevara@upeu.edu.pe |
+| Verónica Vergara Rojas | veronica.vergara@upeu.edu.pe |
+| Pamela Vallejos Cotrina | zulin.vallejos@upeu.edu.pe |
 
 ---
 
@@ -282,7 +288,8 @@ aplicar el modelo en estudios de campo, intervención o gestión sanitaria.
 
 ---
 
-*Contacto: equipo de investigación — EP Ingeniería de Sistemas, Universidad Peruana Unión.*
+*Contacto: Abel Guevara Huasco — abelguevara@upeu.edu.pe*
+*EP Ingeniería de Sistemas, Universidad Peruana Unión.*
 
 ---
 
