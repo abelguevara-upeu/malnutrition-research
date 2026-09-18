@@ -131,11 +131,6 @@ sistema.**
 | `SH76B` / `SH76C` / `SH76D` | Ventanas con cristal / de madera / con malla |
 | `SH77F` | Otro tipo de transporte |
 
-> **Nota:** el conjunto es ampliable. El *dataset* original contiene más de 180 variables, de las cuales
-> se retuvieron 45 por criterios estadísticos. Si los especialistas consideran relevante alguna
-> dimensión no cubierta —consumo dietético, morbilidad reciente, vacunación, antropometría materna—
-> puede incorporarse siempre que exista en la fuente de datos.
-
 ---
 
 ## 4. Especificación de campos
@@ -223,22 +218,6 @@ adjuntar su diccionario de valores.
 | `SH76D` | Binaria | `Sí` / `No` | ventanas con malla | 16.2 |
 | `SH77F` | Binaria | `Sí` / `No` | otro tipo de transporte | 0.0 |
 
-> **Advertencia sobre la codificación heredada.** Las tres irregularidades que siguen provienen de la
-> propia ENDES y se conservaron para no alterar la fuente; se señalan aquí porque condicionan el
-> formato de entrega:
->
-> 1. **`Si` frente a `Sí`.** Internamente unas variables llevan tilde y otras no, según el módulo de
->    origen. Para la entrega esto es indiferente: basta escribir `Sí` de forma uniforme.
-> 2. **Binarias en dos formatos internos.** `M17`, `M54`, `M55G` y `M60` viajan como `1`/`0` dentro del
->    sistema, mientras que el resto de las dicotómicas usan texto. Para la entrega basta con `Sí`/`No`
->    en todas: la homologación corre por cuenta del equipo.
-> 3. **Códigos especiales.** Internamente `SH49` y `SH70` reservan 96, 98 y 99 para *otro* y *no
->    sabe*. Al entregarse como texto esto deja de ser un problema: escriba `Otro` cuando corresponda y
->    deje la celda **vacía** cuando el dato no se pudo obtener.
->
-> Si el conjunto de datos externo emplea otra codificación, basta con entregarlo acompañado de su
-> diccionario de valores: el equipo se encarga de la homologación.
-
 ---
 
 ## 5. Variables adicionales deseables
@@ -285,16 +264,6 @@ precisamente donde actúa la intervención nutricional.
 | Seguridad alimentaria | Escala de inseguridad alimentaria del hogar (ELCSA o similar) | Acceso efectivo a alimentos, no solo capacidad económica |
 | Cuidado | Situación laboral de la madre / cuidador principal | Tiempo disponible para prácticas de cuidado |
 | Programas sociales | Beneficiario de Juntos, Cuna Más, Qali Warma (sí/no) | Permite evaluar cobertura frente a necesidad |
-
-> **Sobre el formato.** Estas variables no requieren la codificación estricta de la sección 4, ya
-> que aún no forman parte del modelo. Basta con entregarlas tal como estén registradas, acompañadas de
-> su diccionario de valores. El equipo se encarga de homologarlas.
-
-> **Una aclaración necesaria.** Las variables de morbilidad reciente (diarrea, IRA) son causas
-> inmediatas, pero también son *concurrentes* con el desenlace: si un agente de salud ya sabe que el
-> niño tuvo diarrea, es porque hubo contacto previo con el sistema. Por eso se solicitan para
-> **análisis explicativo** y para una eventual versión del modelo orientada a seguimiento, no
-> necesariamente para el triaje anticipado, cuyo valor reside justamente en operar sin visita previa.
 
 
 ---
