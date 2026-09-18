@@ -24,9 +24,9 @@ if m:
     h = h[:m.start()] + '<pre class="mermaid">' + html.unescape(m.group(1)) + '</pre>' + h[m.end():]
 if 'mermaid.min.js' not in h and 'class="mermaid"' in h:
     h = h.replace('</head>', '''<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-<script>mermaid.initialize({startOnLoad:true,theme:"base",themeVariables:{fontSize:"13px",primaryColor:"#eef3f9",primaryBorderColor:"#003366",primaryTextColor:"#1a2530",lineColor:"#5a7ca6"}});</script>
+<script>mermaid.initialize({startOnLoad:true,theme:"base",themeVariables:{fontSize:"15px",primaryColor:"#eef3f9",primaryBorderColor:"#003366",primaryTextColor:"#1a2530",lineColor:"#5a7ca6"}});</script>
 <style>.mermaid{text-align:center;margin:8px 0 12px;page-break-inside:avoid;background:none;border:none;padding:0}
-.mermaid svg{width:100%;max-width:520px;height:auto}</style>
+.mermaid svg{max-height:88mm;width:auto;max-width:100%}</style>
 </head>''')
 p.write_text(h, encoding="utf-8")
 PY

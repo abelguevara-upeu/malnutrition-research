@@ -4,13 +4,8 @@
 
 **Institución:** Universidad Peruana Unión (UPeU) — Facultad de Ingeniería y Arquitectura, EP Ingeniería de Sistemas
 **Asignatura:** Investigación V (Ciclo X – 2026-II) · **Docente:** Mg. Nemias Saboya Rios
-**Equipo de investigación:**
-
-| Integrante | Correo institucional |
-|---|---|
-| Abel Guevara Huasco | abelguevara@upeu.edu.pe |
-| Verónica Vergara Rojas | veronica.vergara@upeu.edu.pe |
-| Pamela Vallejos Cotrina | zulin.vallejos@upeu.edu.pe |
+**Equipo:** Abel Guevara Huasco (abelguevara@upeu.edu.pe) · Verónica Vergara Rojas
+(veronica.vergara@upeu.edu.pe) · Pamela Vallejos Cotrina (zulin.vallejos@upeu.edu.pe)
 
 ---
 
@@ -49,22 +44,21 @@ para proyectos de ciencia de datos, organizado en seis fases:
 
 ```mermaid
 flowchart TB
-  F1["<b>1. Comprensión del negocio</b><br/>Focalización de recursos<br/>en salud pública"]
-  F2["<b>2. Comprensión de los datos</b><br/>Auditoría de 19 años<br/>de ENDES"]
-  F3["<b>3. Preparación de los datos</b><br/>Integración, limpieza y<br/>selección de variables"]
-  F4["<b>4. Modelado</b><br/>Seis algoritmos<br/>comparados"]
-  F5["<b>5. Evaluación</b><br/>Desempeño y<br/>explicabilidad"]
-  F6["<b>6. Despliegue</b><br/>Aplicativo web<br/>de consulta"]
+  F1["<b>1.</b> Comprensión del negocio"]
+  F2["<b>2.</b> Comprensión de los datos"]
+  F3["<b>3.</b> Preparación de los datos"]
+  F4["<b>4.</b> Modelado"]
+  F5["<b>5.</b> Evaluación"]
+  F6["<b>6.</b> Despliegue"]
 
   F1 --> F2 --> F3 --> F4 --> F5 --> F6
 
-  F2 -. "los datos obligan a replantear el objetivo" .-> F1
-  F4 -. "faltan variables o requieren otro formato" .-> F3
-  F5 -. "el desempeño no alcanza la meta" .-> F4
-  F5 -. "no responde a la necesidad" .-> F1
-  F6 -. "el uso real revela nuevas necesidades" .-> F1
+  F2 -. "replantear el objetivo" .-> F1
+  F4 -. "faltan variables" .-> F3
+  F5 -. "no alcanza la meta" .-> F4
+  F6 -. "nuevas necesidades" .-> F1
 
-  classDef fase fill:#eef3f9,stroke:#003366,stroke-width:1.5px,color:#1a2530
+  classDef fase fill:#eef3f9,stroke:#003366,stroke-width:1.4px,color:#1a2530
   class F1,F2,F3,F4,F5,F6 fase
 ```
 
