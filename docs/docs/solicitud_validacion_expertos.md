@@ -65,82 +65,13 @@ de verificación innecesaria.
 
 ## 3. Variables que intervienen (45)
 
-Estas son las variables que el modelo utiliza actualmente, agrupadas por dominio. **Son las que
-solicitamos encontrar en cualquier conjunto de datos externo con el que se desee contrastar el
-sistema.**
-
-### A. Niño (4)
-| Código ENDES | Variable |
-|---|---|
-| `HC1` | Edad en meses |
-| `HC27` | Sexo |
-| `HC56` | Hemoglobina ajustada por altitud |
-| `HC63` | Intervalo respecto al nacimiento anterior |
-
-### B. Salud materna, embarazo y lactancia (13)
-| Código | Variable |
-|---|---|
-| `M13` | Mes de gestación del primer control prenatal |
-| `M14` | Número de visitas prenatales |
-| `m15` | Lugar del parto |
-| `M17` | Parto por cesárea |
-| `M18` | Tamaño del niño al nacer |
-| `m19` | Peso al nacer (kg) |
-| `M4` | Duración de la lactancia |
-| `m34` | Horas hasta el inicio de la lactancia |
-| `M46` | Días que tomó hierro en el embarazo |
-| `M54` | Vitamina A en los primeros 2 meses post parto |
-| `M55G` | Fórmula para bebés en los primeros 3 días |
-| `M60` | Antiparasitarios durante el embarazo |
-| `HC62` | Año más alto de educación de la madre |
-
-### C. Hogar y nivel socioeconómico (7)
-| Código | Variable |
-|---|---|
-| `HV271` | Índice de riqueza del hogar |
-| `HV012` | Miembros habituales del hogar |
-| `HV014` | Niños menores de 5 años en el hogar |
-| `HV219` | Sexo del jefe del hogar |
-| `HV220` | Edad del jefe del hogar |
-| `HV102` | Residente habitual |
-| `HV025` | Área de residencia (urbano / rural) |
-
-### D. Agua, saneamiento e higiene — WASH (10)
-| Código | Variable |
-|---|---|
-| `HV204` | Tiempo de viaje a la fuente de agua |
-| `HV225` | Comparte servicio higiénico |
-| `HV234` | Prueba de yodo en la sal |
-| `HV237` | Tratamiento del agua |
-| `HV237A` | Tratamiento del agua: hervir |
-| `HV237G` | Consumo de agua embotellada |
-| `SH42` | Disponibilidad de agua todo el día |
-| `SH48` | Conserva agua |
-| `SH49` / `SH50` | Tipo de recipiente y si lo usa con tapa |
-
-### E. Vivienda y entorno (11)
-| Código | Variable |
-|---|---|
-| `HV040` | Altitud del conglomerado (msnm) |
-| `HV216` | Habitaciones para dormir |
-| `SH71` | Número de habitaciones del hogar |
-| `HV240` | Tiene chimenea o campana |
-| `HV242` | Cuarto separado para cocinar |
-| `SH63` | Otro tipo de combustible para cocinar |
-| `SH70` | Fuente de luz |
-| `SH76B` / `SH76C` / `SH76D` | Ventanas con cristal / de madera / con malla |
-| `SH77F` | Otro tipo de transporte |
-
----
-
-## 4. Especificación de campos
-
 Esta tabla define **cómo debe venir codificada cada variable** en un conjunto de datos externo. El
 modelo compara valores de forma literal: una categoría escrita de otra manera (`"URBANO"` en lugar de
 `"Urbano"`, o `1`/`0` en lugar de `"Si"`/`"No"`) no produce un error visible, sino una predicción
 degradada en silencio. Por eso el formato importa tanto como la variable misma.
 
 **Convenciones**
+
 - *Categórica nominal*: texto, exactamente uno de los valores listados. No hay orden entre ellos.
 - *Categórica ordinal*: texto, con orden implícito (de mayor a menor, según se lista).
 - *Binaria*: texto, `Sí` o `No`.
@@ -160,7 +91,6 @@ adjuntar su diccionario de valores.
 | `HC27` | Categórica nominal | `Hombre` / `Mujer` | sexo del niño | 0.0 |
 | `HC56` | Numérica | 4 – 20 (hemoglobina ajustada) | g/dL | 9.6 |
 | `HC63` | Numérica | 7 – 388 | meses desde el parto anterior | 36.3 |
-
 ### Salud materna, embarazo y lactancia
 | Código | Tipo | Valores admitidos | Unidad | % nulos tolerado |
 |---|---|---|---|---:|
@@ -177,7 +107,6 @@ adjuntar su diccionario de valores.
 | `M55G` | Binaria | `Sí` / `No` | fórmula en los 3 primeros días | 6.8 |
 | `M60` | Binaria | `Sí` / `No` | antiparasitarios durante el embarazo | 19.9 |
 | `HC62` | Numérica | 0 – 9 | años de educación aprobados por la madre | 4.8 |
-
 ### Hogar y nivel socioeconómico
 | Código | Tipo | Valores admitidos | Unidad | % nulos tolerado |
 |---|---|---|---|---:|
@@ -188,7 +117,6 @@ adjuntar su diccionario de valores.
 | `HV220` | Numérica | 12 – 97 | años | 0.0 |
 | `HV102` | Binaria | `Sí` / `No` | residente habitual del hogar | 2.4 |
 | `HV025` | Categórica nominal | `Urbano` / `Rural` | área de residencia | 0.0 |
-
 ### Agua, saneamiento e higiene (WASH)
 | Código | Tipo | Valores admitidos | Unidad | % nulos tolerado |
 |---|---|---|---|---:|
@@ -202,7 +130,6 @@ adjuntar su diccionario de valores.
 | `SH48` | Binaria | `Sí` / `No` | ¿conserva agua? | 15.8 |
 | `SH49` | Categórica nominal | `Olla, tetera` / `Balde` / `Jarra` / `Bidón` / `Otro` | recipiente donde conserva el agua | 20.4 |
 | `SH50` | Binaria | `Sí` / `No` | ¿usa el recipiente con tapa? | 19.3 |
-
 ### Vivienda y entorno
 | Código | Tipo | Valores admitidos | Unidad | % nulos tolerado |
 |---|---|---|---|---:|
@@ -217,10 +144,7 @@ adjuntar su diccionario de valores.
 | `SH76C` | Binaria | `Sí` / `No` | ventanas de madera | 16.2 |
 | `SH76D` | Binaria | `Sí` / `No` | ventanas con malla | 16.2 |
 | `SH77F` | Binaria | `Sí` / `No` | otro tipo de transporte | 0.0 |
-
----
-
-## 5. Variables adicionales deseables
+## 4. Variables adicionales deseables
 
 Las 45 variables anteriores son las que el modelo **usa hoy** y constituyen el mínimo necesario para
 contrastarlo. Las que siguen **no están en el modelo actual** y se solicitan porque la literatura
@@ -268,13 +192,13 @@ precisamente donde actúa la intervención nutricional.
 
 ---
 
-## 6. Qué esperamos de esta validación
+## 5. Qué esperamos de esta validación
 
 Solicitamos la participación de **cinco especialistas** en nutrición, salud pública, epidemiología o
 enfermería, idealmente con representación territorial (**2 de costa, 2 de sierra, 1 de selva**), para
 dos procesos complementarios:
 
-### 6.1 Pertinencia
+### 5.1 Pertinencia
 Valoración de la **utilidad percibida** del sistema mediante un instrumento estructurado que el
 especialista completará tras una demostración del aplicativo. Se evalúa si la herramienta resulta útil,
 comprensible y aplicable en la práctica real de focalización sanitaria, y qué limitaciones o variables
@@ -283,7 +207,7 @@ faltantes identifica desde su experiencia profesional.
 *Modalidad:* sesión virtual, coordinada según disponibilidad. El equipo provee el protocolo, conduce la
 demostración y registra la sesión.
 
-### 6.2 Replicabilidad
+### 5.2 Replicabilidad
 Contraste del modelo frente a **datos externos** distintos de la ENDES. El procedimiento consiste en que
 el especialista aporte registros de su ámbito —incluyendo casos con y sin desnutrición diagnosticada—,
 el sistema emita su estimación de riesgo, y se compare con el diagnóstico clínico conocido.
@@ -294,7 +218,7 @@ sección 3.
 
 ---
 
-## 7. Consideraciones éticas
+## 6. Consideraciones éticas
 
 Los datos con los que se construyó el modelo son de **acceso público y libre** (portal de microdatos del
 INEI), por lo que su tratamiento no requirió aprobación de comité de ética.
@@ -306,7 +230,7 @@ no serán publicados ni compartidos con terceros.
 
 ---
 
-## 8. Contribución esperada para los participantes
+## 7. Contribución esperada para los participantes
 
 Los especialistas que participen serán reconocidos en el artículo científico resultante. Asimismo, el
 equipo queda disponible para integrarse como soporte técnico en investigaciones posteriores que deseen

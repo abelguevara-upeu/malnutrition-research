@@ -1,0 +1,114 @@
+/* Hoja de estilo para los documentos que se exportan a PDF con Chrome.
+   Margenes estrechos y tablas densas para reducir el numero de paginas. */
+
+@page {
+  size: A4 portrait;
+  margin: 14mm 13mm 16mm 13mm;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 9.4pt;
+  line-height: 1.38;
+  color: #1a2530;
+  margin: 0;
+  max-width: none;
+}
+
+/* --- titulos --- */
+h1 {
+  font-size: 15pt;
+  line-height: 1.2;
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #003366;
+  color: #003366;
+}
+h2 {
+  font-size: 11.2pt;
+  margin: 16px 0 7px;
+  padding: 3px 0 3px 8px;
+  border-left: 3px solid #003366;
+  background: #f2f5f9;
+  color: #003366;
+  page-break-after: avoid;
+}
+h3 {
+  font-size: 9.8pt;
+  margin: 11px 0 5px;
+  color: #1f3f66;
+  page-break-after: avoid;
+}
+
+p { margin: 0 0 6px; }
+ul, ol { margin: 0 0 7px; padding-left: 18px; }
+li { margin-bottom: 2px; }
+
+/* --- tablas: el nucleo del documento --- */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 7px 0 12px;
+  font-size: 8.3pt;
+  page-break-inside: auto;
+}
+thead { display: table-header-group; }   /* repite el encabezado al partir pagina */
+tr { page-break-inside: avoid; }
+
+th {
+  background: #003366;
+  color: #fff;
+  text-align: left;
+  font-weight: 600;
+  padding: 4px 6px;
+  border: 1px solid #003366;
+  font-size: 8.1pt;
+}
+td {
+  padding: 3px 6px;
+  border: 1px solid #c9d4e0;
+  vertical-align: top;
+}
+tbody tr:nth-child(even) td { background: #f6f9fc; }
+
+/* codigos de variable: monoespaciado compacto y sin cortes */
+code {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 7.9pt;
+  background: #eef2f7;
+  padding: 0 2px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+th code { background: none; color: #fff; }
+
+/* la primera columna de las tablas lleva el codigo: evitar que se parta */
+td:first-child { white-space: nowrap; }
+
+/* --- notas y separadores --- */
+blockquote {
+  margin: 7px 0;
+  padding: 5px 10px;
+  background: #fff8e6;
+  border-left: 3px solid #d9a521;
+  font-size: 8.8pt;
+}
+blockquote p { margin: 0 0 3px; }
+
+hr {
+  border: none;
+  border-top: 1px solid #d6dfe8;
+  margin: 13px 0;
+}
+
+/* el diagrama CRISP-DM va en bloque de codigo */
+pre {
+  background: #f6f9fc;
+  border: 1px solid #d6dfe8;
+  padding: 7px 9px;
+  font-size: 8pt;
+  line-height: 1.3;
+  overflow-x: hidden;
+  page-break-inside: avoid;
+}
+pre code { background: none; font-size: 8pt; white-space: pre; }
