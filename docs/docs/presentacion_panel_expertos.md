@@ -32,18 +32,21 @@ si los datos que el Estado ya recoge permiten priorizar mejor.
 Estima la **probabilidad de que un niño presente desnutrición crónica** a partir del perfil de su hogar
 y de la historia materna, **sin medir al niño**.
 
-| | |
+| Qué pide | De dónde sale |
 |---|---|
-| **Entrega** | Un nivel de riesgo por niño y un mapa de factores predominantes por departamento |
-| **Requiere** | Datos de encuesta: condiciones de la vivienda, agua y saneamiento, historia del embarazo y parto |
-| **No requiere** | Peso ni talla actuales del niño |
+| Condiciones de vivienda, agua y saneamiento | Entrevista al hogar |
+| Historia del embarazo, parto y lactancia | Entrevista a la madre |
+| **Peso y tamaño al nacer** | Carné de control o recuerdo de la madre |
+| **Hemoglobina** | Tamizaje de anemia — **requiere punción** |
 
-**Por qué no usa peso ni talla:** esas dos mediciones *definen* el diagnóstico. Si el sistema las
-conociera, no estaría prediciendo nada. El modelo aprende de las señales que rodean al problema, no de
-su resultado.
+**Por qué no usa peso ni talla actuales:** esas dos mediciones *definen* el diagnóstico de
+desnutrición crónica. Si el sistema las conociera, no estaría prediciendo nada.
 
-*La única variable que exige laboratorio es la hemoglobina, habitualmente disponible en el tamizaje de
-anemia de los controles CRED.*
+**La hemoglobina es la excepción.** Es la única variable que exige un procedimiento sobre el niño, y la
+incluimos porque el tamizaje de anemia es rutinario en los controles CRED.
+
+Probamos qué ocurre **sin ella**: el desempeño cae de 0.8295 a 0.8282, una diferencia inapreciable. El
+sistema puede operar solo con datos de entrevista cuando el dato no esté disponible.
 :::
 
 ::: slide
