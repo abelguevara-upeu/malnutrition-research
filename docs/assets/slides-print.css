@@ -1,0 +1,113 @@
+/* Diapositivas horizontales para exportar a PDF con Chrome.
+   Cada bloque ::: slide ocupa una pagina A4 apaisada. */
+
+@page { size: A4 landscape; margin: 0; }
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #1a2530;
+  margin: 0;
+  font-size: 14.5pt;
+  line-height: 1.5;
+}
+
+.slide {
+  width: 297mm;
+  height: 209mm;          /* 1mm menos que A4 para evitar paginas en blanco */
+  box-sizing: border-box;
+  padding: 16mm 20mm;
+  page-break-after: always;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+.slide:last-child { page-break-after: auto; }
+
+/* portada y cierre: centradas y sobre fondo institucional */
+.slide:first-child, .slide:last-child {
+  background: #003366;
+  color: #fff;
+  text-align: center;
+}
+.slide:first-child h1 {
+  font-size: 30pt;
+  line-height: 1.15;
+  color: #fff;
+  border: none;
+  margin: 0 0 10mm;
+}
+.slide:first-child h3 {
+  font-size: 15pt;
+  font-weight: 400;
+  color: #b9d0e8;
+  margin: 0 0 14mm;
+}
+.slide:last-child h2 {
+  font-size: 26pt;
+  color: #fff;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0 0 10mm;
+}
+.slide:first-child p, .slide:last-child p { color: #dce7f2; margin: 2mm 0; }
+.slide:first-child em, .slide:last-child em { color: #93b4d6; }
+.slide:first-child strong, .slide:last-child strong { color: #fff; }
+
+/* titulos de contenido */
+h2 {
+  font-size: 23pt;
+  color: #003366;
+  margin: 0 0 7mm;
+  padding-bottom: 3mm;
+  border-bottom: 2.5px solid #003366;
+  background: none;
+}
+h3 { font-size: 14pt; color: #1f3f66; margin: 5mm 0 2mm; }
+
+p { margin: 0 0 4mm; }
+ol, ul { margin: 0 0 4mm; padding-left: 7mm; }
+li { margin-bottom: 1.5mm; }
+
+strong { color: #003366; }
+
+/* citas destacadas */
+blockquote {
+  margin: 5mm 0;
+  padding: 4mm 7mm;
+  background: #f2f5f9;
+  border-left: 4px solid #003366;
+  font-size: 15pt;
+  font-style: italic;
+}
+blockquote p { margin: 0; }
+
+/* tablas */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 5mm 0;
+  font-size: 13pt;
+}
+th {
+  background: #003366;
+  color: #fff;
+  text-align: left;
+  padding: 2.5mm 4mm;
+  border: 1px solid #003366;
+  font-size: 11.5pt;
+}
+td { padding: 2.5mm 4mm; border: 1px solid #c9d4e0; vertical-align: top; }
+tbody tr:nth-child(even) td { background: #f6f9fc; }
+/* tablas de dos columnas sin encabezado visible: la primera actua de etiqueta */
+table tbody td:first-child { font-weight: 600; color: #003366; }
+
+/* tabla de metricas: la columna del valor no necesita mas que el numero */
+table th:nth-child(2), table td:nth-child(2) { width: 12%; }
+table th:nth-child(3), table td:nth-child(3) { width: 58%; font-weight: 400; }
+
+hr { border: none; border-top: 2px solid #d6dfe8; margin: 6mm 0; }
+
+em { color: #55606b; }
+.slide > p:last-child em { font-size: 11pt; }
