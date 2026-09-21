@@ -238,18 +238,27 @@ precisamente donde actúa la intervención nutricional.
 
 ## 5. Qué esperamos de esta validación
 
-Solicitamos la participación de **cinco especialistas** en nutrición, salud pública, epidemiología o
-enfermería, idealmente con representación territorial (**2 de costa, 2 de sierra, 1 de selva**), para
-dos procesos complementarios:
+Solicitamos la participación de un **panel multidisciplinario de cinco profesionales** del ámbito
+sanitario, con el siguiente perfil:
+
+| Perfil | Cantidad |
+|---|:--:|
+| Nutricionistas | 2 |
+| Médico | 1 |
+| Enfermeros | 2 |
+
+**Requisitos:** mínimo diez años de experiencia en área asistencial y grado de maestría en salud
+pública o áreas afines.
 
 ### 5.1 Pertinencia
 Valoración de la **utilidad percibida** del sistema mediante un instrumento estructurado que el
-especialista completará tras una demostración del aplicativo. Se evalúa si la herramienta resulta útil,
-comprensible y aplicable en la práctica real de focalización sanitaria, y qué limitaciones o variables
-faltantes identifica desde su experiencia profesional.
+especialista completará tras una demostración del aplicativo. El instrumento se apoya en el Modelo de
+Aceptación Tecnológica (Davis, 1989) y evalúa si la herramienta aporta información accionable para
+priorizar la atención, qué limitaciones se identifican desde la experiencia clínica y qué variables
+adicionales resultarían necesarias.
 
-*Modalidad:* sesión virtual, coordinada según disponibilidad. El equipo provee el protocolo, conduce la
-demostración y registra la sesión.
+*Modalidad:* sesión virtual única, de aproximadamente una hora. El equipo provee el protocolo, conduce
+la demostración y registra la sesión.
 
 ### 5.2 Replicabilidad
 Contraste del modelo frente a **datos externos** distintos de la ENDES. El procedimiento consiste en que
@@ -291,6 +300,8 @@ aplicar el modelo en estudios de campo, intervención o gestión sanitaria.
 
 - Black, R. E., Victora, C. G., Walker, S. P., *et al.* (2013). Maternal and child undernutrition and
   overweight in low-income and middle-income countries. *The Lancet*, 382(9890), 427–451.
+- Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information
+  technology. *MIS Quarterly*, 13(3), 319–340.
 - Kaufman, S., Rosset, S., & Perlich, C. (2011). Leakage in data mining: formulation, detection, and
   avoidance. *Proceedings of the 17th ACM SIGKDD*, 556–563.
 - Ndagijimana, S., Kabano, I., Masabo, E., & Ntaganda, J. M. (2025). Predicting stunting status among
