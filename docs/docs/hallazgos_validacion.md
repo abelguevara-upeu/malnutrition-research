@@ -155,7 +155,18 @@ Ruta base: `reports/figures/`.
 | Figura | Ruta | Observación |
 |---|---|---|
 | Curvas ROC | `03_modeling/03_model_benchmarking_extended/01_*` | Estándar para comparar los seis algoritmos, pero exige explicar qué es una curva ROC. Reservar para el anexo |
-| Mapa de calor SHAP por departamento | `03_modeling/03_model_explainability/02_*` | El contenido es el más valioso del proyecto —los factores cambian según el departamento— pero los ejes llevan nombres de variable ENDES (`HV271_Factor_de_puntuacion...`) y resulta ilegible para quien no conoce el diccionario. Conviene rehacerla con etiquetas en lenguaje natural y menos columnas |
+| Mapa de calor SHAP por departamento | `03_modeling/03_model_explainability/02_*` | Versión original, con los ejes rotulados en nomenclatura ENDES. Sustituida para el panel por la que genera `mnp/plots_panel.py` |
+
+### Regenerada para el panel
+
+`mnp/plots_panel.py` produce `reports/figures/panel/mapa_riesgo_departamental.png`, que es la versión
+del mapa de calor incorporada a la presentación. Frente a la original: los factores se rotulan en
+lenguaje sanitario («Pobreza del hogar» en lugar de `HV271_Factor_de_puntuacion_del_indice_de_riqueza`),
+se muestran los diez de mayor importancia en el modelo en lugar de quince, los departamentos se agrupan
+por región natural con separadores, y el formato es apaisado para ocupar una diapositiva completa.
+
+Las columnas se eligen por la importancia que les asigna el modelo, no por su media en el csv: los
+valores vienen normalizados por departamento y promediarlos no distingue entre factores.
 
 ### No recomendadas para esta sesión
 

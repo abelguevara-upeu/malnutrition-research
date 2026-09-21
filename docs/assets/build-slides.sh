@@ -9,8 +9,11 @@ DIR="$ROOT/docs/docs"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
+# --resource-path permite que las rutas de imagen del markdown se resuelvan
+# desde la raiz del repositorio y no desde el directorio del documento.
 pandoc "$DIR/$DOC.md" -o "$TMP/doc.html" --standalone \
-  --css="$ROOT/docs/assets/slides-print.css" --embed-resources
+  --css="$ROOT/docs/assets/slides-print.css" --embed-resources \
+  --resource-path="$ROOT:$DIR"
 
 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu \
   --no-pdf-header-footer --virtual-time-budget=8000 \

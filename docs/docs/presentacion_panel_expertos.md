@@ -73,7 +73,17 @@ disponible, a un costo muy bajo.
 :::
 
 ::: slide
-## 4. Qué tan bien funciona
+## 4. Lo que el modelo aprendió
+
+![](reports/figures/panel/mapa_riesgo_departamental.png)
+
+**El riesgo no se explica igual en todo el país.** En Puno pesa la altitud; en Amazonas y Madre de
+Dios, la pobreza; en Huancavelica, el bajo peso al nacer. Esto permite orientar intervenciones
+distintas según el territorio.
+:::
+
+::: slide
+## 5. Qué tan bien funciona
 
 | Métrica | Valor | Qué significa en la práctica |
 |---|:---:|---|
@@ -90,7 +100,7 @@ afectado es más costoso que una visita de verificación innecesaria.
 :::
 
 ::: slide
-## 5. Qué **no** hace el sistema
+## 6. Qué **no** hace el sistema
 
 | No es | Sí es |
 |---|---|
@@ -106,7 +116,7 @@ limitaciones antes de cualquier uso real.
 :::
 
 ::: slide
-## 6. Demostración
+## 7. Demostración
 
 **A. Mapa de riesgo territorial**
 Cómo cambian los factores predominantes según el departamento: lo que pesa en Puno no es lo mismo que

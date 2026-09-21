@@ -107,6 +107,18 @@ table tbody td:first-child { font-weight: 600; color: #003366; }
 table th:nth-child(2), table td:nth-child(2) { width: 12%; }
 table th:nth-child(3), table td:nth-child(3) { width: 58%; font-weight: 400; }
 
+img {
+  display: block;
+  width: 100%;
+  max-width: 255mm;
+  max-height: 142mm;
+  object-fit: contain;
+  margin: 0 auto 2mm;
+}
+
+/* la diapositiva con figura necesita todo el alto: se recorta el texto */
+.slide p { margin-bottom: 3mm; }
+
 hr { border: none; border-top: 2px solid #d6dfe8; margin: 6mm 0; }
 
 em { color: #55606b; }
