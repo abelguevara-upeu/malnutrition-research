@@ -82,8 +82,19 @@ code {
 }
 th code { background: none; color: #fff; }
 
-/* la primera columna de las tablas lleva el codigo: evitar que se parta */
+/* la primera columna suele llevar el codigo de variable: evitar que se parta */
 td:first-child { white-space: nowrap; }
+
+/* Cuestionarios tipo Likert: la columna del enunciado debe llevarse el ancho y
+   las de la escala quedar estrechas. Se reconocen por el encabezado numerico. */
+.likert td:first-child { white-space: nowrap; width: 3%; text-align: center; }
+.likert td:nth-child(2) { white-space: normal; width: 62%; }
+.likert th:nth-child(n+3), .likert td:nth-child(n+3) {
+  width: 7%;
+  min-width: 7%;
+  text-align: center;
+}
+.likert table { table-layout: fixed; }
 
 /* --- notas y separadores --- */
 blockquote {
