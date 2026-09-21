@@ -45,8 +45,9 @@ desnutrición crónica. Si el sistema las conociera, no estaría prediciendo nad
 **La hemoglobina es la excepción.** Es la única variable que exige un procedimiento sobre el niño, y la
 incluimos porque el tamizaje de anemia es rutinario en los controles CRED.
 
-Probamos qué ocurre **sin ella**: el desempeño cae de 0.8295 a 0.8282, una diferencia inapreciable. El
-sistema puede operar solo con datos de entrevista cuando el dato no esté disponible.
+Medimos qué ocurre **sin ella**: la cobertura pasa de 76.4% a 76.3%, trece casos menos por cada diez
+mil niños evaluados. El sistema puede operar solo con datos de entrevista donde el tamizaje no esté
+disponible, a un costo muy bajo.
 :::
 
 ::: slide

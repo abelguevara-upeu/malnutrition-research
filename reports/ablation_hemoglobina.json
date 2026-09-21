@@ -1,0 +1,19 @@
+{
+  "variable": "HC56_Nivel_de_hemoglobina_ajustado_por_altitud",
+  "con_hemoglobina": {
+    "auc": 0.8294098821289249,
+    "recall": 0.7642878827688936,
+    "precision": 0.3635834658649014
+  },
+  "sin_hemoglobina": {
+    "auc": 0.8280519137201408,
+    "recall": 0.7630347053870322,
+    "precision": 0.36187509355177483
+  },
+  "delta_auc": {
+    "point": -0.0013672883992895098,
+    "ci_low": -0.0018527563684914232,
+    "ci_high": -0.0008758803650741554
+  },
+  "n_bootstrap": 1000
+}

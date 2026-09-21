@@ -241,9 +241,11 @@ with tab2:
                 help="Riesgo máximo meses 6–20.")
             peso_nacer = st.number_input("Peso al nacer (kg)", min_value=0.5, max_value=6.0,
                 value=3.2, step=0.1, help="< 2.5 kg = bajo peso al nacer.")
-            tamano_nacer_text = st.selectbox("Talla al nacer",
+            tamano_nacer_text = st.selectbox("Tamaño al nacer",
                 options=["Muy grande", "Más grande que el promedio", "Promedio",
-                         "Más pequeño que el promedio", "Muy pequeño"], index=2)
+                         "Más pequeño que el promedio", "Muy pequeño"], index=2,
+                help="Percepción de la madre al momento del parto, tal como lo "
+                     "registra la ENDES. No es una medición en centímetros.")
             hemo = st.number_input("Hemoglobina ajustada (g/dL)", min_value=1.0,
                 max_value=20.0, value=11.3, step=0.1, help="Normal en niños: > 11.0 g/dL.")
             intervalo_nac = st.number_input(
