@@ -11,7 +11,7 @@ La elección se hizo aplicando el marco de decisión de Britto (2026), que compa
 UTAUT y UTAUT2 en cinco dimensiones:
 
 | Dimensión | Este estudio | Modelo que corresponde |
-|---|---|---|---|
+|---|---------------------------------------------------------------------|---|
 | D1. Contexto de aplicación | Organizacional: la herramienta apoya tareas del personal de salud | TAM2, TAM3, UTAUT |
 | D2. Régimen de uso | Voluntario: es una propuesta, no un sistema impuesto | TAM2 |
 | D3. Etapa de adopción | **Aceptación inicial**: primera exposición, antes de cualquier despliegue | TAM, **TAM2** |
@@ -47,7 +47,7 @@ originales de forma literal.
 ## 2. Correspondencia entre constructos e ítems
 
 | Constructo | Origen | Sección | Ítems |
-|---|---|---|
+|--------------------------------------------------------|---|---|--------|
 | Relevancia para el trabajo (*job relevance*) | TAM2 | III | R1–R3 |
 | Calidad del resultado (*output quality*) | TAM2 | IV | C1–C3 |
 | Demostrabilidad del resultado (*result demonstrability*) | TAM2 | V | D1–D2 |
