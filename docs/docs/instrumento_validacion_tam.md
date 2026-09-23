@@ -9,13 +9,13 @@
 
 ---
 
-Agradecemos su participación como evaluador. Esta ficha recoge su valoración profesional sobre la
-utilidad y la facilidad de uso del sistema que acaba de conocer. Se basa en el **Modelo de Aceptación
-Tecnológica** (Davis, 1989), ampliamente utilizado para evaluar la adopción de herramientas de apoyo a
-la decisión en salud.
+Agradecemos su participación como evaluador. Esta ficha recoge su valoración profesional sobre el
+sistema que acaba de conocer. Se basa en el **Modelo de Aceptación Tecnológica 3** (Venkatesh y Bala,
+2008), que amplía el modelo original de Davis (1989) con los factores que explican por qué una
+herramienta resulta útil en la práctica profesional.
 
 Sus respuestas se utilizarán únicamente con fines académicos, de forma agregada y sin identificar
-individualmente a los participantes. Completarla toma alrededor de **10 minutos**.
+individualmente a los participantes. Completarla toma alrededor de **12 minutos**.
 
 ---
 
@@ -43,53 +43,109 @@ Marque el número que mejor represente su grado de acuerdo con cada afirmación:
 
 ---
 
-## III. Utilidad percibida
+## III. Relevancia para el trabajo
 
-*Mide si el sistema aporta valor al trabajo profesional.*
+*¿El sistema se relaciona con las tareas que usted realiza?*
 
 ::: likert
 | N.º | Afirmación | 1 | 2 | 3 | 4 | 5 |
-|:---:|---|:---:|:---:|:---:|:---:|:---:|
+|:--:|----------------------------------------|:--:|:--:|:--:|:--:|:--:|
+| R1 | Identificar a los niños con mayor riesgo es una tarea **importante** en mi ámbito de trabajo. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| R2 | El sistema aborda un problema **real** de la focalización en salud pública. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| R3 | La información que entrega es **pertinente** para decisiones sobre intervenciones nutricionales. | ☐ | ☐ | ☐ | ☐ | ☐ |
+
+:::
+
+## IV. Calidad del resultado
+
+*¿Confía en lo que el sistema entrega?*
+
+::: likert
+| N.º | Afirmación | 1 | 2 | 3 | 4 | 5 |
+|:--:|----------------------------------------|:--:|:--:|:--:|:--:|:--:|
+| C1 | Los factores de riesgo que identifica por departamento son **coherentes** con mi experiencia profesional. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| C2 | El nivel de desempeño presentado es **suficiente** para priorizar a quién evaluar primero. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| C3 | Confiaría en el resultado del sistema como **apoyo** a la decisión, no como sustituto del juicio clínico. | ☐ | ☐ | ☐ | ☐ | ☐ |
+
+:::
+
+## V. Demostrabilidad del resultado
+
+*¿Se entiende por qué el sistema llega a su resultado?*
+
+::: likert
+| N.º | Afirmación | 1 | 2 | 3 | 4 | 5 |
+|:--:|----------------------------------------|:--:|:--:|:--:|:--:|:--:|
+| D1 | Comprendo **por qué** el sistema asigna un nivel de riesgo a un niño concreto. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| D2 | Podría **explicar a un colega** los resultados que entrega el sistema. | ☐ | ☐ | ☐ | ☐ | ☐ |
+
+:::
+
+## VI. Utilidad percibida
+
+*¿El sistema mejoraría su trabajo?*
+
+::: likert
+| N.º | Afirmación | 1 | 2 | 3 | 4 | 5 |
+|:--:|----------------------------------------|:--:|:--:|:--:|:--:|:--:|
 | U1 | El sistema permitiría **priorizar** qué niños atender primero cuando los recursos son limitados. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| U2 | La información que entrega es **pertinente** para decisiones de focalización en salud pública. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| U3 | Los factores de riesgo que identifica por departamento son **coherentes** con mi experiencia profesional. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| U4 | Usar el sistema **ahorraría tiempo** frente a los métodos actuales de identificación de casos. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| U5 | El sistema sería **útil para orientar intervenciones** nutricionales en el territorio. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| U6 | En conjunto, considero que el sistema **mejoraría la efectividad** del trabajo de focalización. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| U2 | Usarlo **ahorraría tiempo** frente a los métodos actuales de identificación de casos. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| U3 | Sería **útil para orientar** intervenciones distintas según el territorio. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| U4 | En conjunto, **mejoraría la efectividad** del trabajo de focalización. | ☐ | ☐ | ☐ | ☐ | ☐ |
+
 :::
 
----
+## VII. Facilidad de uso percibida
 
-## IV. Facilidad de uso percibida
-
-*Mide si el sistema resulta comprensible y manejable.*
+*¿El sistema resulta sencillo de usar?*
 
 ::: likert
 | N.º | Afirmación | 1 | 2 | 3 | 4 | 5 |
-|:---:|---|:---:|:---:|:---:|:---:|:---:|
-| F1 | La interfaz del sistema es **clara** y fácil de entender. | ☐ | ☐ | ☐ | ☐ | ☐ |
+|:--:|----------------------------------------|:--:|:--:|:--:|:--:|:--:|
+| F1 | La interfaz es **clara** y fácil de entender. | ☐ | ☐ | ☐ | ☐ | ☐ |
 | F2 | El mapa de riesgo por departamento se **interpreta sin dificultad**. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| F3 | Los datos que solicita el predictor individual son **accesibles** en la práctica habitual. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| F4 | El resultado que entrega es **comprensible** para un profesional de salud sin formación en informática. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| F5 | Aprender a usar el sistema **no requeriría** una capacitación extensa. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| F6 | En conjunto, considero que el sistema es **fácil de usar**. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| F3 | El resultado es **comprensible** para un profesional de salud sin formación en informática. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| F4 | Aprender a usar el sistema **no requeriría** una capacitación extensa. | ☐ | ☐ | ☐ | ☐ | ☐ |
+
 :::
 
----
+## VIII. Condiciones para su uso
 
-## V. Intención de uso
+*¿Existen en su entorno los medios para usarlo?*
 
 ::: likert
 | N.º | Afirmación | 1 | 2 | 3 | 4 | 5 |
-|:---:|---|:---:|:---:|:---:|:---:|:---:|
+|:--:|----------------------------------------|:--:|:--:|:--:|:--:|:--:|
+| K1 | Los datos que solicita el sistema **están disponibles** en los registros de mi ámbito de trabajo. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| K2 | El dato de **hemoglobina** suele estar disponible para los niños que atiendo. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| K3 | Mi institución cuenta con los **medios** (equipos, conectividad, personal) para usar una herramienta así. | ☐ | ☐ | ☐ | ☐ | ☐ |
+
+:::
+
+## IX. Respaldo del entorno profesional
+
+::: likert
+| N.º | Afirmación | 1 | 2 | 3 | 4 | 5 |
+|:--:|----------------------------------------|:--:|:--:|:--:|:--:|:--:|
+| S1 | Mis **colegas** considerarían adecuado el uso de una herramienta como esta. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| S2 | Las **autoridades** de salud de mi ámbito apoyarían su incorporación. | ☐ | ☐ | ☐ | ☐ | ☐ |
+
+:::
+
+## X. Intención de uso
+
+::: likert
+| N.º | Afirmación | 1 | 2 | 3 | 4 | 5 |
+|:--:|----------------------------------------|:--:|:--:|:--:|:--:|:--:|
 | I1 | **Usaría** este sistema si estuviera disponible en mi ámbito de trabajo. | ☐ | ☐ | ☐ | ☐ | ☐ |
 | I2 | **Recomendaría** su uso a colegas del área de nutrición o salud pública. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| I3 | Considero que el sistema está **listo para ser probado** en un entorno real. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| I3 | El sistema está **listo para ser probado** en un entorno real. | ☐ | ☐ | ☐ | ☐ | ☐ |
+
 :::
 
 ---
 
-## VI. Valoración global
+## XI. Valoración global
 
 **Del 1 al 10, ¿qué potencial le asigna a esta herramienta para el trabajo en salud pública?**
 
@@ -99,9 +155,9 @@ Marque el número que mejor represente su grado de acuerdo con cada afirmación:
 
 ---
 
-## VII. Preguntas abiertas
+## XII. Preguntas abiertas
 
-**1. ¿Qué variables o información adicional considera que el sistema debería incorporar?**
+**1. ¿Qué variables o información adicional debería incorporar el sistema?**
 
 <br><br><br>
 
@@ -125,3 +181,5 @@ Marque el número que mejor represente su grado de acuerdo con cada afirmación:
 
 *Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information
 technology. MIS Quarterly, 13(3), 319–340.*
+*Venkatesh, V., y Bala, H. (2008). Technology Acceptance Model 3 and a research agenda on
+interventions. Decision Sciences, 39(2), 273–315.*

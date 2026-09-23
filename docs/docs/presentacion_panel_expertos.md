@@ -130,7 +130,7 @@ caso concreto.
 
 ### Qué les pedimos
 
-Tras la demostración, completar una **ficha de validación** de unos 10 minutos sobre:
+Tras la demostración, completar una **ficha de validación** de unos 12 minutos sobre:
 
 - La **utilidad** de la herramienta para el trabajo en salud pública
 - Su **facilidad de uso** e interpretación
