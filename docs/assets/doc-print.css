@@ -87,14 +87,16 @@ td:first-child { white-space: nowrap; }
 
 /* Cuestionarios tipo Likert: la columna del enunciado debe llevarse el ancho y
    las de la escala quedar estrechas. Se reconocen por el encabezado numerico. */
-.likert td:first-child { white-space: nowrap; width: 3%; text-align: center; }
-.likert td:nth-child(2) { white-space: normal; width: 62%; }
+.likert td:first-child { white-space: nowrap; width: 4%; text-align: center; }
+.likert td:nth-child(2) { white-space: normal; width: 50%; }
 .likert th:nth-child(n+3), .likert td:nth-child(n+3) {
-  width: 7%;
-  min-width: 7%;
+  width: 9.2%;
+  min-width: 9.2%;
   text-align: center;
+  font-size: 10pt;
 }
 .likert table { table-layout: fixed; }
+.likert td:nth-child(n+3) { padding: 6px 0; }
 
 /* --- notas y separadores --- */
 blockquote {
