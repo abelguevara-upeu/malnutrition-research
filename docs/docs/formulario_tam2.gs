@@ -129,3 +129,29 @@ function crearFicha() {
 function toRoman(n) {
   return ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'][n];
 }
+
+const FORM_ID = '1iN-l1qU-TO6yKT0AO-EkvX2JRS-aA48fK0-FYfHzIcs';
+
+const CONSENTIMIENTO = [
+  'Se le invita a valorar, como especialista del ámbito sanitario, la utilidad y pertinencia de este sistema.',
+  'Participar implica asistir a una sesión virtual de unos 45 minutos y responder esta ficha (unos 10 minutos).',
+  'La participación es voluntaria: puede retirarse en cualquier momento sin consecuencia alguna.',
+  'Sus respuestas se analizan de forma agregada; su nombre y correo no se publican.',
+  'La sesión solo se graba si todos los participantes lo aceptan. No existen riesgos previsibles ni compensación económica.',
+  'La información se usa exclusivamente con fines académicos (informe de la asignatura y artículo de investigación).',
+].join('\n\n');
+
+/** Inserta el consentimiento informado como primer paso obligatorio del formulario ya creado. */
+function agregarConsentimiento() {
+  const form = FormApp.openById(FORM_ID);
+  const titulo = form.addSectionHeaderItem()
+    .setTitle('Consentimiento informado')
+    .setHelpText(CONSENTIMIENTO);
+  const acepto = form.addCheckboxItem()
+    .setTitle('Declaración')
+    .setChoiceValues(['He leído la información anterior y acepto participar voluntariamente.'])
+    .setRequired(true);
+  form.moveItem(titulo, 0);
+  form.moveItem(acepto, 1);
+  Logger.log('Consentimiento agregado al inicio del formulario.');
+}
