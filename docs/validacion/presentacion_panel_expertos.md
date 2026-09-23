@@ -73,6 +73,29 @@ disponible, a un costo muy bajo.
 :::
 
 ::: slide
+## 3A. Las 45 variables: Eje Clínico y Materno-Infantil
+
+Seleccionadas por su poder para anticipar el riesgo sin necesidad de tallar al niño:
+
+| Dimensión | Variables incluidas | Por qué importan al personal de salud |
+|---|---|---|
+| **Salud del Niño** *(7 variables)* | • Peso al nacer (`m19`)<br>• Tamaño al nacer (`M18`)<br>• Edad en meses (`HC1`)<br>• Hemoglobina ajustada (`HC56`)<br>• Intervalo genésico (`HC63`)<br>• Sexo (`HC27`) · Residencia (`HV102`) | Identifica la reserva biológica inicial y la ventana crítica de los 1,000 días (meses 6 a 20). La hemoglobina alerta la coexistencia de anemia. |
+| **Historia Materna y Nutrición** *(10 variables)* | • N° controles prenatales (`M14`)<br>• Mes inicio 1er control (`M13`)<br>• Días con hierro gestacional (`M46`)<br>• Meses lactancia materna (`M4`)<br>• Horas hasta inicio lactancia (`m34`)<br>• Fórmula primeros 3 días (`M55G`)<br>• Parto en IPRESS (`m15`) · Cesárea (`M17`)<br>• Vitamina A (`M54`) · Antiparasitarios (`M60`) | Evalúa el apego precoz, el soporte nutricional en gestación y las prácticas de alimentación temprana que protegen la microbiota infantil. |
+:::
+
+::: slide
+## 3B. Las 45 variables: Entorno, Saneamiento y Territorio
+
+Los determinantes subyacentes que provocan infecciones recurrentes y malabsorción:
+
+| Dimensión | Variables incluidas | Relevancia en salud pública |
+|---|---|---|
+| **Agua y Saneamiento (WASH)** *(10 variables)* | • Continuidad 24h (`SH42`) · Reserva (`SH48`)<br>• Depósito con tapa (`SH50`) y tipo (`SH49`)<br>• Tiempo a fuente de agua (`HV204`)<br>• Baño compartido (`HV225`)<br>• Tratamiento y hervido (`HV237`, `HV237A`, `HV237G`)<br>• Yodo en la sal (`HV234`) | **Ruta feco-oral:** la falta de agua continua y letrinas compartidas causan diarreas y enteropatía ambiental que frenan el crecimiento lineal. |
+| **Vivienda e Higiene del Aire** *(9 variables)* | • Chimenea/campana (`HV240`)<br>• Cocina en cuarto separado (`HV242`)<br>• Combustible secundario (`SH63`)<br>• Dormitorios (`HV216`) · Total cuartos (`SH71`)<br>• Ventanas cristal/madera/malla (`SH76B-D`)<br>• Luz eléctrica (`SH70`) | **Salud respiratoria:** cocinar con leña sin extracción causa IRAs repetitivas. El aislamiento térmico previene el impacto de heladas y friajes. |
+| **Familia y Territorio** *(9 variables)* | • Índice de riqueza (`HV271`) · Altitud (`HV040`)<br>• Educación de la madre (`HC62`)<br>• Edad (`HV220`) y Sexo jefe de hogar (`HV219`)<br>• Carga niños < 5 años (`HV014`) · Miembros (`HV012`)<br>• Área rural (`HV025`) · Peque-peque/caballo (`SH77F`) | Vulnerabilidad económica, capacidad de compra de alimentos nutritivos y barreras geográficas para acudir a los controles CRED. |
+:::
+
+::: slide
 ## 4. Lo que el modelo aprendió
 
 ![](reports/figures/panel/mapa_riesgo_departamental.png)
