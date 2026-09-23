@@ -17,7 +17,7 @@ Este documento sirve como el **punto de anclaje (Master Context)** para el asist
 
 **Aporte Ingenieril:** Resolver desafíos computacionales severos (alta dimensionalidad, nulos masivos, desbalance extremo) en bases de datos gubernamentales masivas, aportando rigor de Ingeniería de Sistemas frente al enfoque estadístico tradicional de salud pública.
 
-- [Propuesta Ingenieril y Defensa Académica](file:///Users/abelguevarah/Desktop/invs/malnutrition-research/docs/docs/engineering_proposal.md)
+- [Propuesta Ingenieril y Defensa Académica](docs/antiguo/engineering_proposal.md)
 
 ## Fase 2: Comprensión de los Datos (Data Understanding)
 

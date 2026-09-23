@@ -102,7 +102,7 @@ aplican a una evaluación por expertos que no serán usuarios obligados del sist
 
 El ítem **K2** pregunta de forma expresa por la disponibilidad del dato de hemoglobina, la única de
 las 45 variables del modelo que exige un procedimiento sobre el niño. Sus respuestas contrastan la
-medición que muestra que el modelo pierde poco sin ella (`docs/docs/hallazgos_validacion.md`, §1).
+medición que muestra que el modelo pierde poco sin ella (`docs/validacion/hallazgos_validacion.md`, §1).
 
 ## 3. Cómo se analizarán las respuestas
 

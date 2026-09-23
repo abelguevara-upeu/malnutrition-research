@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Genera un PDF de diapositivas a partir de un markdown con bloques ::: slide
-# Uso: docs/assets/build-slides.sh <nombre-sin-extension>
+# Uso: docs/assets/build-slides.sh <carpeta>/<nombre-sin-extension>  (ej. validacion/presentacion_panel_expertos)
 set -euo pipefail
 
-DOC="${1:?uso: build-slides.sh <nombre-sin-extension>}"
+DOC_PATH="${1:?uso: build-slides.sh <carpeta>/<nombre-sin-extension>}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-DIR="$ROOT/docs/docs"
+DIR="$ROOT/docs/$(dirname "$DOC_PATH")"
+DOC="$(basename "$DOC_PATH")"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 

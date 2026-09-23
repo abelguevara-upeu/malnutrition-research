@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
-# Genera el PDF de un documento markdown de docs/docs.
-# Uso: docs/assets/build-pdf.sh <nombre-sin-extension>
+# Genera el PDF de un documento markdown de docs/.
+# Uso: docs/assets/build-pdf.sh <carpeta>/<nombre-sin-extension>  (ej. validacion/protocolo_sesion_panel)
 #
 # Pandoc escapa las entidades HTML dentro de los bloques mermaid, de modo que
 # hay que desescaparlas antes de que la libreria las lea; sin ese paso el
 # diagrama sale como "Syntax error in text".
 set -euo pipefail
 
-DOC="${1:?uso: build-pdf.sh <nombre-sin-extension>}"
+DOC_PATH="${1:?uso: build-pdf.sh <carpeta>/<nombre-sin-extension>}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-DIR="$ROOT/docs/docs"
+DIR="$ROOT/docs/$(dirname "$DOC_PATH")"
+DOC="$(basename "$DOC_PATH")"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 

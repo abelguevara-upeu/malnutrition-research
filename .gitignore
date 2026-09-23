@@ -219,5 +219,5 @@ catboost_info/
 
 *.zip
 
-# Ficha TAM: solo se distribuye como PDF, el .docx se regenera localmente
-docs/docs/instrumento_validacion_tam.docx
+# build-pdf.sh genera un .docx junto a cada PDF; se regenera localmente
+docs/**/*.docx
