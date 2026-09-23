@@ -2,7 +2,13 @@
 
 Revisión de `app/main.py` contra lo que prometen la ficha TAM2, la presentación al panel y el modelo
 entrenado (`models/champion_lightgbm.pkl`). Cada hallazgo indica dónde está, qué afirmación afecta y
-qué se propone. Nada de esto está corregido todavía.
+qué se propone.
+
+**Criterio:** la app debe cumplir cada aspecto que evalúa la ficha, y ningún texto de la app, la
+presentación o la ficha debe prometer más de lo que la app hace.
+
+**Corregido en el paso 1:** 1.2, 1.3, 1.5, 2.1, 2.2, 2.5 y el rótulo de 2.3 (la lista se presenta
+ahora como *alertas clínicas de referencia*, no como explicación del modelo).
 
 **Estados:** 🔴 da resultados incorrectos · 🟠 contradice lo que se promete · 🟡 usabilidad
 
@@ -28,6 +34,7 @@ qué se propone. Nada de esto está corregido todavía.
 | 2.4 | D1: "comprendo por qué asigna un nivel de riesgo a un niño concreto" | Ficha | Igual que 2.3: no hay explicación individual (SHAP) | 🟠 |
 | 2.5 | "El modelo maneja datos faltantes internamente" | Texto del expander | Ningún campo puede dejarse vacío; todos traen un valor por defecto | 🟠 |
 | 2.6 | U1: "priorizar qué niños atender primero" | Ficha | Solo se evalúa un niño a la vez; no hay lista ordenada | 🟠 |
+| 2.8 | "Probabilidad estimada" de 45.8% | Indicador de la app | El modelo se entrenó con `class_weight='balanced'`, que infla las probabilidades: el perfil por defecto (urbano, estrato medio, 150 m) ya sale en riesgo alto. El número sirve para ordenar niños, no como probabilidad real (prevalencia nacional: 15.8%) | 🟠 |
 | 2.7 | F1: "ingresar los datos es sencillo" | Ficha | 43 campos a mano, varios como códigos ENDES | 🟡 |
 
 ## 3. Usabilidad
@@ -44,7 +51,8 @@ qué se propone. Nada de esto está corregido todavía.
 1. **Evaluación en lote.** Subir un CSV o Excel (por ejemplo, un padrón) y descargar la lista ordenada por riesgo. Es lo que responde a U1 y reduce el ingreso manual.
 2. **Explicación individual.** Mostrar los factores que más suben o bajan el riesgo de ese niño con valores SHAP, en lugar de reglas fijas.
 3. **Datos faltantes honestos.** Opción "No sabe" en cada campo, enviada como faltante, y un aviso del tipo "se usaron 38 de 45 datos".
-4. **Medición de la pérdida por datos faltantes**, como se hizo con la hemoglobina, para declarar en la metodología cuánto empeora el modelo.
+4. **Calibrar o renombrar el puntaje (2.8).** Calibrar las probabilidades (por ejemplo, con regresión isotónica sobre las predicciones *out-of-fold*) o mostrarlo como "puntaje de riesgo" en vez de probabilidad.
+5. **Medición de la pérdida por datos faltantes**, como se hizo con la hemoglobina, para declarar en la metodología cuánto empeora el modelo.
 
 ## 5. Orden propuesto
 
@@ -58,6 +66,8 @@ qué se propone. Nada de esto está corregido todavía.
 
 ## 6. Para la demostración de hoy
 
+- No usar el perfil por defecto como ejemplo de riesgo bajo: sale en riesgo alto. Preparar los dos perfiles de antemano.
+- Decir "puntaje de riesgo" y no "probabilidad" al leer el indicador.
 - Usar el estrato **"Medio"**, que es el único que no cae en valores extremos de riqueza.
 - No presentar la lista "Factores detectados" como explicación del modelo; decir que son alertas clínicas de referencia.
 - Si preguntan por muchos niños o por datos que no se tienen, responder que la evaluación en lote y el manejo de datos faltantes son las siguientes mejoras.

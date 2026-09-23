@@ -55,7 +55,7 @@ def threshold_for_recall(recall_curve, target_recall_pct):
 model, metadata, recall_curve, df_shap, peru_geojson = load_assets()
 
 st.title("Sistema Predictivo de Riesgo de Desnutrición Crónica")
-st.markdown("Herramienta de triaje basada en Machine Learning (LightGBM · AUC 0.83 · Recall 76%). Entrenada con 285,284 niños — ENDES 2007–2024.")
+st.markdown("Herramienta de triaje basada en Machine Learning (LightGBM · AUC 0.83 · Recall 76%). Entrenada con 304,271 niños — ENDES 2007–2025.")
 
 tab1, tab2 = st.tabs(["Mapa de Riesgo Territorial", "Predictor Individual"])
 
@@ -219,7 +219,7 @@ with tab1:
 # ──────────────────────────────────────────────
 with tab2:
     st.markdown("### Evaluación de Riesgo Individual")
-    st.caption("Variables ordenadas por importancia predictiva (SHAP global). Top 43 del modelo campeón.")
+    st.caption("Variables ordenadas por importancia predictiva (SHAP global). El modelo usa 45 variables; 43 se ingresan aquí y las 2 restantes se tratan como dato faltante.")
 
     tamano_map = {"Muy grande": 1, "Más grande que el promedio": 2, "Promedio": 3,
                   "Más pequeño que el promedio": 4, "Muy pequeño": 5}
@@ -281,7 +281,7 @@ with tab2:
 
         # ── Expander: 26 variables adicionales en 3 columnas temáticas ──
         with st.expander("Parámetros adicionales (26 variables complementarias)"):
-            st.caption("Defaults razonables precargados. El modelo maneja datos faltantes internamente.")
+            st.caption("Vienen precargados con el valor más frecuente en la ENDES. Ajústelos si conoce el dato del niño.")
 
             e1, e2, e3 = st.columns(3)
 
@@ -294,14 +294,17 @@ with tab2:
                 agua_continua     = st.selectbox("¿Agua todo el día?",       ["Sí", "No"], index=0, key="sh42")
                 conserva_agua     = st.selectbox("¿Conserva agua?",          ["Sí", "No"], index=0, key="sh48")
                 tiempo_fuente     = st.number_input("Tiempo a fuente de agua (min)", min_value=0, max_value=999, value=0, key="hv204")
-                prueba_yodo       = st.number_input("Sal con yodo (0=No, 1=Sí)", min_value=0, max_value=1, value=1, key="hv234")
+                prueba_yodo       = st.selectbox("Yodo en la sal (resultado del kit)", [0, 7, 15, 30], index=3, key="hv234",
+                    format_func=lambda v: "Sin yodo (0 ppm)" if v == 0 else f"{v} ppm")
                 tipo_recipiente   = st.number_input("Tipo recipiente de agua (código)", min_value=0, max_value=20, value=0, key="sh49")
                 usa_tapa          = st.number_input("¿Recipiente con tapa? (0=No, 1=Sí)", min_value=0, max_value=1, value=1, key="sh50")
 
             with e2:
                 st.markdown("**Vivienda**")
-                cuarto_cocina     = st.selectbox("¿Cocina en cuarto separado?",        ["Sí", "No"], index=0, key="hv242")
-                otro_combustible  = st.selectbox("¿Usa otro combustible?",             ["Sí", "No"], index=1, key="sh63")
+                cuarto_cocina     = st.selectbox("¿Cocina en cuarto separado?",        ["Si", "No"], index=0, key="hv242",
+                    format_func=lambda v: "Sí" if v == "Si" else v)
+                otro_combustible  = st.selectbox("¿Usa otro combustible?",             ["Si", "No"], index=1, key="sh63",
+                    format_func=lambda v: "Sí" if v == "Si" else v)
                 ventana_cristal   = st.selectbox("¿Ventanas con cristal?",             ["Si", "No"], index=0, key="sh76b")
                 ventana_madera    = st.selectbox("¿Ventanas de madera?",               ["Si", "No"], index=1, key="sh76c")
                 ventana_malla     = st.selectbox("¿Ventanas con malla?",               ["Si", "No"], index=0, key="sh76d")
@@ -344,7 +347,7 @@ with tab2:
         if calcular:
             input_dict = {}
             for feat in metadata["features"]:
-                input_dict[feat] = None if feat in metadata["cat_features"] else 0
+                input_dict[feat] = None if feat in metadata["cat_features"] else float("nan")
 
             # Formulario principal
             input_dict["HC27_Sexo"] = sexo_str
@@ -452,7 +455,8 @@ with tab2:
             if lactancia < 3:                      alertas.append(f"Lactancia breve ({lactancia} meses)")
 
             if alertas:
-                st.markdown("**Factores detectados:**")
+                st.markdown("**Alertas clínicas de referencia:**")
+                st.caption("Umbrales clínicos habituales. No son la explicación del cálculo del modelo.")
                 for a in alertas:
                     st.markdown(f"- {a}")
         else:
