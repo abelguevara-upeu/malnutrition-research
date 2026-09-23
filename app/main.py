@@ -66,7 +66,7 @@ with tab1:
     st.markdown("### Distribución Geográfica del Riesgo")
     st.caption("Intensidad relativa de cada factor de riesgo por departamento (escala 0–1 normalizada). Fuente: SHAP values del modelo campeón sobre 10,000 niños.")
 
-    # Nombres legibles para las 43 variables SHAP
+    # Nombres legibles para las 45 variables SHAP
     FACTOR_NAMES = {
         "HV271_Factor_de_puntuacion_del_indice_de_riqueza": "Pobreza económica extrema",
         "m19_Peso_al_nacer_kg": "Bajo peso al nacer",
@@ -76,6 +76,7 @@ with tab1:
         "HC63_Intervalo_de_nacimientos_anteriores_al_nino": "Embarazos muy seguidos",
         "M4_Duracion_de_la_lactancia": "Lactancia materna insuficiente",
         "HV220_Edad_del_jefe_del_hogar": "Jefe del hogar joven o mayor",
+        "HV219_Sexo_del_jefe_del_hogar": "Sexo del jefe del hogar",
         "M46_Dias_que_tomo_hierro": "Falta de hierro gestacional",
         "M18_Tamano_al_nacer": "Talla pequeña al nacer",
         "m34_Horas_hasta_inicio_de_lactancia": "Inicio tardío de lactancia",
@@ -111,6 +112,7 @@ with tab1:
         "HV237A_Tratamiento_de_agua_hervir": "Hierve el agua",
         "HV102_Residente_habitual": "Residente no habitual",
         "HV237_Tratamiento_del_agua": "Trata el agua",
+        "SH77F_Otro_tipo_de_transporte_caballos_peque_peque_etc": "Transporte rural tradicional",
     }
 
     if df_shap is not None and peru_geojson is not None:
@@ -219,7 +221,7 @@ with tab1:
 # ──────────────────────────────────────────────
 with tab2:
     st.markdown("### Evaluación de Riesgo Individual")
-    st.caption("Variables ordenadas por importancia predictiva (SHAP global). El modelo usa 45 variables; 43 se ingresan aquí y las 2 restantes se tratan como dato faltante.")
+    st.caption("Variables ordenadas por importancia predictiva (SHAP global). El modelo evalúa las 45 variables completas del perfil infantil, materno y del hogar.")
 
     tamano_map = {"Muy grande": 1, "Más grande que el promedio": 2, "Promedio": 3,
                   "Más pequeño que el promedio": 4, "Muy pequeño": 5}
@@ -276,11 +278,12 @@ with tab2:
                 help="> 2,500 m: riesgo por hipoxia.")
             miembros = st.number_input("Personas en el hogar", min_value=1, max_value=20, value=4)
             edad_jefe = st.number_input("Edad del jefe del hogar", min_value=15, max_value=99, value=35)
+            sexo_jefe = st.selectbox("Sexo del jefe del hogar", options=["Masculino", "Femenino"], index=0)
             chimenea_str = st.radio("¿Cocina con extracción de humo?",
                 options=["Sí", "No"], index=1, horizontal=True)
 
-        # ── Expander: 26 variables adicionales en 3 columnas temáticas ──
-        with st.expander("Parámetros adicionales (26 variables complementarias)"):
+        # ── Expander: 27 variables adicionales en 3 columnas temáticas ──
+        with st.expander("Parámetros adicionales (27 variables complementarias)"):
             st.caption("Vienen precargados con el valor más frecuente en la ENDES. Ajústelos si conoce el dato del niño.")
 
             e1, e2, e3 = st.columns(3)
@@ -311,6 +314,8 @@ with tab2:
                 fuente_luz        = st.number_input("Fuente de luz (código)", min_value=0, max_value=20, value=1, key="sh70")
                 habitaciones_total= st.number_input("Total habitaciones", min_value=1, max_value=15, value=3, key="sh71")
                 habitaciones_dormir=st.number_input("Habitaciones para dormir", min_value=1, max_value=10, value=2, key="hv216")
+                transporte_rural  = st.selectbox("¿Transporte tradicional/rural? (caballo, peque-peque)", ["Si", "No"], index=1, key="sh77f",
+                    format_func=lambda v: "Sí" if v == "Si" else v)
 
             with e3:
                 st.markdown("**Prenatal / Clínico**")
@@ -366,6 +371,7 @@ with tab2:
             input_dict["HV040_Altitud_del_conglomerado_en_metros"] = altitud
             input_dict["HV012_Miembros_habituales_De_jure"] = miembros
             input_dict["HV220_Edad_del_jefe_del_hogar"] = edad_jefe
+            input_dict["HV219_Sexo_del_jefe_del_hogar"] = sexo_jefe
             input_dict["HV240_Tiene_chimenea_o_campana"] = 1 if chimenea_str == "Sí" else 0
 
             # Expander — agua y saneamiento
@@ -389,6 +395,7 @@ with tab2:
             input_dict["SH70_Fuente_Luz"] = fuente_luz
             input_dict["SH71_Numero_de_habitaciones_en_el_hogar"] = habitaciones_total
             input_dict["HV216_Habitaciones_para_dormir"] = habitaciones_dormir
+            input_dict["SH77F_Otro_tipo_de_transporte_caballos_peque_peque_etc"] = transporte_rural
 
             # Expander — prenatal/clínico
             input_dict["HV014_Ninos_menores_de_5_anos"] = ninos_menores5
@@ -425,7 +432,7 @@ with tab2:
                         "value": threshold_used * 100,
                     },
                 },
-                title={"text": "Probabilidad estimada", "font": {"size": 13}},
+                title={"text": "Puntaje de riesgo", "font": {"size": 13}},
             ))
             fig_gauge.update_layout(margin=dict(t=50, b=10, l=10, r=10), height=250)
             st.plotly_chart(fig_gauge, use_container_width=True)
