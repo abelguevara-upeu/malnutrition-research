@@ -33,6 +33,16 @@ Se descartan las demás por motivos concretos:
 - **TAM Plus** y **TAM 5**, sugeridos por la búsqueda en LeapSpace: el primero es la denominación que
   un meta-análisis da al TAM extendido y no define un instrumento; el segundo mide desarrollo ágil y
   trabajo híbrido en la industria de software, fuera del dominio.
+- **TAM3 + Warm-Glow**: añade el bienestar emocional de "hacer el bien" como antecedente de la
+  utilidad percibida; pensado para tecnología de consumo/filantropía, no para personal clínico
+  evaluando una herramienta de trabajo.
+- **TAM3 en contextos educativos** (meta-análisis con 12 estudios, n=3874): encuentra que TAM3 puede
+  no ajustar bien fuera de su dominio organizacional original, lo que refuerza no forzarlo aquí.
+
+Matemba et al. (2020), tras revisar 166 estudios sobre TAM, plantean como hipótesis que el estado de
+salud modera la fuerza de las relaciones entre sus constructos. No se aplica un modelo distinto por
+eso, pero sí respalda **adaptar los enunciados al contexto sanitario** en vez de traducir los ítems
+originales de forma literal.
 
 ## 2. Correspondencia entre constructos e ítems
 
