@@ -10,8 +10,8 @@
 ---
 
 Agradecemos su participación como evaluador. Esta ficha recoge su valoración profesional sobre el
-sistema que acaba de conocer. Se basa en el **Modelo de Aceptación Tecnológica 3** (Venkatesh y Bala,
-2008), que amplía el modelo original de Davis (1989) con los factores que explican por qué una
+sistema que acaba de conocer. Se basa en el **Modelo de Aceptación Tecnológica 2** (Venkatesh y Davis,
+2000), que amplía el modelo original de Davis (1989) con los factores que explican por qué una
 herramienta resulta útil en la práctica profesional.
 
 Sus respuestas se utilizarán únicamente con fines académicos, de forma agregada y sin identificar
@@ -181,5 +181,7 @@ Marque el número que mejor represente su grado de acuerdo con cada afirmación:
 
 *Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information
 technology. MIS Quarterly, 13(3), 319–340.*
+*Venkatesh, V., y Davis, F. D. (2000). A theoretical extension of the technology acceptance model:
+four longitudinal field studies. Management Science, 46(2), 186–204.*
 *Venkatesh, V., y Bala, H. (2008). Technology Acceptance Model 3 and a research agenda on
 interventions. Decision Sciences, 39(2), 273–315.*
