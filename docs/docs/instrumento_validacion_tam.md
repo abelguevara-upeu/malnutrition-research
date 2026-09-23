@@ -15,7 +15,7 @@ sistema que acaba de conocer. Se basa en el **Modelo de Aceptación Tecnológica
 herramienta resulta útil en la práctica profesional.
 
 Sus respuestas se utilizarán únicamente con fines académicos, de forma agregada y sin identificar
-individualmente a los participantes. Completarla toma alrededor de **12 minutos**.
+individualmente a los participantes. Completarla toma alrededor de **10 minutos**.
 
 ---
 
@@ -50,9 +50,8 @@ Marque el número que mejor represente su grado de acuerdo con cada afirmación:
 ::: likert
 | N.º | Afirmación | 1 | 2 | 3 | 4 | 5 |
 |:--:|----------------------------------------|:--:|:--:|:--:|:--:|:--:|
-| R1 | Identificar a los niños con mayor riesgo es una tarea **importante** en mi ámbito de trabajo. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| R2 | El sistema aborda un problema **real** de la focalización en salud pública. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| R3 | La información que entrega es **pertinente** para decisiones sobre intervenciones nutricionales. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| R1 | En mi ámbito de trabajo, usar un sistema como este sería **importante**. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| R2 | En mi ámbito de trabajo, usar un sistema como este sería **pertinente** para decidir intervenciones nutricionales. | ☐ | ☐ | ☐ | ☐ | ☐ |
 
 :::
 
@@ -64,8 +63,7 @@ Marque el número que mejor represente su grado de acuerdo con cada afirmación:
 | N.º | Afirmación | 1 | 2 | 3 | 4 | 5 |
 |:--:|----------------------------------------|:--:|:--:|:--:|:--:|:--:|
 | C1 | Los factores de riesgo que identifica por departamento son **coherentes** con mi experiencia profesional. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| C2 | El nivel de desempeño presentado es **suficiente** para priorizar a quién evaluar primero. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| C3 | Confiaría en el resultado del sistema como **apoyo** a la decisión, no como sustituto del juicio clínico. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| C2 | Confío en que los niveles de riesgo que asigna el sistema son **acertados**. | ☐ | ☐ | ☐ | ☐ | ☐ |
 
 :::
 
@@ -88,10 +86,9 @@ Marque el número que mejor represente su grado de acuerdo con cada afirmación:
 ::: likert
 | N.º | Afirmación | 1 | 2 | 3 | 4 | 5 |
 |:--:|----------------------------------------|:--:|:--:|:--:|:--:|:--:|
-| U1 | El sistema permitiría **priorizar** qué niños atender primero cuando los recursos son limitados. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| U1 | El sistema me permitiría **priorizar** qué niños atender primero cuando los recursos son limitados. | ☐ | ☐ | ☐ | ☐ | ☐ |
 | U2 | Usarlo **ahorraría tiempo** frente a los métodos actuales de identificación de casos. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| U3 | Sería **útil para orientar** intervenciones distintas según el territorio. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| U4 | En conjunto, **mejoraría la efectividad** del trabajo de focalización. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| U3 | En conjunto, **mejoraría la efectividad** del trabajo de focalización. | ☐ | ☐ | ☐ | ☐ | ☐ |
 
 :::
 
@@ -102,10 +99,9 @@ Marque el número que mejor represente su grado de acuerdo con cada afirmación:
 ::: likert
 | N.º | Afirmación | 1 | 2 | 3 | 4 | 5 |
 |:--:|----------------------------------------|:--:|:--:|:--:|:--:|:--:|
-| F1 | La interfaz es **clara** y fácil de entender. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| F2 | El mapa de riesgo por departamento se **interpreta sin dificultad**. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| F3 | El resultado es **comprensible** para un profesional de salud sin formación en informática. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| F4 | Aprender a usar el sistema **no requeriría** una capacitación extensa. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| F1 | **Ingresar los datos** de un niño en el sistema es sencillo. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| F2 | El nivel de riesgo y el mapa departamental **se leen sin dificultad**. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| F3 | Aprender a usar el sistema **no requeriría** una capacitación extensa. | ☐ | ☐ | ☐ | ☐ | ☐ |
 
 :::
 
@@ -116,7 +112,7 @@ Marque el número que mejor represente su grado de acuerdo con cada afirmación:
 ::: likert
 | N.º | Afirmación | 1 | 2 | 3 | 4 | 5 |
 |:--:|----------------------------------------|:--:|:--:|:--:|:--:|:--:|
-| K1 | Los datos que solicita el sistema **están disponibles** en los registros de mi ámbito de trabajo. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| K1 | **Salvo la hemoglobina**, los datos que solicita el sistema están disponibles en los registros de mi ámbito de trabajo. | ☐ | ☐ | ☐ | ☐ | ☐ |
 | K2 | El dato de **hemoglobina** suele estar disponible para los niños que atiendo. | ☐ | ☐ | ☐ | ☐ | ☐ |
 | K3 | Mi institución cuenta con los **medios** (equipos, conectividad, personal) para usar una herramienta así. | ☐ | ☐ | ☐ | ☐ | ☐ |
 
@@ -139,7 +135,6 @@ Marque el número que mejor represente su grado de acuerdo con cada afirmación:
 |:--:|----------------------------------------|:--:|:--:|:--:|:--:|:--:|
 | I1 | **Usaría** este sistema si estuviera disponible en mi ámbito de trabajo. | ☐ | ☐ | ☐ | ☐ | ☐ |
 | I2 | **Recomendaría** su uso a colegas del área de nutrición o salud pública. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| I3 | El sistema está **listo para ser probado** en un entorno real. | ☐ | ☐ | ☐ | ☐ | ☐ |
 
 :::
 

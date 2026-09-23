@@ -68,7 +68,24 @@ $$f(x) = \phi_0 + \sum_{j=1}^{M} \phi_j(x)$$
 
 ### F. Protocolo de Validación Metodológica
 
-La validación del sistema se estructuró en tres ejes que abarcan la solidez estadística, la replicabilidad computacional y la pertinencia técnica del software, siguiendo las recomendaciones de reporte de modelos predictivos en salud [@moons2015tripod]. El primer eje certificó la confiabilidad mediante remuestreo *Bootstrap* no paramétrico con 1,000 repeticiones sobre las probabilidades *out-of-fold* de los 304,271 registros, obteniendo un AUC-ROC de 0.8294 con intervalo de confianza al 95% de $[0.8267, 0.8324]$ y una sensibilidad de 76.43% con intervalo $[75.88\%, 76.98\%]$. La amplitud de ambos intervalos, inferior a 0.006 y 1.1 puntos porcentuales respectivamente, evidencia que las estimaciones puntuales no dependen de la partición muestral. El valor obtenido se sitúa en el rango que reportan los trabajos previos de predicción de retraso del crecimiento sobre datos de encuestas demográficas y de salud, que alcanzan áreas bajo la curva en torno a 0.84 [@ndagijimana2025rwanda], lo que respalda que el desempeño del modelo es comparable al del estado del arte pese a operar exclusivamente con variables de encuesta. La prueba de significancia estadística de DeLong sobre curvas ROC correlacionadas confirmó la superioridad del modelo campeón frente a los dos algoritmos de referencia con valores $p < 10^{-300}$ ($z = 62.32$ contra XGBoost y $z = 61.48$ contra Regresión Logística), de modo que la diferencia observada no es atribuible al azar. Cabe precisar que el estadístico de DeLong se define sobre rangos y no admite ponderación muestral, por lo que los valores de AUC empleados en ese contraste (0.8193, 0.7775 y 0.7767) corresponden a la muestra sin expandir y se sitúan sistemáticamente por debajo de los ponderados; la validez de la comparación se preserva porque los tres modelos se evalúan sobre los mismos individuos y el contraste recae sobre la diferencia entre curvas y no sobre el nivel absoluto del área. Finalmente, la calibración del umbral de decisión se fijó en $\tau = 0.45$, valor mínimo que garantiza una cobertura del 80.5% con una precisión asociada del 34.0%, orientada al triaje preventivo. El segundo eje garantizó la replicabilidad según los principios FAIR mediante la modularización del código en el paquete Python `mnp/`, el aislamiento del entorno con Docker (`python:3.12-slim`), la automatización del flujo completo mediante `Makefile` y la publicación del dataset maestro y modelo serializado en el repositorio abierto Zenodo con identificador digital DOI. El tercer eje evaluó la pertinencia de la herramienta mediante un panel de cinco profesionales del ámbito sanitario —dos nutricionistas, un médico y dos enfermeros—, seleccionados bajo criterios de al menos diez años de experiencia asistencial y grado mínimo de maestría en salud pública o áreas afines. La evaluación se apoyó en el Modelo de Aceptación Tecnológica [@davis1989tam], que explica la adopción de un sistema de información a partir de la utilidad percibida y la facilidad de uso percibida por sus destinatarios. Dado que el propósito del sistema es orientar decisiones de focalización sanitaria, la dimensión de utilidad percibida constituye el criterio central: se evaluó en qué medida los especialistas consideran que la herramienta aporta información accionable para priorizar la atención, qué limitaciones identifican desde su experiencia clínica y qué variables adicionales estimarían necesarias. La consulta a un panel multidisciplinario, antes que a expertos en ciencia de datos, responde a que la pertinencia no se juzga por la corrección algorítmica —cubierta por los dos ejes anteriores— sino por la utilidad efectiva en el contexto de aplicación.
+La validación del sistema se estructuró en tres ejes que abarcan la solidez estadística, la replicabilidad computacional y la pertinencia técnica del software, siguiendo las recomendaciones de reporte de modelos predictivos en salud [@moons2015tripod]. El primer eje certificó la confiabilidad mediante remuestreo *Bootstrap* no paramétrico con 1,000 repeticiones sobre las probabilidades *out-of-fold* de los 304,271 registros, obteniendo un AUC-ROC de 0.8294 con intervalo de confianza al 95% de $[0.8267, 0.8324]$ y una sensibilidad de 76.43% con intervalo $[75.88\%, 76.98\%]$. La amplitud de ambos intervalos, inferior a 0.006 y 1.1 puntos porcentuales respectivamente, evidencia que las estimaciones puntuales no dependen de la partición muestral. El valor obtenido se sitúa en el rango que reportan los trabajos previos de predicción de retraso del crecimiento sobre datos de encuestas demográficas y de salud, que alcanzan áreas bajo la curva en torno a 0.84 [@ndagijimana2025rwanda], lo que respalda que el desempeño del modelo es comparable al del estado del arte pese a operar exclusivamente con variables de encuesta. La prueba de significancia estadística de DeLong sobre curvas ROC correlacionadas confirmó la superioridad del modelo campeón frente a los dos algoritmos de referencia con valores $p < 10^{-300}$ ($z = 62.32$ contra XGBoost y $z = 61.48$ contra Regresión Logística), de modo que la diferencia observada no es atribuible al azar. Cabe precisar que el estadístico de DeLong se define sobre rangos y no admite ponderación muestral, por lo que los valores de AUC empleados en ese contraste (0.8193, 0.7775 y 0.7767) corresponden a la muestra sin expandir y se sitúan sistemáticamente por debajo de los ponderados; la validez de la comparación se preserva porque los tres modelos se evalúan sobre los mismos individuos y el contraste recae sobre la diferencia entre curvas y no sobre el nivel absoluto del área. Finalmente, la calibración del umbral de decisión se fijó en $\tau = 0.45$, valor mínimo que garantiza una cobertura del 80.5% con una precisión asociada del 34.0%, orientada al triaje preventivo. El segundo eje garantizó la replicabilidad según los principios FAIR mediante la modularización del código en el paquete Python `mnp/`, el aislamiento del entorno con Docker (`python:3.12-slim`), la automatización del flujo completo mediante `Makefile` y la publicación del dataset maestro y modelo serializado en el repositorio abierto Zenodo con identificador digital DOI. El tercer eje evaluó la pertinencia de la herramienta mediante un panel de cinco profesionales del ámbito sanitario —dos nutricionistas, un médico y dos enfermeros—, seleccionados bajo criterios de al menos diez años de experiencia asistencial y grado mínimo de maestría en salud pública o áreas afines. La evaluación se apoyó en el Modelo de Aceptación Tecnológica [@davis1989tam], que explica la adopción de un sistema de información a partir de la utilidad percibida y la facilidad de uso percibida por sus destinatarios, en su extensión TAM2 [@venkatesh2000tam2], que añade los factores del trabajo que explican por qué una herramienta resulta útil (ver apartado F.1). Dado que el propósito del sistema es orientar decisiones de focalización sanitaria, la dimensión de utilidad percibida constituye el criterio central: se evaluó en qué medida los especialistas consideran que la herramienta aporta información accionable para priorizar la atención, qué limitaciones identifican desde su experiencia clínica y qué variables adicionales estimarían necesarias. La consulta a un panel multidisciplinario, antes que a expertos en ciencia de datos, responde a que la pertinencia no se juzga por la corrección algorítmica —cubierta por los dos ejes anteriores— sino por la utilidad efectiva en el contexto de aplicación.
+
+### F.1. Instrumento de Evaluación de la Pertinencia
+
+La versión del modelo se eligió aplicando el marco de decisión de Britto [@britto2026framework], que compara TAM, TAM2, TAM3, UTAUT y UTAUT2 según el contexto de aplicación, el régimen de uso, la etapa de adopción, el foco explicativo y la granularidad. El estudio corresponde a un contexto organizacional de uso voluntario, en etapa de aceptación inicial y con un panel reducido que no admite modelos de alta complejidad, combinación que apunta a TAM2 [@venkatesh2000tam2]. De TAM3 [@venkatesh2008tam3] se incorporó únicamente el constructo de percepción de control externo, para indagar si los datos que requiere el sistema están disponibles en la práctica asistencial. Se omitieron los constructos de imagen y voluntariedad de TAM2, que no aplican a especialistas que evalúan la herramienta sin estar obligados a adoptarla.
+
+| Constructo | Modelo de origen | Ítems en la fuente | Ítems del instrumento |
+|------------------------------------|---------|---------|-------------|
+| Relevancia para el trabajo | TAM2 | 2 | 2 (R1–R2) |
+| Calidad del resultado | TAM2 | 2 | 2 (C1–C2) |
+| Demostrabilidad del resultado | TAM2 | 4 | 2 (D1–D2) |
+| Norma subjetiva | TAM2 | 2 | 2 (S1–S2) |
+| Utilidad percibida | TAM | 4 | 3 (U1–U3) |
+| Facilidad de uso percibida | TAM | 4 | 3 (F1–F3) |
+| Intención de uso | TAM | 2 | 2 (I1–I2) |
+| Percepción de control externo | TAM3 | — | 3 (K1–K3) |
+
+Los ítems se adaptaron al contexto sanitario a partir de las escalas publicadas por Venkatesh y Davis [@venkatesh2000tam2, Apéndice 1], procedimiento equivalente al de los propios autores, que ajustaron la redacción de sus escalas mediante un grupo focal de cinco profesionales. Las escalas originales incluyen, por diseño, enunciados casi sinónimos dentro de cada constructo para estimar su consistencia interna; dado que un panel de cinco evaluadores no permite estimar confiabilidad ni relaciones estructurales, se conservaron por constructo solo los enunciados con contenido distinto, sin bajar de dos ítems, número que los autores emplearon en cuatro de sus escalas con coeficientes alfa superiores a 0.80. Se eliminaron además los ítems que duplicaban el contenido de otro constructo. El instrumento resultante consta de 19 afirmaciones en escala Likert de cinco puntos, en lugar de los siete de la escala original, una valoración global de 1 a 10 y cuatro preguntas abiertas. El ítem K2 consulta expresamente la disponibilidad del dato de hemoglobina, la única de las 45 variables que exige un procedimiento sobre el menor. Las respuestas se analizan de forma descriptiva mediante la mediana y el rango intercuartílico por constructo y el porcentaje de acuerdo por ítem, y un constructo se considera favorablemente valorado cuando su mediana es igual o superior a 4.
 
 ### G. Arquitectura de Software y Despliegue
 
@@ -113,31 +130,37 @@ graph TD
 4. Black, R. E., Victora, C. G., Walker, S. P., Bhutta, Z. A., Christian, P., de Onis, M., Ezzati, M.,
    Grantham-McGregor, S., Katz, J., Martorell, R., & Uauy, R. (2013). Maternal and child undernutrition
    and overweight in low-income and middle-income countries. *The Lancet*, 382(9890), 427–451.
-5. Chilyabanyama, O. N., Chilengi, R., Simuyandi, M., Chisenga, C. C., Chirwa, M., Hamusonde, K.,
+5. Britto, N. P. (2026). A decision framework for selecting technology acceptance and use models: TAM,
+   TAM2, TAM3, UTAUT, and UTAUT2. *arXiv preprint* arXiv:2608.08333.
+6. Chilyabanyama, O. N., Chilengi, R., Simuyandi, M., Chisenga, C. C., Chirwa, M., Hamusonde, K.,
    Saroj, R. K., Iqbal, N. T., & Ngaruye, I. (2022). Performance of machine learning classifiers in
    classifying stunting among under-five children in Zambia. *Children*, 9(7), 1082.
-6. Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of
+7. Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of
    information technology. *MIS Quarterly*, 13(3), 319–340.
-7. Kaufman, S., Rosset, S., & Perlich, C. (2011). Leakage in data mining: formulation, detection, and
+8. Kaufman, S., Rosset, S., & Perlich, C. (2011). Leakage in data mining: formulation, detection, and
    avoidance. *Proceedings of the 17th ACM SIGKDD International Conference on Knowledge Discovery and
    Data Mining*, 556–563.
-8. Lundberg, S. M., & Lee, S.-I. (2017). A unified approach to interpreting model predictions.
+9. Lundberg, S. M., & Lee, S.-I. (2017). A unified approach to interpreting model predictions.
    *Advances in Neural Information Processing Systems 30 (NIPS 2017)*.
-9. Moons, K. G. M., Altman, D. G., Reitsma, J. B., Ioannidis, J. P. A., Macaskill, P., Steyerberg, E. W.,
+10. Moons, K. G. M., Altman, D. G., Reitsma, J. B., Ioannidis, J. P. A., Macaskill, P., Steyerberg, E. W.,
    Vickers, A. J., Ransohoff, D. F., & Collins, G. S. (2015). Transparent reporting of a multivariable
    prediction model for individual prognosis or diagnosis (TRIPOD): explanation and elaboration.
    *Annals of Internal Medicine*, 162(1), W1–W73.
-10. Ndagijimana, S., Kabano, I., Masabo, E., & Ntaganda, J. M. (2025). Predicting stunting status among
+11. Ndagijimana, S., Kabano, I., Masabo, E., & Ntaganda, J. M. (2025). Predicting stunting status among
    under-5 children in Rwanda using neural network model: evidence from 2020 Rwanda demographic and
    health survey. *F1000Research*, 13, 128.
-11. Santos, M. P., Turner, B., & Chaparro, M. P. (2021). The double burden of malnutrition in Peru: an
+12. Santos, M. P., Turner, B., & Chaparro, M. P. (2021). The double burden of malnutrition in Peru: an
     update with a focus on social inequities. *The American Journal of Clinical Nutrition*, 113(4),
     865–873.
-12. Sobrino, M., Gutiérrez, C., Cunha, A. J., Dávila, M., & Alarcón, J. (2014). Desnutrición infantil en
+13. Sobrino, M., Gutiérrez, C., Cunha, A. J., Dávila, M., & Alarcón, J. (2014). Desnutrición infantil en
     menores de cinco años en Perú: tendencias y factores determinantes. *Revista Panamericana de Salud
     Pública*, 35(2), 104–112.
-13. Talukder, A., & Ahammed, B. (2020). Machine learning algorithms for predicting malnutrition among
+14. Talukder, A., & Ahammed, B. (2020). Machine learning algorithms for predicting malnutrition among
     under-five children in Bangladesh. *Nutrition*, 78, 110861.
-14. Victora, C. G., Christian, P., Vidaletti, L. P., Gatica-Domínguez, G., Menon, P., & Black, R. E.
+15. Venkatesh, V., & Bala, H. (2008). Technology acceptance model 3 and a research agenda on
+   interventions. *Decision Sciences*, 39(2), 273–315.
+16. Venkatesh, V., & Davis, F. D. (2000). A theoretical extension of the technology acceptance model:
+   four longitudinal field studies. *Management Science*, 46(2), 186–204.
+17. Victora, C. G., Christian, P., Vidaletti, L. P., Gatica-Domínguez, G., Menon, P., & Black, R. E.
     (2021). Revisiting maternal and child undernutrition in low-income and middle-income countries:
     variable progress towards an unfinished agenda. *The Lancet*, 397(10282), 1388–1399.

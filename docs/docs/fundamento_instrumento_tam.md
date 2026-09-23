@@ -16,7 +16,7 @@ UTAUT y UTAUT2 en cinco dimensiones:
 | D2. Régimen de uso | Voluntario: es una propuesta, no un sistema impuesto | TAM2 |
 | D3. Etapa de adopción | **Aceptación inicial**: primera exposición, antes de cualquier despliegue | TAM, **TAM2** |
 | D4. Foco explicativo | Utilidad ampliada por factores del trabajo (relevancia, calidad y demostrabilidad del resultado) | **TAM2** |
-| D5. Granularidad | **Intermedia**: un panel de seis especialistas no sostiene un modelo de alta complejidad | **TAM2** |
+| D5. Granularidad | **Intermedia**: un panel de cinco especialistas no sostiene un modelo de alta complejidad | **TAM2** |
 
 **Se adopta TAM2** (Venkatesh y Davis, 2000), que coincide con el estudio en las cinco dimensiones.
 
@@ -46,18 +46,56 @@ originales de forma literal.
 
 ## 2. Correspondencia entre constructos e ítems
 
-| Constructo | Origen | Sección | Ítems |
-|--------------------------------------------------------|---|---|--------|
-| Relevancia para el trabajo (*job relevance*) | TAM2 | III | R1–R3 |
-| Calidad del resultado (*output quality*) | TAM2 | IV | C1–C3 |
-| Demostrabilidad del resultado (*result demonstrability*) | TAM2 | V | D1–D2 |
-| Utilidad percibida (*perceived usefulness*) | TAM | VI | U1–U4 |
-| Facilidad de uso percibida (*perceived ease of use*) | TAM | VII | F1–F4 |
-| Percepción de control externo (*perceptions of external control*) | TAM3 | VIII | K1–K3 |
-| Norma subjetiva (*subjective norm*) | TAM2 | IX | S1–S2 |
-| Intención de uso (*behavioral intention*) | TAM | X | I1–I3 |
+| Constructo | Origen | Sección | Ítems en la fuente | Ítems en la ficha |
+|--------------------------------------------------------|---|---|---|---------|
+| Relevancia para el trabajo (*job relevance*) | TAM2 | III | 2 | R1–R2 |
+| Calidad del resultado (*output quality*) | TAM2 | IV | 2 | C1–C2 |
+| Demostrabilidad del resultado (*result demonstrability*) | TAM2 | V | 4 | D1–D2 |
+| Utilidad percibida (*perceived usefulness*) | TAM | VI | 4 | U1–U3 |
+| Facilidad de uso percibida (*perceived ease of use*) | TAM | VII | 4 | F1–F3 |
+| Percepción de control externo (*perceptions of external control*) | TAM3 | VIII | — | K1–K3 |
+| Norma subjetiva (*subjective norm*) | TAM2 | IX | 2 | S1–S2 |
+| Intención de uso (*behavioral intention*) | TAM | X | 2 | I1–I2 |
 
-**24 ítems** en escala de 1 a 5, más una valoración global de 1 a 10 y cuatro preguntas abiertas.
+**19 ítems** en escala de 1 a 5, más una valoración global de 1 a 10 y cuatro preguntas abiertas.
+
+### Por qué hay menos ítems que en la fuente
+
+Las escalas de Venkatesh y Davis (2000, Apéndice 1) repiten a propósito la misma idea con otras
+palabras dentro de cada constructo (por ejemplo, *"usage of the system is important"* y *"… is
+relevant"*), porque así estiman la consistencia interna con el alfa de Cronbach. Con cinco evaluadores
+ese cálculo no se hace, de modo que esa redundancia no aporta información y alarga la ficha. Se
+conservó en cada constructo solo lo que tiene contenido distinto, sin bajar de dos ítems: los propios
+autores usan dos ítems en cuatro escalas y declaran alfas superiores a 0.80 (sección *Limitations*).
+
+Se eliminaron además los ítems que repetían el contenido de **otro** constructo: priorizar aparecía en
+calidad y en utilidad, y comprender el resultado aparecía en facilidad de uso y en demostrabilidad.
+
+La escala original es de 7 puntos; la ficha usa 5, adaptación habitual que se declara en la
+metodología. Los autores ajustaron la redacción de sus ítems con un grupo focal de cinco profesionales,
+procedimiento equivalente al de este panel.
+
+### De qué ítem original sale cada uno
+
+| Ítem | Ítem original (Venkatesh y Davis, 2000, salvo indicación) |
+|:--:|------------------------------------------------------------|
+| R1 | *In my job, usage of the system is important.* |
+| R2 | *In my job, usage of the system is relevant.* |
+| C1 | *I have no problem with the quality of the system's output.* |
+| C2 | *The quality of the output I get from the system is high.* |
+| D1 | *The results of using the system are apparent to me.* Adaptado hacia la explicación del modelo (valores SHAP) |
+| D2 | *I have no difficulty telling others about the results of using the system.* |
+| U1 | *Using the system improves my performance in my job.* |
+| U2 | *Using the system in my job increases my productivity.* |
+| U3 | *Using the system enhances my effectiveness in my job.* |
+| F1 | *I find it easy to get the system to do what I want it to do.* |
+| F2 | *My interaction with the system is clear and understandable.* |
+| F3 | Facilidad de aprendizaje, de Davis (1989); no figura en el apéndice de TAM2 |
+| K1–K3 | Percepción de control externo, de Venkatesh y Bala (2008) |
+| S1 | *People who influence my behavior think that I should use the system.* Referente concretado en los colegas |
+| S2 | *People who are important to me think that I should use the system.* Referente concretado en las autoridades |
+| I1 | *Assuming I have access to the system, I intend to use it.* |
+| I2 | Adaptación propia (recomendación a colegas); no figura en TAM2 |
 
 De TAM2 se omiten **imagen** (el prestigio que da usar la herramienta) y **voluntariedad**, que no
 aplican a una evaluación por expertos que no serán usuarios obligados del sistema.
@@ -69,7 +107,7 @@ medición que muestra que el modelo pierde poco sin ella (`docs/docs/hallazgos_v
 ## 3. Cómo se analizarán las respuestas
 
 TAM2 es un modelo estructural: en su formulación original se valida estimando las relaciones entre
-constructos con cientos de respuestas. **Con un panel de seis especialistas esa estimación no es
+constructos con cientos de respuestas. **Con un panel de cinco especialistas esa estimación no es
 posible ni se pretende.** Los constructos se usan como **dimensiones de evaluación**, y el análisis es
 descriptivo:
 
