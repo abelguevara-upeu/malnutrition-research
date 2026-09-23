@@ -119,14 +119,13 @@ Para garantizar la reproducibilidad científica y evitar conflictos de software,
 │   ├── processed/     ← Datos finales procesados listos para modelamiento estadístico
 │   └── raw/           ← Datos ENDES originales comprimidos/extraídos desde INEI (.sav)
 │
-├── docs/              ← Carpeta principal de documentación y artículos
-│   ├── mkdocs.yml     ← Configuración del sitio web de MkDocs
-│   ├── docs/          ← Wiki/Documentación técnica en Markdown (MkDocs)
-│   │   ├── index.md
-│   │   └── getting-started.md
-│   └── papers/        ← Artículos académicos, propuestas y manuscritos (en LaTeX)
-│       ├── graduation-profile/  ← Propuesta de perfil de egreso en LaTeX
-│       └── malnutrition-paper/  ← Artículo de investigación de desnutrición
+├── docs/              ← Documentación del proyecto
+│   ├── validacion/    ← Panel de especialistas: solicitud, presentación, ficha TAM2, protocolo, consentimiento, hallazgos
+│   ├── articulo/      ← Metodología del artículo y referencias seleccionadas
+│   ├── tecnico/       ← Datos, variables, EDA y auditoría de la app
+│   ├── antiguo/       ← Documentos reemplazados, conservados como historial
+│   ├── assets/        ← Estilos y scripts de compilación (build-pdf.sh, build-slides.sh)
+│   └── papers/        ← Bibliografía (referencias.bib), artículos fuente y PPI en LaTeX
 │
 ├── mnp/               ← Código fuente de Python (Módulos de datos)
 │   ├── __init__.py
