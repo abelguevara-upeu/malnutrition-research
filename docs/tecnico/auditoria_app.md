@@ -7,8 +7,23 @@ qué se propone.
 **Criterio:** la app debe cumplir cada aspecto que evalúa la ficha, y ningún texto de la app, la
 presentación o la ficha debe prometer más de lo que la app hace.
 
-**Corregido en el paso 1:** 1.2, 1.3, 1.4 (incorporadas a la app), 1.5, 2.1, 2.2, 2.5, 2.8 (indicador renombrado a *Puntaje de riesgo*) y el rótulo de 2.3 (la lista se presenta
-ahora como *alertas clínicas de referencia*, no como explicación del modelo).
+## Estado actual (rama `develop/app-audit-fixes`)
+
+| Hallazgo | Estado | Cómo se resolvió |
+|---|:--:|---|
+| 1.1 Escala de riqueza | ⚠️ mitigado | La app envía la mediana de cada quintil de riqueza de ENDES 2018–2025, la escala de los años recientes. El modelo responde de forma coherente (puntaje de 34 en el quintil 1 a 17 en el 5, con el resto sin dato). La corrección de fondo sigue pendiente: estandarizar `HV271` por año y reentrenar |
+| 1.2, 1.3, 1.5 Valores que el modelo no reconocía | ✅ | Las categorías se toman de las opciones que aprendió el modelo, el yodo usa ppm y lo no respondido va como faltante |
+| 1.4 Variables sin campo | ✅ | La app pide las 45. Estaban en el modelo desde el principio; la app no las pedía |
+| 1.6 Educación materna e intervalo genésico (nuevo) | ✅ | `HC62` es el año aprobado dentro del nivel (0–9), no los años totales; la app lo pregunta así. En el intervalo genésico, el primer hijo se envía como faltante, como en el entrenamiento, y no como 0 |
+| 2.3, 2.4 Explicación del caso concreto | ✅ | Gráfico con los 10 datos que más suben o bajan el puntaje de ese niño (valores SHAP del propio modelo) |
+| 2.5 Datos faltantes | ✅ | Todo campo puede quedar en «Sin dato» |
+| 2.6 Priorizar a muchos niños | ✅ | Pestaña «Evaluar un grupo»: plantilla, carga de CSV o Excel y lista ordenada descargable |
+| 2.7, 3.1 Códigos ENDES | ✅ | Todas las opciones se muestran en texto (alumbrado, recipiente, yodo, sí/no) |
+| 2.8 Probabilidad inflada | ⚠️ parcial | Se muestra como «puntaje de riesgo» y «prioridad alta/regular», con la aclaración de que no es una probabilidad. Calibrar el modelo sigue pendiente |
+| 3.3 Completitud | ✅ | Contador «Datos ingresados: n de 45» y advertencia si falta un dato de mucho peso |
+| 3.4 Mapa ambiguo | ✅ | Las etiquetas son neutras y el texto explica que el mapa indica peso, no dirección |
+
+**Pendiente:** reentrenar con `HV271` estandarizado por año (1.1) y calibrar las probabilidades (2.8).
 
 **Estados:** 🔴 da resultados incorrectos · 🟠 contradice lo que se promete · 🟡 usabilidad
 

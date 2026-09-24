@@ -1,10 +1,8 @@
-streamlit>=1.32.0
+streamlit>=1.50.0
 pandas
 numpy
 lightgbm
-shap
 scikit-learn
 joblib
-matplotlib
-seaborn
-plotly
+plotly>=5.24
+openpyxl

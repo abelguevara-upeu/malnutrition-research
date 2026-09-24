@@ -1,10 +1,18 @@
-import streamlit as st
-import pandas as pd
-import joblib
 import json
 import os
+import sys
+
+import joblib
+import numpy as np
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import streamlit as st
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from fields import (BY_FEATURE, BY_KEY, EXAMPLES, FIELDS, GROUPS, KEY_FIELDS, LABEL_BY_FEATURE,
+                    build_model_frame, is_missing, label_to_value, parse_upload, read_table, template_frame,
+                    value_to_label)
 
 st.set_page_config(page_title="Sistema de Alerta de Desnutrición", layout="wide")
 
@@ -14,457 +22,318 @@ st.markdown("""
     footer {visibility: hidden;}
     .block-container { padding-top: 2rem; padding-bottom: 2rem; }
     h1, h2, h3 { font-family: 'Inter', 'Helvetica Neue', sans-serif; color: #1e293b; }
-    .stButton>button {
-        background-color: #0f172a; color: white;
-        border-radius: 6px; padding: 0.5rem 1rem; font-weight: 600;
-    }
-    .stButton>button:hover { background-color: #334155; color: white; }
-    .result-box { padding: 20px; border-radius: 10px; margin-top: 10px; }
+    .result-box { padding: 16px 18px; border-radius: 10px; margin-top: 6px; }
 </style>
 """, unsafe_allow_html=True)
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+N_FIELDS = len(FIELDS)
 
 
 @st.cache_resource
 def load_assets():
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     model = joblib.load(os.path.join(BASE_DIR, "../models/champion_lightgbm.pkl"))
     with open(os.path.join(BASE_DIR, "../models/champion_metadata.json")) as f:
         metadata = json.load(f)
     with open(os.path.join(BASE_DIR, "../models/threshold_recall_curve.json")) as f:
         recall_curve = json.load(f)
+    booster = model.booster_
+    features = booster.feature_name()
+    cat_feats = [f for f in features if f in metadata["cat_features"]]
+    categories = dict(zip(cat_feats, booster.pandas_categorical))
     try:
         df_shap = pd.read_csv(os.path.join(BASE_DIR, "../data/processed/shap_dept_impact.csv"), index_col=0)
         with open(os.path.join(BASE_DIR, "peru_departamentos.geojson")) as f:
             peru_geojson = json.load(f)
     except FileNotFoundError:
-        df_shap = None
-        peru_geojson = None
-    return model, metadata, recall_curve, df_shap, peru_geojson
+        df_shap, peru_geojson = None, None
+    return model, features, categories, recall_curve, df_shap, peru_geojson
 
 
 def threshold_for_recall(recall_curve, target_recall_pct):
     target = target_recall_pct / 100
     candidates = [r for r in recall_curve if r["recall"] >= target]
-    if not candidates:
-        best = recall_curve[-1]
-    else:
-        best = max(candidates, key=lambda r: r["threshold"])
+    best = max(candidates, key=lambda r: r["threshold"]) if candidates else recall_curve[-1]
     return best["threshold"], round(best["recall"] * 100, 1), round(best["precision"] * 100, 1)
 
 
-model, metadata, recall_curve, df_shap, peru_geojson = load_assets()
+def score(answers):
+    """Puntaje (0-1) y contribuciones por variable para una lista de respuestas {feature: valor}."""
+    X = build_model_frame(answers, FEATURES, CATEGORIES)
+    probs = MODEL.predict_proba(X)[:, 1]
+    contrib = MODEL.predict(X, pred_contrib=True)[:, :-1]
+    return probs, pd.DataFrame(contrib, columns=FEATURES)
+
+
+def n_answered(answer):
+    return sum(not is_missing(answer.get(f["feature"])) for f in FIELDS)
+
+
+def top_factors(contrib_row, answer, k=3):
+    s = contrib_row[contrib_row > 0].sort_values(ascending=False).head(k)
+    return "; ".join(f"{LABEL_BY_FEATURE[f]} ({value_to_label(BY_FEATURE[f], answer.get(f))})" for f in s.index)
+
+
+MODEL, FEATURES, CATEGORIES, RECALL_CURVE, DF_SHAP, PERU_GEOJSON = load_assets()
 
 st.title("Sistema Predictivo de Riesgo de Desnutrición Crónica")
-st.markdown("Herramienta de triaje basada en Machine Learning (LightGBM · AUC 0.83 · Recall 76%). Entrenada con 304,271 niños — ENDES 2007–2025.")
+st.markdown("Herramienta de apoyo a la focalización basada en Machine Learning (LightGBM · AUC 0.83). "
+            "Entrenada con 304,271 niños — ENDES 2007–2025.")
 
-tab1, tab2 = st.tabs(["Mapa de Riesgo Territorial", "Predictor Individual"])
+# ── Sensibilidad del triaje: común a la evaluación individual y por grupo ──
+with st.sidebar:
+    st.markdown("### Sensibilidad del triaje")
+    target_recall = st.slider("¿Qué % de niños con desnutrición crónica quiero detectar?",
+                              min_value=50, max_value=99, value=80, step=1, key="recall",
+                              help="Detectar más casos exige revisar a más niños que finalmente no la tienen.")
+    THRESHOLD, REAL_RECALL, REAL_PRECISION = threshold_for_recall(RECALL_CURVE, target_recall)
+    st.markdown(f"Umbral de prioridad: **{THRESHOLD * 100:.0f}** de 100")
+    st.caption(f"En la validación, este umbral detectó al {REAL_RECALL}% de los niños con desnutrición "
+               f"crónica; de los señalados como prioridad alta, el {REAL_PRECISION}% la tenía.")
+
+tab_map, tab_one, tab_batch = st.tabs(["Mapa de riesgo territorial", "Evaluar un niño", "Evaluar un grupo"])
 
 # ──────────────────────────────────────────────
-# TAB 1: MAPA INTERACTIVO
+# MAPA
 # ──────────────────────────────────────────────
-with tab1:
-    st.markdown("### Distribución Geográfica del Riesgo")
-    st.caption("Intensidad relativa de cada factor de riesgo por departamento (escala 0–1 normalizada). Fuente: SHAP values del modelo campeón sobre 10,000 niños.")
+with tab_map:
+    st.markdown("### Qué factores pesan más en cada departamento")
+    st.caption("Para cada factor, el mapa compara cuánto influye en las predicciones del modelo para los niños de "
+               "cada departamento (0 = el departamento donde menos influye, 1 = donde más). Indica peso, no si el "
+               "factor sube o baja el riesgo. Fuente: valores SHAP del modelo sobre 10,000 niños.")
 
-    # Nombres legibles para las 45 variables SHAP
-    FACTOR_NAMES = {
-        "HV271_Factor_de_puntuacion_del_indice_de_riqueza": "Pobreza económica extrema",
-        "m19_Peso_al_nacer_kg": "Bajo peso al nacer",
-        "HV040_Altitud_del_conglomerado_en_metros": "Altitud geográfica",
-        "HC1_Edad_en_meses": "Edad crítica (ventana 1000 días)",
-        "HC56_Nivel_de_hemoglobina_ajustado_por_altitud": "Anemia (hemoglobina baja)",
-        "HC63_Intervalo_de_nacimientos_anteriores_al_nino": "Embarazos muy seguidos",
-        "M4_Duracion_de_la_lactancia": "Lactancia materna insuficiente",
-        "HV220_Edad_del_jefe_del_hogar": "Jefe del hogar joven o mayor",
-        "HV219_Sexo_del_jefe_del_hogar": "Sexo del jefe del hogar",
-        "M46_Dias_que_tomo_hierro": "Falta de hierro gestacional",
-        "M18_Tamano_al_nacer": "Talla pequeña al nacer",
-        "m34_Horas_hasta_inicio_de_lactancia": "Inicio tardío de lactancia",
-        "M14_Numero_de_visitas_prenatales": "Controles prenatales insuficientes",
-        "HC62_Ano_mas_alto_de_educacion_de_la_madre": "Educación materna baja",
-        "HC27_Sexo": "Sexo del niño",
-        "HV012_Miembros_habituales_De_jure": "Hacinamiento familiar",
-        "SH49_Tipo_de_envase_o_recipiente": "Tipo de recipiente de agua",
-        "M13_Mes_de_gestacion_en_el_1er_control": "Inicio tardío de controles prenatales",
-        "HV234_Prueba_de_yodo_para_sal": "Sal sin yodo",
-        "SH42_Agua_Todo_El_Dia": "Sin acceso a agua continua",
-        "HV240_Tiene_chimenea_o_campana": "Cocina a leña sin extracción de humo",
-        "SH71_Numero_de_habitaciones_en_el_hogar": "Vivienda pequeña",
-        "M55G_Liquidos_primeros_3_dias_Formula_para_bebes": "Fórmula artificial primeros días",
-        "SH76B_Ventanas_con_cristal": "Sin ventanas de cristal",
-        "SH70_Fuente_Luz": "Fuente de luz precaria",
-        "HV014_Ninos_menores_de_5_anos": "Más niños < 5 años en el hogar",
-        "SH50_Lo_usa_con_tapa": "Recipiente sin tapa",
-        "SH63_Utiliza_otro_tipo_de_combustible_para_cocinar": "Uso de combustible adicional",
-        "HV216_Habitaciones_para_dormir": "Pocas habitaciones para dormir",
-        "HV242_Cuarto_separado_para_cocinar": "Sin cocina separada",
-        "HV204_Tiempo_de_viaje_a_fuente": "Lejos de fuente de agua",
-        "HV225_Comparte_servicio_higienico": "Comparte servicio higiénico",
-        "HV237G_Agua_embotellada": "Usa agua embotellada",
-        "HV025_Area_de_residencia": "Zona rural",
-        "SH76D_Ventanas_con_malla": "Sin ventanas con malla",
-        "m15_Lugar_del_parto_agrupado": "Parto domiciliario",
-        "M17_Parto_por_cesarea": "Parto sin cesárea (cuando indicada)",
-        "M54_Vitamina_A_primeros_2_meses_post_parto": "Sin vitamina A post-parto",
-        "SH76C_Ventanas_de_madera": "Ventanas de madera",
-        "M60_Tomo_antiparasitarios_en_el_embarazo": "Sin antiparasitarios en gestación",
-        "SH48_Conserva_Agua": "No conserva agua",
-        "HV237A_Tratamiento_de_agua_hervir": "Hierve el agua",
-        "HV102_Residente_habitual": "Residente no habitual",
-        "HV237_Tratamiento_del_agua": "Trata el agua",
-        "SH77F_Otro_tipo_de_transporte_caballos_peque_peque_etc": "Transporte rural tradicional",
-    }
-
-    if df_shap is not None and peru_geojson is not None:
-        df_map = df_shap.copy()
-        df_map.columns = [FACTOR_NAMES.get(c, c.split("_", 1)[-1].replace("_", " ").capitalize()) for c in df_map.columns]
-        df_map["NOMBDEP"] = (
-            df_map.index.str.upper()
-            .str.replace("Á", "A").str.replace("É", "E")
-            .str.replace("Í", "I").str.replace("Ó", "O").str.replace("Ú", "U")
-        )
-
+    if DF_SHAP is not None and PERU_GEOJSON is not None:
+        df_map = DF_SHAP.copy()
+        df_map.columns = [LABEL_BY_FEATURE.get(c, c) for c in df_map.columns]
+        df_map["NOMBDEP"] = (df_map.index.str.upper().str.replace("Á", "A").str.replace("É", "E")
+                             .str.replace("Í", "I").str.replace("Ó", "O").str.replace("Ú", "U"))
         available_factors = [c for c in df_map.columns if c != "NOMBDEP"]
         departamentos_list = df_map.index.tolist()
 
         col_mapa, col_grafico = st.columns([2, 1])
-
         with col_mapa:
-            st.markdown("#### Mapa Nacional por Factor de Riesgo")
-            selected_factor = st.selectbox("Factor de riesgo a visualizar:", options=available_factors)
-
-            df_map["Intensidad"] = (df_map[selected_factor] * 100).round(1).astype(str) + "% del máximo nacional"
-
-            fig = px.choropleth_mapbox(
-                df_map,
-                geojson=peru_geojson,
-                featureidkey="properties.NOMBDEP",
-                locations="NOMBDEP",
-                color=selected_factor,
-                color_continuous_scale="Reds",
-                range_color=(0, 1),
-                mapbox_style="carto-positron",
-                zoom=4.2,
-                center={"lat": -9.19, "lon": -75.01},
-                opacity=0.75,
-                hover_name="NOMBDEP",
-                hover_data={"NOMBDEP": False, selected_factor: False, "Intensidad": True},
+            selected_factor = st.selectbox("Factor:", options=available_factors, key="map_factor")
+            df_map["Peso relativo"] = (df_map[selected_factor] * 100).round(1).astype(str) + "% del máximo"
+            fig = px.choropleth_map(
+                df_map, geojson=PERU_GEOJSON, featureidkey="properties.NOMBDEP", locations="NOMBDEP",
+                color=selected_factor, color_continuous_scale="Reds", range_color=(0, 1),
+                map_style="carto-positron", zoom=4.2, center={"lat": -9.19, "lon": -75.01}, opacity=0.75,
+                hover_name="NOMBDEP", hover_data={"NOMBDEP": False, selected_factor: False, "Peso relativo": True},
             )
-            fig.update_traces(
-                hovertemplate="<b>%{hovertext}</b><br>Intensidad relativa: %{customdata[2]}<extra></extra>"
-            )
-            fig.update_layout(
-                margin={"r": 0, "t": 0, "l": 0, "b": 0},
-                coloraxis_colorbar=dict(title="Intensidad", tickformat=".0%"),
-            )
-            st.plotly_chart(fig, use_container_width=True)
+            fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0},
+                              coloraxis_colorbar=dict(title="Peso", tickformat=".0%"))
+            st.plotly_chart(fig, width="stretch")
 
-            # Top 5 departamentos más afectados por el factor seleccionado
-            top5 = df_map.nlargest(5, selected_factor)[["NOMBDEP", selected_factor]].copy()
-            top5.columns = ["Departamento", "Intensidad relativa"]
-            top5["Intensidad relativa"] = (top5["Intensidad relativa"] * 100).round(1).astype(str) + "%"
-            top5.index = range(1, 6)
-            st.markdown(f"**Top 5 departamentos con mayor '{selected_factor}':**")
-            st.dataframe(top5, use_container_width=True)
+            top5 = df_map.nlargest(5, selected_factor)[[selected_factor]].copy()
+            top5.columns = ["Peso relativo"]
+            top5["Peso relativo"] = (top5["Peso relativo"] * 100).round(1).astype(str) + "%"
+            st.markdown(f"**Departamentos donde más pesa «{selected_factor}»:**")
+            st.dataframe(top5, width="stretch")
 
         with col_grafico:
-            st.markdown("#### Perfil de Riesgo Departamental")
             selected_dept = st.selectbox(
-                "Departamento:",
-                options=departamentos_list,
-                index=departamentos_list.index("Puno") if "Puno" in departamentos_list else 0,
-            )
-            top_n = st.slider("Variables a mostrar:", min_value=3, max_value=15, value=8)
-
-            dept_data = (
-                df_map.loc[selected_dept, available_factors]
-                .sort_values(ascending=True)
-                .tail(top_n)
-                .astype(float)
-                .round(3)
-            )
-
-            chart_data = pd.DataFrame({
-                "Intensidad de riesgo": dept_data.values,
-                "Factor": dept_data.index,
-            })
-
-            fig_bar = px.bar(
-                chart_data,
-                x="Intensidad de riesgo",
-                y="Factor",
-                orientation="h",
-                color="Intensidad de riesgo",
-                color_continuous_scale="Reds",
-                text="Intensidad de riesgo",
-            )
-            fig_bar.update_traces(textposition="outside", texttemplate="%{text:.2f}")
-            fig_bar.update_layout(
-                margin={"r": 10, "t": 10, "l": 0, "b": 0},
-                xaxis_range=[0, 1.15],
-                coloraxis_showscale=False,
-                yaxis=dict(tickfont=dict(size=11)),
-            )
-            st.plotly_chart(fig_bar, use_container_width=True)
-
-            st.info(
-                f"**Lectura del perfil en {selected_dept}:**\n\n"
-                "Los factores con barra más larga son los que más impulsan el riesgo de desnutrición "
-                "en este departamento comparado con el resto del país (escala relativa 0–1)."
-            )
+                "Departamento:", options=departamentos_list, key="map_dept",
+                index=departamentos_list.index("Puno") if "Puno" in departamentos_list else 0)
+            top_n = st.slider("Factores a mostrar:", min_value=3, max_value=15, value=8, key="map_topn")
+            dept_data = (df_map.loc[selected_dept, available_factors].astype(float)
+                         .sort_values(ascending=True).tail(top_n).round(2))
+            fig_bar = px.bar(x=dept_data.values, y=dept_data.index, orientation="h", text=dept_data.values,
+                             labels={"x": "Peso relativo", "y": ""})
+            fig_bar.update_traces(marker_color="#b91c1c", textposition="outside", texttemplate="%{text:.2f}")
+            fig_bar.update_layout(margin={"r": 10, "t": 10, "l": 0, "b": 0}, xaxis_range=[0, 1.15])
+            st.plotly_chart(fig_bar, width="stretch")
+            st.info(f"En **{selected_dept}**, estos son los factores que más pesan en las predicciones del modelo, "
+                    "comparado con el resto del país.")
     else:
-        st.warning("Archivos de datos geográficos no encontrados. Verifique shap_dept_impact.csv y peru_departamentos.geojson.")
+        st.warning("No se encontraron los archivos del mapa (shap_dept_impact.csv y peru_departamentos.geojson).")
 
 
 # ──────────────────────────────────────────────
-# TAB 2: PREDICTOR INDIVIDUAL
+# EVALUAR UN NIÑO
 # ──────────────────────────────────────────────
-with tab2:
-    st.markdown("### Evaluación de Riesgo Individual")
-    st.caption("Variables ordenadas por importancia predictiva (SHAP global). El modelo evalúa las 45 variables completas del perfil infantil, materno y del hogar.")
-
-    tamano_map = {"Muy grande": 1, "Más grande que el promedio": 2, "Promedio": 3,
-                  "Más pequeño que el promedio": 4, "Muy pequeño": 5}
-    riqueza_map = {"Pobreza Extrema": -150000, "Pobre": -50000, "Medio": 0, "Rico": 50000, "Muy Rico": 150000}
+def load_example(name):
+    for f in FIELDS:
+        st.session_state["f_" + f["key"]] = EXAMPLES.get(name, {}).get(f["key"])
 
 
-    # Layout: formulario (izquierda amplia) | panel de resultado (derecha fija)
-    form_col, result_col = st.columns([2, 1])
+def render_field(f):
+    wkey = "f_" + f["key"]
+    st.session_state.setdefault(wkey, None)
+    if f["kind"] == "num":
+        is_int = float(f["step"]).is_integer()
+        cast = int if is_int else float
+        st.number_input(f["label"], min_value=cast(f["min"]), max_value=cast(f["max"]), step=cast(f["step"]),
+                        key=wkey, placeholder="Sin dato", help=f.get("help"))
+    else:
+        st.selectbox(f["label"], options=[lab for lab, _ in f["options"]], key=wkey,
+                     index=None, placeholder="Sin dato", help=f.get("help"))
 
-    with form_col:
-        # ── Formulario principal en 3 columnas ──
-        c1, c2, c3 = st.columns(3)
 
-        with c1:
-            st.markdown("##### Datos del Niño")
-            sexo_ui = st.selectbox("Género", options=["Masculino", "Femenino"])
-            sexo_str = "Hombre" if sexo_ui == "Masculino" else "Mujer"
-            edad = st.number_input("Edad (meses)", min_value=0, max_value=59, value=24,
-                help="Riesgo máximo meses 6–20.")
-            peso_nacer = st.number_input("Peso al nacer (kg)", min_value=0.5, max_value=6.0,
-                value=3.2, step=0.1, help="< 2.5 kg = bajo peso al nacer.")
-            tamano_nacer_text = st.selectbox("Tamaño al nacer",
-                options=["Muy grande", "Más grande que el promedio", "Promedio",
-                         "Más pequeño que el promedio", "Muy pequeño"], index=2,
-                help="Percepción de la madre al momento del parto, tal como lo "
-                     "registra la ENDES. No es una medición en centímetros.")
-            hemo = st.number_input("Hemoglobina ajustada (g/dL)", min_value=1.0,
-                max_value=20.0, value=11.3, step=0.1, help="Normal en niños: > 11.0 g/dL.")
-            intervalo_nac = st.number_input(
-                "Meses desde el nacimiento anterior",
-                min_value=0, max_value=200, value=24,
-                help="¿Cuántos meses pasaron entre el hijo anterior y este niño? "
-                     "Si es el primer hijo, ingrese 0. "
-                     "OMS recomienda mínimo 24 meses.")
-
-        with c2:
-            st.markdown("##### Historia Materna")
-            lactancia = st.number_input("Duración de la lactancia (meses)", min_value=0, max_value=36, value=6)
-            dias_hierro = st.number_input("Días de hierro en el embarazo", min_value=0, max_value=300, value=90)
-            visitas_prenatales = st.number_input("Visitas prenatales", min_value=0, max_value=20, value=6,
-                help="OMS recomienda mínimo 8.")
-            educ_madre = st.number_input("Años de educación de la madre",
-                min_value=0, max_value=20, value=8,
-                help="0 = sin educación · 6 = primaria · 11 = secundaria · 16+ = superior")
-            lugar_parto_str = st.selectbox("Lugar del parto",
-                options=["Institucional", "Domiciliario"], index=0)
-
-        with c3:
-            st.markdown("##### Entorno del Hogar")
-            riqueza_text = st.select_slider("Estrato socioeconómico",
-                options=["Pobreza Extrema", "Pobre", "Medio", "Rico", "Muy Rico"], value="Medio")
-            area_str = st.radio("Área de residencia", options=["Urbano", "Rural"], horizontal=True)
-            altitud = st.number_input("Altitud (m s.n.m.)", min_value=0, max_value=5000, value=150,
-                help="> 2,500 m: riesgo por hipoxia.")
-            miembros = st.number_input("Personas en el hogar", min_value=1, max_value=20, value=4)
-            edad_jefe = st.number_input("Edad del jefe del hogar", min_value=15, max_value=99, value=35)
-            sexo_jefe = st.selectbox("Sexo del jefe del hogar", options=["Masculino", "Femenino"], index=0)
-            chimenea_str = st.radio("¿Cocina con extracción de humo?",
-                options=["Sí", "No"], index=1, horizontal=True)
-
-        # ── Expander: 27 variables adicionales en 3 columnas temáticas ──
-        with st.expander("Parámetros adicionales (27 variables complementarias)"):
-            st.caption("Vienen precargados con el valor más frecuente en la ENDES. Ajústelos si conoce el dato del niño.")
-
-            e1, e2, e3 = st.columns(3)
-
-            with e1:
-                st.markdown("**Agua y Saneamiento**")
-                comparte_sanitario = st.selectbox("¿Comparte servicio higiénico?", ["Si", "No"], index=1, key="hv225")
-                trata_agua        = st.selectbox("¿Trata el agua?",          ["Si", "No"], index=1, key="hv237")
-                hierve_agua       = st.selectbox("¿Hierve el agua?",         ["Si", "No"], index=0, key="hv237a")
-                agua_botella      = st.selectbox("¿Agua embotellada?",       ["Si", "No"], index=1, key="hv237g")
-                agua_continua     = st.selectbox("¿Agua todo el día?",       ["Sí", "No"], index=0, key="sh42")
-                conserva_agua     = st.selectbox("¿Conserva agua?",          ["Sí", "No"], index=0, key="sh48")
-                tiempo_fuente     = st.number_input("Tiempo a fuente de agua (min)", min_value=0, max_value=999, value=0, key="hv204")
-                prueba_yodo       = st.selectbox("Yodo en la sal (resultado del kit)", [0, 7, 15, 30], index=3, key="hv234",
-                    format_func=lambda v: "Sin yodo (0 ppm)" if v == 0 else f"{v} ppm")
-                tipo_recipiente   = st.number_input("Tipo recipiente de agua (código)", min_value=0, max_value=20, value=0, key="sh49")
-                usa_tapa          = st.number_input("¿Recipiente con tapa? (0=No, 1=Sí)", min_value=0, max_value=1, value=1, key="sh50")
-
-            with e2:
-                st.markdown("**Vivienda**")
-                cuarto_cocina     = st.selectbox("¿Cocina en cuarto separado?",        ["Si", "No"], index=0, key="hv242",
-                    format_func=lambda v: "Sí" if v == "Si" else v)
-                otro_combustible  = st.selectbox("¿Usa otro combustible?",             ["Si", "No"], index=1, key="sh63",
-                    format_func=lambda v: "Sí" if v == "Si" else v)
-                ventana_cristal   = st.selectbox("¿Ventanas con cristal?",             ["Si", "No"], index=0, key="sh76b")
-                ventana_madera    = st.selectbox("¿Ventanas de madera?",               ["Si", "No"], index=1, key="sh76c")
-                ventana_malla     = st.selectbox("¿Ventanas con malla?",               ["Si", "No"], index=0, key="sh76d")
-                fuente_luz        = st.number_input("Fuente de luz (código)", min_value=0, max_value=20, value=1, key="sh70")
-                habitaciones_total= st.number_input("Total habitaciones", min_value=1, max_value=15, value=3, key="sh71")
-                habitaciones_dormir=st.number_input("Habitaciones para dormir", min_value=1, max_value=10, value=2, key="hv216")
-                transporte_rural  = st.selectbox("¿Transporte tradicional/rural? (caballo, peque-peque)", ["Si", "No"], index=1, key="sh77f",
-                    format_func=lambda v: "Sí" if v == "Si" else v)
-
-            with e3:
-                st.markdown("**Prenatal / Clínico**")
-                ninos_menores5    = st.number_input("Niños < 5 años en el hogar", min_value=1, max_value=10, value=1, key="hv014")
-                residente_hab     = st.selectbox("¿Residente habitual?", ["Sí", "No"], index=0, key="hv102")
-                mes_primer_control= st.number_input("Mes gestación 1er control", min_value=0, max_value=10, value=3, key="m13")
-                cesarea           = st.number_input("¿Cesárea? (0=No, 1=Sí)", min_value=0, max_value=1, value=0, key="m17")
-                vitamina_a        = st.number_input("¿Vitamina A post-parto? (0=No, 1=Sí)", min_value=0, max_value=1, value=0, key="m54")
-                formula_bebe      = st.number_input("¿Fórmula primeros 3 días? (0=No, 1=Sí)", min_value=0, max_value=1, value=0, key="m55g")
-                antiparasitarios  = st.number_input("¿Antiparasitarios gestación? (0=No, 1=Sí)", min_value=0, max_value=1, value=0, key="m60")
-                horas_lactancia   = st.number_input("Horas hasta inicio de lactancia", min_value=0, max_value=72, value=0, key="m34")
-
-    # ── Panel de resultado (columna derecha, siempre visible) ──
-    with result_col:
-        st.markdown("##### Sensibilidad del Triaje")
-
-        target_recall = st.slider(
-            "¿Qué % de niños desnutridos quiero detectar?",
-            min_value=50, max_value=99, value=80, step=1,
-            help="Aumentar la detección reduce la precisión — se generan más visitas preventivas."
-        )
-
-        threshold_used, real_recall, real_precision = threshold_for_recall(recall_curve, target_recall)
-
-        st.markdown(
-            f"Umbral automático: **{threshold_used:.2f}** → "
-            f"Recall real **{real_recall}%** · Precisión **{real_precision}%**"
-        )
-        st.caption("A mayor recall: más casos detectados, más visitas preventivas necesarias.")
-        st.markdown("---")
-
-        calcular = st.button("Calcular Riesgo", use_container_width=True)
-
-        if calcular:
-            input_dict = {}
-            for feat in metadata["features"]:
-                input_dict[feat] = None if feat in metadata["cat_features"] else float("nan")
-
-            # Formulario principal
-            input_dict["HC27_Sexo"] = sexo_str
-            input_dict["HC1_Edad_en_meses"] = edad
-            input_dict["m19_Peso_al_nacer_kg"] = peso_nacer
-            input_dict["M18_Tamano_al_nacer"] = tamano_map[tamano_nacer_text]
-            input_dict["HC56_Nivel_de_hemoglobina_ajustado_por_altitud"] = hemo
-            input_dict["HC63_Intervalo_de_nacimientos_anteriores_al_nino"] = intervalo_nac
-            input_dict["M4_Duracion_de_la_lactancia"] = lactancia
-            input_dict["M46_Dias_que_tomo_hierro"] = dias_hierro
-            input_dict["M14_Numero_de_visitas_prenatales"] = visitas_prenatales
-            input_dict["HC62_Ano_mas_alto_de_educacion_de_la_madre"] = educ_madre
-            input_dict["m15_Lugar_del_parto_agrupado"] = lugar_parto_str
-            input_dict["HV271_Factor_de_puntuacion_del_indice_de_riqueza"] = riqueza_map[riqueza_text]
-            input_dict["HV025_Area_de_residencia"] = area_str
-            input_dict["HV040_Altitud_del_conglomerado_en_metros"] = altitud
-            input_dict["HV012_Miembros_habituales_De_jure"] = miembros
-            input_dict["HV220_Edad_del_jefe_del_hogar"] = edad_jefe
-            input_dict["HV219_Sexo_del_jefe_del_hogar"] = sexo_jefe
-            input_dict["HV240_Tiene_chimenea_o_campana"] = 1 if chimenea_str == "Sí" else 0
-
-            # Expander — agua y saneamiento
-            input_dict["HV225_Comparte_servicio_higienico"] = comparte_sanitario
-            input_dict["HV237_Tratamiento_del_agua"] = trata_agua
-            input_dict["HV237A_Tratamiento_de_agua_hervir"] = hierve_agua
-            input_dict["HV237G_Agua_embotellada"] = agua_botella
-            input_dict["SH42_Agua_Todo_El_Dia"] = agua_continua
-            input_dict["SH48_Conserva_Agua"] = conserva_agua
-            input_dict["HV204_Tiempo_de_viaje_a_fuente"] = tiempo_fuente
-            input_dict["HV234_Prueba_de_yodo_para_sal"] = prueba_yodo
-            input_dict["SH49_Tipo_de_envase_o_recipiente"] = tipo_recipiente
-            input_dict["SH50_Lo_usa_con_tapa"] = usa_tapa
-
-            # Expander — vivienda
-            input_dict["HV242_Cuarto_separado_para_cocinar"] = cuarto_cocina
-            input_dict["SH63_Utiliza_otro_tipo_de_combustible_para_cocinar"] = otro_combustible
-            input_dict["SH76B_Ventanas_con_cristal"] = ventana_cristal
-            input_dict["SH76C_Ventanas_de_madera"] = ventana_madera
-            input_dict["SH76D_Ventanas_con_malla"] = ventana_malla
-            input_dict["SH70_Fuente_Luz"] = fuente_luz
-            input_dict["SH71_Numero_de_habitaciones_en_el_hogar"] = habitaciones_total
-            input_dict["HV216_Habitaciones_para_dormir"] = habitaciones_dormir
-            input_dict["SH77F_Otro_tipo_de_transporte_caballos_peque_peque_etc"] = transporte_rural
-
-            # Expander — prenatal/clínico
-            input_dict["HV014_Ninos_menores_de_5_anos"] = ninos_menores5
-            input_dict["HV102_Residente_habitual"] = residente_hab
-            input_dict["M13_Mes_de_gestacion_en_el_1er_control"] = mes_primer_control
-            input_dict["M17_Parto_por_cesarea"] = cesarea
-            input_dict["M54_Vitamina_A_primeros_2_meses_post_parto"] = vitamina_a
-            input_dict["M55G_Liquidos_primeros_3_dias_Formula_para_bebes"] = formula_bebe
-            input_dict["M60_Tomo_antiparasitarios_en_el_embarazo"] = antiparasitarios
-            input_dict["m34_Horas_hasta_inicio_de_lactancia"] = horas_lactancia
-
-            df_input = pd.DataFrame([input_dict])
-            for feat in metadata["cat_features"]:
-                df_input[feat] = df_input[feat].astype("category")
-
-            prob = model.predict_proba(df_input)[0][1]
-            prob_pct = prob * 100
-
-            # Gauge
-            fig_gauge = go.Figure(go.Indicator(
-                mode="gauge+number",
-                value=prob_pct,
-                number={"suffix": "%", "font": {"size": 40}},
-                gauge={
-                    "axis": {"range": [0, 100], "tickwidth": 1},
-                    "bar": {"color": "#b91c1c" if prob >= threshold_used else "#15803d"},
-                    "steps": [
-                        {"range": [0, threshold_used * 100], "color": "#dcfce7"},
-                        {"range": [threshold_used * 100, 100], "color": "#fee2e2"},
-                    ],
-                    "threshold": {
-                        "line": {"color": "#7f1d1d", "width": 3},
-                        "thickness": 0.75,
-                        "value": threshold_used * 100,
-                    },
-                },
-                title={"text": "Puntaje de riesgo", "font": {"size": 13}},
-            ))
-            fig_gauge.update_layout(margin=dict(t=50, b=10, l=10, r=10), height=250)
-            st.plotly_chart(fig_gauge, use_container_width=True)
-
-            # Veredicto
-            if prob >= threshold_used:
-                st.markdown(f"""<div class="result-box" style="background-color:#fef2f2;border:2px solid #f87171;">
-                    <strong style="color:#b91c1c;">ALERTA — Riesgo Alto ({prob_pct:.1f}%)</strong><br>
-                    <span style="color:#7f1d1d;font-size:0.9rem;">Perfil coincide con casos históricos de desnutrición crónica. Priorizar visita domiciliaria.</span>
-                </div>""", unsafe_allow_html=True)
-            else:
-                st.markdown(f"""<div class="result-box" style="background-color:#f0fdf4;border:2px solid #4ade80;">
-                    <strong style="color:#15803d;">Riesgo Bajo ({prob_pct:.1f}%)</strong><br>
-                    <span style="color:#166534;font-size:0.9rem;">Factores protectores suficientes. Mantener vigilancia regular.</span>
-                </div>""", unsafe_allow_html=True)
-
-            # Factores de riesgo detectados
-            alertas = []
-            if riqueza_map[riqueza_text] < -50000: alertas.append("Pobreza económica severa")
-            if peso_nacer < 2.5:                   alertas.append(f"Bajo peso al nacer ({peso_nacer} kg)")
-            if hemo < 11.0:                        alertas.append(f"Anemia (Hb {hemo:.1f} g/dL)")
-            if visitas_prenatales < 6:             alertas.append(f"Controles prenatales insuficientes ({visitas_prenatales})")
-            if dias_hierro < 60:                   alertas.append(f"Hierro gestacional bajo ({dias_hierro} días)")
-            if altitud > 2500:                     alertas.append(f"Altitud elevada ({altitud} m)")
-            if lugar_parto_str == "Domiciliario":  alertas.append("Parto domiciliario")
-            if area_str == "Rural":                alertas.append("Zona rural")
-            if lactancia < 3:                      alertas.append(f"Lactancia breve ({lactancia} meses)")
-
-            if alertas:
-                st.markdown("**Alertas clínicas de referencia:**")
-                st.caption("Umbrales clínicos habituales. No son la explicación del cálculo del modelo.")
-                for a in alertas:
-                    st.markdown(f"- {a}")
+def answer_from_state():
+    answer = {}
+    for f in FIELDS:
+        raw = st.session_state.get("f_" + f["key"])
+        if is_missing(raw):
+            answer[f["feature"]] = None
+        elif f["kind"] == "num":
+            answer[f["feature"]] = float(raw)
         else:
-            st.info("Complete el formulario y presione **Calcular Riesgo**.")
+            answer[f["feature"]] = label_to_value(f, raw)
+    return answer
+
+
+with tab_one:
+    st.markdown("### Evaluar a un niño")
+    st.caption("Complete los datos que conozca. Los campos que deje en **Sin dato** se envían al modelo como "
+               "dato faltante, sin inventar un valor.")
+
+    b1, b2, b3, _ = st.columns([1.2, 1.2, 1, 3])
+    b1.button("Ejemplo: prioridad alta", on_click=load_example, args=("alto",), width="stretch")
+    b2.button("Ejemplo: prioridad regular", on_click=load_example, args=("bajo",), width="stretch")
+    b3.button("Limpiar", on_click=load_example, args=("",), width="stretch")
+
+    form_col, result_col = st.columns([2, 1])
+    with form_col:
+        cols = st.columns(3)
+        for col, group in zip(cols, ["Niño", "Madre", "Hogar"]):
+            with col:
+                st.markdown(f"##### {GROUPS[group]}")
+                for f in FIELDS:
+                    if f["group"] == group:
+                        render_field(f)
+        with st.expander("Agua, saneamiento y vivienda"):
+            cols = st.columns(2)
+            for col, group in zip(cols, ["Agua", "Vivienda"]):
+                with col:
+                    st.markdown(f"##### {GROUPS[group]}")
+                    for f in FIELDS:
+                        if f["group"] == group:
+                            render_field(f)
+
+    with result_col:
+        answer = answer_from_state()
+        n = n_answered(answer)
+        missing_key = [BY_KEY[k]["label"] for k in KEY_FIELDS if is_missing(answer[BY_KEY[k]["feature"]])]
+
+        st.markdown("##### Resultado")
+        st.progress(n / N_FIELDS, text=f"Datos ingresados: {n} de {N_FIELDS}")
+
+        if n == 0:
+            st.info("Ingrese los datos del niño o cargue un ejemplo para ver el resultado.")
+        else:
+            probs, contrib = score([answer])
+            prob = float(probs[0])
+            if missing_key:
+                st.warning("Faltan datos de mucho peso en el modelo: " + ", ".join(missing_key) +
+                           ". El resultado es menos confiable.")
+
+            high = prob >= THRESHOLD
+            fig_gauge = go.Figure(go.Indicator(
+                mode="gauge+number", value=prob * 100, number={"font": {"size": 40}, "valueformat": ".0f"},
+                gauge={"axis": {"range": [0, 100]}, "bar": {"color": "#b91c1c" if high else "#15803d"},
+                       "steps": [{"range": [0, THRESHOLD * 100], "color": "#dcfce7"},
+                                 {"range": [THRESHOLD * 100, 100], "color": "#fee2e2"}],
+                       "threshold": {"line": {"color": "#7f1d1d", "width": 3}, "thickness": 0.75,
+                                     "value": THRESHOLD * 100}},
+                title={"text": "Puntaje de riesgo (0–100)", "font": {"size": 13}},
+            ))
+            fig_gauge.update_layout(margin=dict(t=50, b=10, l=10, r=10), height=230)
+            st.plotly_chart(fig_gauge, width="stretch")
+
+            if high:
+                st.markdown(f"""<div class="result-box" style="background:#fef2f2;border:2px solid #f87171;">
+                    <strong style="color:#b91c1c;">Prioridad alta</strong><br>
+                    <span style="color:#7f1d1d;font-size:0.9rem;">El puntaje ({prob*100:.0f}) supera el umbral
+                    ({THRESHOLD*100:.0f}). Se sugiere priorizar su evaluación antropométrica.</span></div>""",
+                            unsafe_allow_html=True)
+            else:
+                st.markdown(f"""<div class="result-box" style="background:#f0fdf4;border:2px solid #4ade80;">
+                    <strong style="color:#15803d;">Prioridad regular</strong><br>
+                    <span style="color:#166534;font-size:0.9rem;">El puntaje ({prob*100:.0f}) está por debajo del
+                    umbral ({THRESHOLD*100:.0f}). Mantener el control regular.</span></div>""",
+                            unsafe_allow_html=True)
+            st.caption("El puntaje sirve para ordenar a los niños según su riesgo; no es la probabilidad de que el "
+                       "niño tenga desnutrición crónica. El diagnóstico requiere medir talla y edad.")
+
+    if n > 0:
+        st.markdown("#### Por qué obtuvo este puntaje")
+        st.caption("Cuánto sube (rojo) o baja (verde) el puntaje cada dato de este niño según el modelo (valores "
+                   "SHAP). Es una asociación aprendida de la ENDES, no una causa. Los datos en «Sin dato» también "
+                   "influyen, porque el modelo aprendió qué suele pasar cuando falta ese dato.")
+        c = contrib.iloc[0]
+        top = c.reindex(c.abs().sort_values(ascending=False).index).head(10)[::-1]
+        labels = [f"{LABEL_BY_FEATURE[f]}: {value_to_label(BY_FEATURE[f], answer.get(f))}" for f in top.index]
+        fig_c = go.Figure(go.Bar(x=top.values, y=labels, orientation="h",
+                                 marker_color=["#b91c1c" if v > 0 else "#15803d" for v in top.values]))
+        fig_c.update_layout(margin=dict(t=10, b=10, l=10, r=10), height=380,
+                            xaxis_title="Efecto sobre el puntaje (escala log-odds)")
+        st.plotly_chart(fig_c, width="stretch")
+
+
+# ──────────────────────────────────────────────
+# EVALUAR UN GRUPO
+# ──────────────────────────────────────────────
+with tab_batch:
+    st.markdown("### Evaluar a un grupo de niños")
+    st.caption("Suba un archivo con un niño por fila (por ejemplo, el padrón de un establecimiento) y obtenga la "
+               "lista ordenada por puntaje de riesgo. Las celdas vacías se tratan como dato faltante.")
+
+    c1, c2 = st.columns([1, 2])
+    with c1:
+        st.download_button("Descargar plantilla (CSV)", data=template_frame().to_csv(index=False).encode("utf-8-sig"),
+                           file_name="plantilla_evaluacion_grupo.csv", mime="text/csv", width="stretch")
+        with st.expander("Valores aceptados en las columnas de opciones"):
+            for f in FIELDS:
+                if f["kind"] != "num":
+                    st.markdown(f"**{f['label']}:** " + " · ".join(lab for lab, _ in f["options"]))
+    with c2:
+        upload = st.file_uploader("Archivo CSV o Excel", type=["csv", "xlsx"], key="batch_file")
+
+    if upload is not None:
+        try:
+            df_up = read_table(upload.getvalue(), upload.name)
+        except Exception as e:
+            st.error(f"No se pudo leer el archivo: {e}. Use la plantilla en CSV o Excel.")
+            df_up = None
+
+        if df_up is not None and len(df_up):
+            answers, matched, problems = parse_upload(df_up)
+            if not matched:
+                st.error("Ninguna columna coincide con la plantilla. Descargue la plantilla y use sus encabezados.")
+            else:
+                probs, contrib = score(answers)
+                id_col = next((c for c in df_up.columns if str(c).strip().lower() == "id"), None)
+                ids = df_up[id_col].astype(str) if id_col else pd.Series(range(1, len(df_up) + 1)).astype(str)
+                out = pd.DataFrame({
+                    "id": ids.values,
+                    "Puntaje": (probs * 100).round(0).astype(int),
+                    "Prioridad": np.where(probs >= THRESHOLD, "Alta", "Regular"),
+                    "Datos ingresados": [f"{n_answered(a)} de {N_FIELDS}" for a in answers],
+                    "Principales factores que suben el puntaje": [
+                        top_factors(contrib.iloc[i], answers[i]) for i in range(len(answers))],
+                }).sort_values("Puntaje", ascending=False).reset_index(drop=True)
+                out.index = out.index + 1
+
+                n_high = int((out["Prioridad"] == "Alta").sum())
+                m1, m2, m3 = st.columns(3)
+                m1.metric("Niños evaluados", len(out))
+                m2.metric("Prioridad alta", n_high)
+                m3.metric("Columnas reconocidas", f"{len(matched)} de {N_FIELDS}")
+
+                if len(matched) < N_FIELDS:
+                    faltan = [f["label"] for f in FIELDS if f not in matched.values()]
+                    st.info("Columnas no incluidas en el archivo (se tratan como dato faltante): " + ", ".join(faltan))
+                if problems:
+                    st.warning("Algunos valores no se reconocieron y se trataron como dato faltante: " + "; ".join(
+                        f"{k}: {', '.join(sorted(v)[:4])}" for k, v in problems.items()))
+
+                st.dataframe(out, width="stretch",
+                             column_config={"Puntaje": st.column_config.ProgressColumn(
+                                 "Puntaje", min_value=0, max_value=100, format="%d")})
+                st.download_button("Descargar lista priorizada (CSV)",
+                                   data=out.to_csv(index_label="orden").encode("utf-8-sig"),
+                                   file_name="lista_priorizada.csv", mime="text/csv")
+                st.caption("El puntaje ordena a los niños según su riesgo; no es la probabilidad de desnutrición "
+                           "crónica. La lista sirve para decidir a quién evaluar primero, no reemplaza la medición.")
+        elif df_up is not None:
+            st.warning("El archivo no tiene filas.")
