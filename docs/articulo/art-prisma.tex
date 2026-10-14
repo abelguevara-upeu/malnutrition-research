@@ -265,7 +265,7 @@ La solución se implementó como una aplicación web interactiva en Streamlit, o
 
 La reproducibilidad se abordó de acuerdo con los principios FAIR mediante la modularización del código en el paquete Python \texttt{mnp/}, el aislamiento del entorno con Docker (\texttt{python:3.12-slim}), la automatización del flujo con Makefile y la publicación del conjunto de datos maestro y del modelo serializado en Zenodo.
 
-La pertinencia se evaluó mediante un panel de cinco profesionales sanitarios: dos nutricionistas, un médico y dos enfermeros, todos con al menos diez años de experiencia asistencial y grado mínimo de maestría en salud pública o áreas afines. La evaluación se apoyó en el Modelo de Aceptación Tecnológica \citep{davis1989tam} y en su extensión TAM2 \citep{venkatesh2000tam2}; la utilidad percibida fue el criterio central, por el propósito del sistema de aportar información accionable para priorizar la atención sanitaria.
+La pertinencia se evaluó mediante un panel de cuatro profesionales sanitarios: tres nutricionistas y un enfermero, todos con al menos diez años de experiencia asistencial y grado de maestría. La evaluación se apoyó en el Modelo de Aceptación Tecnológica \citep{davis1989tam} y en su extensión TAM2 \citep{venkatesh2000tam2}; la utilidad percibida fue el criterio central, por el propósito del sistema de aportar información accionable para priorizar la atención sanitaria.
 
 \subsubsection{Instrumento de evaluación de la pertinencia}
 
@@ -294,6 +294,127 @@ Percepción de control externo & TAM3 & --- & 3 (K1--K3) \\
 \end{table*}
 
 \section{Resultados}
+\label{resultados}
+
+\subsection{Evolución de la desnutrición crónica, 2007--2025}
+
+La prevalencia ponderada de desnutrición crónica en menores de cinco años descendió de 29.2~\% en 2007 a 13.0~\% en 2017 y, desde 2018, se mantiene entre 11.3~\% y 12.4~\%, con 12.0~\% en 2025 (Figura~\ref{fig:tendencia}). La brecha entre áreas persiste: en 2025 la prevalencia fue de 21.5~\% en el área rural y de 7.9~\% en la urbana.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.8\textwidth]{prism-uploads/Figura4_tendencia_prevalencia.png}
+\caption{Prevalencia ponderada de desnutrición crónica en menores de cinco años en el Perú, 2007--2025, a nivel nacional y por área de residencia (talla para la edad menor de $-2$ DE según el patrón OMS; factor de expansión HV005).}
+\label{fig:tendencia}
+\end{figure*}
+
+\subsection{Comparación de modelos}
+
+Con las probabilidades fuera de pliegue sin ponderación muestral (Tabla~\ref{tab:modelos} y Figuras~\ref{fig:roc}, \ref{fig:pr} y \ref{fig:confusion}), LightGBM alcanzó el mayor AUC-ROC (0.8230), seguido de CatBoost (0.8210) y de la red neuronal (0.8144); la regresión logística, XGBoost y el árbol de decisión se ubicaron entre 0.7696 y 0.7894. CatBoost obtuvo un AUC-PR ligeramente superior (0.5014 frente a 0.4894), pero con el umbral de 0.5 detectó solo el 28.2~\% de los casos, y la red neuronal el 24.2~\%, frente al 75.3~\% de LightGBM. Por su discriminación y su sensibilidad con el umbral de referencia se seleccionó LightGBM. Con ponderación muestral, su AUC-ROC es de 0.8295.
+
+\begin{table*}[t]
+\centering
+\caption{Desempeño de los seis algoritmos con las probabilidades fuera de pliegue, sin ponderación muestral (umbral de 0.5).}
+\label{tab:modelos}
+\begin{tabular}{lcccc}
+\hline
+Modelo & AUC-ROC & AUC-PR & Sensibilidad & Especificidad \\
+\hline
+Regresión logística & 0.7894 & 0.4158 & 70.7~\% & 72.9~\% \\
+LightGBM & 0.8230 & 0.4894 & 75.3~\% & 73.8~\% \\
+XGBoost & 0.7847 & 0.4129 & 74.9~\% & 69.4~\% \\
+CatBoost & 0.8210 & 0.5014 & 28.2~\% & 96.4~\% \\
+Árbol de decisión & 0.7696 & 0.3840 & 70.4~\% & 71.1~\% \\
+Red neuronal & 0.8144 & 0.4798 & 24.2~\% & 96.9~\% \\
+\hline
+\end{tabular}
+\end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.6\textwidth]{prism-uploads/Figura5_curvas_roc.png}
+\caption{Curvas ROC de los seis algoritmos con las probabilidades fuera de pliegue, sin ponderación muestral.}
+\label{fig:roc}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.6\textwidth]{prism-uploads/Figura6_curvas_precision_recall.png}
+\caption{Curvas de precisión--sensibilidad de los seis algoritmos con las probabilidades fuera de pliegue, sin ponderación muestral.}
+\label{fig:pr}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.8\textwidth]{prism-uploads/Figura7_matrices_confusion.png}
+\caption{Matrices de confusión normalizadas por clase real con el umbral de 0.5, sin ponderación muestral.}
+\label{fig:confusion}
+\end{figure*}
+
+\subsection{Confiabilidad estadística del modelo seleccionado}
+
+Con ponderación muestral, el modelo seleccionado alcanzó un AUC-ROC de 0.8294 (IC 95~\%: 0.8267--0.8324), una sensibilidad de 76.43~\% y una precisión de 36.36~\% con el umbral de 0.5 (Tabla~\ref{tab:bootstrap}). Con el umbral de 0.45, utilizado en la aplicación, la sensibilidad asciende a 80.46~\% y la precisión desciende a 34.04~\%. La prueba de DeLong confirmó la superioridad de LightGBM frente a XGBoost ($z=62.32$) y a la regresión logística ($z=61.48$), con $p<10^{-300}$ en ambos casos y AUC sin ponderar de 0.8193, 0.7775 y 0.7767, respectivamente. Al excluir la hemoglobina, único predictor que exige un procedimiento sobre el niño, el AUC-ROC disminuyó de 0.8294 a 0.8281 (diferencia de $-0.0014$; IC 95~\%: $-0.0019$ a $-0.0009$) y la sensibilidad de 76.43~\% a 76.30~\%.
+
+\begin{table}[t]
+\centering
+\caption{Métricas del modelo seleccionado con ponderación muestral e intervalos de confianza de 95~\% por bootstrap (1,000 repeticiones; umbral de 0.5).}
+\label{tab:bootstrap}
+\begin{tabular}{lcc}
+\hline
+Métrica & Estimación & IC 95~\% \\
+\hline
+AUC-ROC & 0.8294 & 0.8267--0.8324 \\
+Sensibilidad & 76.43~\% & 75.88--76.98~\% \\
+Precisión & 36.36~\% & 35.94--36.71~\% \\
+F1 & 49.28~\% & 48.85--49.66~\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Explicabilidad}
+
+La importancia global de las variables se concentra en pocos factores (Figura~\ref{fig:shap_global}): la pobreza del hogar (0.42), el peso al nacer (0.41), la altitud de residencia (0.26) y el tamaño al nacer (0.25) destacan claramente, y las diez variables principales acumulan el 68.0~\% de la importancia total. Estos valores describen asociaciones aprendidas de la encuesta y no relaciones causales. El peso de cada factor varía entre territorios (Figura~\ref{fig:mapa_factores}): en Puno destacan la altitud, la pobreza del hogar y el bajo peso al nacer, mientras que en Huancavelica destacan el bajo peso al nacer, el intervalo entre partos y la edad del jefe del hogar.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{prism-uploads/Figura8_importancia_global_shap.png}
+\caption{Importancia global de las 15 variables con mayor valor SHAP absoluto promedio del modelo seleccionado, sobre una muestra aleatoria de 10,000 niños.}
+\label{fig:shap_global}
+\end{figure}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.9\textwidth]{prism-uploads/Figura9_mapa_factores_departamentos.png}
+\caption{Peso relativo de los diez principales factores del modelo en cada departamento (0 = menor peso entre departamentos; 1 = mayor peso), agrupados por región natural.}
+\label{fig:mapa_factores}
+\end{figure*}
+
+\subsection{Evaluación de la pertinencia por el panel}
+
+Respondieron la ficha cuatro especialistas (tres nutricionistas y un enfermero; Costa y Selva; entre 10 y 20 años de experiencia asistencial). Todos los constructos alcanzaron una mediana igual o superior a 4 (Tabla~\ref{tab:panel}) y la valoración global tuvo una mediana de 9 sobre 10. Los puntos con menor acuerdo fueron la confianza en que los niveles de riesgo asignados son acertados y la disponibilidad en los registros de los datos solicitados y de la hemoglobina, con un evaluador en el puntaje 3 en cada caso (75~\% de acuerdo). Con cuatro evaluadores no se estimaron la confiabilidad ni las relaciones entre constructos: los resultados describen la percepción del panel y no son generalizables.
+
+Las respuestas abiertas coincidieron en cuatro temas: la vigencia de los datos y la equivalencia de las variables entre años, planteada por los cuatro evaluadores; la ampliación a la malnutrición por exceso y a las deficiencias de micronutrientes; un mayor detalle territorial, por ciudad o establecimiento, con retroalimentación de datos locales; y la incorporación de variables adicionales, como la lactancia exclusiva, el consumo de alimentos y las enfermedades crónicas.
+
+\begin{table}[t]
+\centering
+\caption{Valoración del panel por constructo (cuatro evaluadores; escala de 1 a 5). Mediana, rango intercuartílico (RIC) y porcentaje de acuerdo (respuestas 4 y 5).}
+\label{tab:panel}
+\begin{tabular}{lccc}
+\hline
+Constructo & Mediana & RIC & Acuerdo \\
+\hline
+Relevancia para el trabajo & 4 & 4--5 & 100~\% \\
+Calidad del resultado & 4 & 4--4 & 88~\% \\
+Demostrabilidad del resultado & 4.5 & 4--5 & 100~\% \\
+Utilidad percibida & 4 & 4--4.25 & 100~\% \\
+Facilidad de uso percibida & 4 & 4--5 & 100~\% \\
+Condiciones para su uso & 4.5 & 4--5 & 83~\% \\
+Respaldo del entorno & 4.5 & 4--5 & 100~\% \\
+Intención de uso & 4.5 & 4--5 & 100~\% \\
+\hline
+Valoración global (1 a 10) & 9 & 8--10 & --- \\
+\hline
+\end{tabular}
+\end{table}
 
 \section{Discusión}
 
