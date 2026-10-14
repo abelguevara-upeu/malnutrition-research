@@ -1,0 +1,24 @@
+graph TD
+    subgraph P["Capa de presentación"]
+        UI1["Mapa de riesgo territorial<br/>(25 departamentos)"]
+        UI2["Evaluación de un niño<br/>y explicación de su puntaje"]
+        UI3["Evaluación de un grupo (CSV o Excel)<br/>y lista priorizada"]
+    end
+    subgraph L["Capa lógica"]
+        L1["Motor de inferencia<br/>LightGBM"]
+        L2["Umbral de prioridad según<br/>la cobertura elegida"]
+        L3["Contribución de cada variable<br/>(valores SHAP)"]
+    end
+    subgraph D["Capa de datos"]
+        D1["Modelo y metadatos<br/>(.pkl, .json)"]
+        D2["Curva cobertura–umbral<br/>(.json)"]
+        D3["SHAP por departamento (.csv)<br/>y geometrías (GeoJSON)"]
+    end
+    UI2 --> L1
+    UI3 --> L1
+    UI2 --> L3
+    UI3 --> L3
+    L1 --> L2
+    UI1 --> D3
+    L1 --> D1
+    L2 --> D2
