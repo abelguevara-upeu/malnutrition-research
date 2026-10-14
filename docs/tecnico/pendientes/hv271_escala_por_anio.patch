@@ -1,0 +1,76 @@
+diff --git a/mnp/configs/rech23.py b/mnp/configs/rech23.py
+index 856df81..1816333 100644
+--- a/mnp/configs/rech23.py
++++ b/mnp/configs/rech23.py
+@@ -65,8 +65,16 @@ config_f1: Dict[str, Any] = {
+         994.0,
+         995.0
+     ],
+-    # SH224 alimenta a HV234 por coalesce, asi que necesita la misma limpieza:
+-    # de lo contrario reintroduce 994/995 despues de que HV234 ya fue limpiada.
++    # SH107, SH124 (2009-2010) y SH224 alimentan a HV234 por coalesce, asi que necesitan la misma
++    # limpieza: de lo contrario reintroducen 994/995 despues de que HV234 ya fue limpiada.
++    "SH107": [
++        994.0,
++        995.0
++    ],
++    "SH124": [
++        994.0,
++        995.0
++    ],
+     "SH224": [
+         5.0,
+         9.0,
+@@ -114,11 +122,10 @@ config_f1: Dict[str, Any] = {
+         "SH227": {6.0: 3.0},
+         "SHREGION": {5.0: 4.0}
+     },
+-    # En 2015 y 2016 el INEI entrega esta columna en minuscula ('hv271'), y el
+-    # escalado corre antes del coalesce: si solo se declara la mayuscula, esos
+-    # dos anios entran sin dividir y el indice mezcla dos escalas (+-215987
+-    # frente a +-10).
+-    'divide_by_100000': ['HV271', 'hv271'],
++    # HV271 llega en escalas distintas segun el anio (x100,000 en 2007-2017, x1,000,000 en 2013,
++    # decimales desde 2018; en 2015-2016 ademas la columna esta en minuscula). Una division fija
++    # mezcla escalas, asi que cada anio se lleva a su escala por magnitud (ver run_phase1_engine).
++    'rescale_by_year': {'cols': ['HV271', 'hv271'], 'expected_max': 3.0, 'stray_factor': 100000.0},
+     'cols_to_drop': [
+     "SHTRIMES",
+     "HV246H",
+diff --git a/mnp/utils/cleaning.py b/mnp/utils/cleaning.py
+index e68d50c..5151e6a 100644
+--- a/mnp/utils/cleaning.py
++++ b/mnp/utils/cleaning.py
+@@ -105,6 +105,32 @@ def run_phase1_engine(df, config, inplace=False):
+                 df_out[col] = df_out[col] / 100000.0
+         print(f"[Limpieza] Escalamiento /100k completado en {time.time() - start_step:.2f}s")
+ 
++    # 5.7. Escala por año: el INEI entrega algunas columnas con una escala distinta segun el
++    # anio (p. ej. HV271 viene x100,000 en 2007-2017, x1,000,000 en 2013 y en decimales desde 2018).
++    # La escala de cada anio se deduce del percentil 99 del valor absoluto; las filas sueltas que
++    # siguen fuera de rango dentro de un anio ya escalado se dividen por `stray_factor`.
++    if "rescale_by_year" in config:
++        print("[Limpieza] Escala por anio...")
++        start_step = time.time()
++        cfg = config["rescale_by_year"]
++        expected_max = cfg.get("expected_max", 3.0)
++        stray_factor = cfg.get("stray_factor", 100000.0)
++        if "year" not in df_out.columns:
++            raise KeyError("rescale_by_year necesita la columna 'year'")
++        for col in cfg["cols"]:
++            if col not in df_out.columns:
++                continue
++            v = pd.to_numeric(df_out[col], errors="coerce")
++            p99 = v.abs().groupby(df_out["year"]).transform(lambda s: s.quantile(0.99))
++            exponent = np.ceil(np.log10(np.maximum(p99.fillna(1.0), 1e-9) / expected_max)).clip(lower=0)
++            v = v / np.power(10.0, exponent)
++            stray = v.abs() > 10 * expected_max
++            if stray.any():
++                print(f"[Limpieza]   {col}: {int(stray.sum())} fila(s) suelta(s) reescaladas por {stray_factor:g}")
++                v = v.where(~stray, v / stray_factor)
++            df_out[col] = v
++        print(f"[Limpieza] Escala por anio completada en {time.time() - start_step:.2f}s")
++
+     # 6. Coalesce (Unificación de columnas mutadas)
+     if "coalesce" in config:
+         print("[Limpieza] Ejecutando Coalesce (Unificación de columnas)...")

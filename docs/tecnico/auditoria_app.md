@@ -33,7 +33,7 @@ presentación o la ficha debe prometer más de lo que la app hace.
 
 | # | Hallazgo | Dónde | Estado |
 |---|---|---|:--:|
-| 1.1 | **Índice de riqueza con escala mezclada.** En los datos de entrenamiento `HV271` tiene la mediana cerca de 0 (±0.00002) pero extremos de ±200,000: los años 2015–2016 quedaron sin dividir. La app envía −150,000 a 150,000, que solo corresponde a esos años. El estrato "Medio" (0) sí cae en la masa central; los demás caen en los valores extremos. Es el problema de `HV271` ya documentado, pendiente de regenerar y reentrenar | `riqueza_map`, l. 229 | 🔴 |
+| 1.1 | **Índice de riqueza con escala mezclada.** En los datos de entrenamiento `HV271` tiene la mediana cerca de 0 (±0.00002) pero extremos de ±200,000: la escala cambia según el año (×100,000 hasta 2017, ×1,000,000 en 2013, decimales desde 2018; ver `pendientes/propuesta_validacion_por_epoca.md`). La app envía −150,000 a 150,000, que solo corresponde a esos años. El estrato "Medio" (0) sí cae en la masa central; los demás caen en los valores extremos. Es el problema de `HV271` ya documentado, pendiente de regenerar y reentrenar | `riqueza_map`, l. 229 | 🔴 |
 | 1.2 | **Categorías con tilde que el modelo no conoce.** El modelo aprendió `Si` para cocina separada (`HV242`) y otro combustible (`SH63`); la app envía `Sí`. Una categoría desconocida se trata como dato faltante, así que esas dos respuestas **se ignoran en silencio** | l. 303–304 | 🔴 |
 | 1.3 | **Sal con yodo con otra escala.** El modelo se entrenó con partes por millón (0, 7, 15, 30); la app envía 0 o 1 | l. 297 | 🔴 |
 | 1.4 | **Dos variables añadidas con ENDES 2025:** sexo del jefe del hogar (`HV219`) y otro tipo de transporte (`SH77F`). Ya incorporadas a los formularios | `c3`, `e2` | ✅ |
