@@ -221,3 +221,6 @@ catboost_info/
 
 # build-pdf.sh genera un .docx junto a cada PDF; se regenera localmente
 docs/**/*.docx
+
+# Respuestas del panel de especialistas: llevan nombres y correos (consentimiento informado)
+entrevista/
