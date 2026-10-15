@@ -183,7 +183,7 @@ El estudio utilizó los microdatos anuales de la Encuesta Demográfica y de Salu
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.98\textwidth]{prism-uploads/Figura2_integracion_ENDES.png}
-\caption{Integración relacional de los módulos de la ENDES 2007--2025 mediante las llaves \texttt{HHID} y \texttt{CASEID}.}
+\caption{Integración relacional de los módulos de la ENDES 2007--2025.}
 \label{fig:integracion_endes}
 \end{figure*}
 
@@ -335,7 +335,7 @@ La muestra incluyó 304,271 niños menores de cinco años, 51.0~\% varones y 65.
 
 \begin{table}[!tp]
 \centering
-\caption{Características de la muestra y prevalencia de desnutrición crónica (simple: sin ponderar; pond.: con ponderación muestral).}
+\caption{Características de la muestra y prevalencia de desnutrición crónica (simple y ponderada).}
 \label{tab:descriptiva}
 \footnotesize
 \resizebox{\columnwidth}{!}{%
@@ -371,7 +371,7 @@ Con la ponderación muestral, la prevalencia nacional descendió de 29.2~\% en 2
 \begin{figure*}[!tp]
 \centering
 \includegraphics[width=0.75\textwidth]{prism-uploads/Figura4_tendencia_prevalencia.png}
-\caption{Prevalencia ponderada de desnutrición crónica en menores de cinco años en el Perú, 2007--2025, a nivel nacional y por área de residencia (talla para la edad menor de $-2$ DE según el patrón OMS; factor de expansión HV005).}
+\caption{Prevalencia ponderada de desnutrición crónica en menores de cinco años, Perú, 2007--2025.}
 \label{fig:tendencia}
 \end{figure*}
 
@@ -406,7 +406,7 @@ En el quinto pliegue de validación, con ponderación muestral y el umbral de 0.
 
 \begin{table}[!tp]
 \centering
-\caption{Desempeño de los seis algoritmos en el quinto pliegue de validación, con ponderación muestral (umbral de 0.5). En negrita, el mejor valor de cada columna.}
+\caption{Desempeño de los seis algoritmos en el quinto pliegue (umbral de 0.5). En negrita, el mejor valor.}
 \label{tab:modelos}
 \small
 \begin{tabular}{lcccc}
@@ -437,7 +437,7 @@ Con el umbral de 0.5, LightGBM clasificó correctamente al 75.3~\% de los niños
 \begin{figure}[!tp]
 \centering
 \includegraphics[width=\columnwidth]{prism-uploads/Figura6_matriz_confusion_lightgbm.png}
-\caption{Matriz de confusión de LightGBM, normalizada por clase real, en el quinto pliegue de validación con ponderación muestral (umbral de 0.5).}
+\caption{Matriz de confusión de LightGBM en el quinto pliegue (umbral de 0.5).}
 \label{fig:confusion}
 \end{figure}
 
@@ -447,7 +447,7 @@ Con ponderación muestral, sobre las probabilidades fuera de pliegue de los 304,
 
 \begin{table}[!tp]
 \centering
-\caption{Métricas del modelo seleccionado con ponderación muestral e intervalos de confianza de 95~\% por bootstrap (1,000 repeticiones; umbral de 0.5).}
+\caption{Métricas de LightGBM con intervalos de confianza de 95~\% por bootstrap.}
 \label{tab:bootstrap}
 \begin{tabular}{lcc}
 \hline
@@ -468,21 +468,21 @@ La importancia global de las variables se concentra en pocos factores (Figura~\r
 \begin{figure}[!tp]
 \centering
 \includegraphics[width=\columnwidth]{prism-uploads/Figura7_importancia_global_shap.png}
-\caption{Importancia global de las 15 variables con mayor valor SHAP absoluto promedio del modelo seleccionado, sobre una muestra aleatoria de 10,000 niños.}
+\caption{Importancia global de las 15 variables principales según el valor SHAP absoluto promedio.}
 \label{fig:shap_global}
 \end{figure}
 
 \begin{figure*}[!tp]
 \centering
 \includegraphics[width=0.6\textwidth]{prism-uploads/Figura8_explicacion_local.png}
-\caption{Explicación local de un perfil sintético de riesgo alto (salida del modelo de 0.93): contribución de las diez variables con mayor efecto. Todas elevan el resultado.}
+\caption{Explicación local de un perfil sintético de riesgo alto (salida del modelo de 0.93).}
 \label{fig:shap_local}
 \end{figure*}
 
 \begin{figure*}[!tp]
 \centering
 \includegraphics[width=0.85\textwidth]{prism-uploads/Figura9_mapa_factores_departamentos.png}
-\caption{Peso relativo de los diez principales factores del modelo en cada departamento (0 = menor peso entre departamentos; 1 = mayor peso), agrupados por región natural.}
+\caption{Peso relativo de los diez principales factores por departamento (0 = menor; 1 = mayor).}
 \label{fig:mapa_factores}
 \end{figure*}
 
@@ -494,7 +494,7 @@ Las respuestas abiertas coincidieron en cuatro temas: la vigencia de los datos y
 
 \begin{table}[!tp]
 \centering
-\caption{Valoración del panel por constructo (escala de 1 a 5). Mediana, rango intercuartílico (RIC) y porcentaje de acuerdo (respuestas 4 y 5).}
+\caption{Valoración del panel por constructo (escala de 1 a 5). RIC: rango intercuartílico.}
 \label{tab:panel}
 \begin{tabular}{lccc}
 \hline
