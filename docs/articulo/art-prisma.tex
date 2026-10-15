@@ -242,7 +242,7 @@ Primero, se descartaron los atributos con más del 60~\% de valores ausentes est
 
 Para descartar que la reducción dimensional hubiese eliminado señal predictiva relevante, se verificó el efecto de reincorporar las variables excluidas. De las 78 columnas disponibles en el conjunto preprocesado, 33 no formaron parte de las 45 seleccionadas. Estas se ordenaron según su señal marginal respecto de la variable objetivo: para los atributos categóricos se empleó la amplitud entre las tasas de prevalencia máxima y mínima de categorías con al menos 500 observaciones, mientras que para las variables continuas se utilizó el estadístico $2\lvert\mathrm{AUC}-0.5\rvert$.
 
-Se contrastaron cuatro configuraciones experimentales manteniendo constantes la partición, la ponderación muestral, la semilla determinista y los hiperparámetros del clasificador. La configuración de referencia reprodujo las cifras del modelo campeón (AUC = 0.8295; Recall = 76.44~\%), lo que verificó la trazabilidad del experimento. Los resultados del estudio de ablación se presentan en la Sección~\ref{sec:seleccion}.
+Se contrastaron cuatro configuraciones experimentales manteniendo constantes la partición, los pesos, la semilla determinista y los hiperparámetros del clasificador. La configuración de referencia reprodujo las cifras del modelo campeón (AUC = 0.8295; Recall = 76.44~\%), lo que verificó la trazabilidad del experimento. Los resultados del estudio de ablación se presentan en la Sección~\ref{sec:seleccion}.
 
 \subsection{Entrenamiento y comparación de modelos}
 
@@ -331,7 +331,7 @@ Los microdatos de la ENDES son de acceso público y no contienen información qu
 \subsection{Características de la muestra}
 \label{sec:muestra}
 
-La muestra incluyó 304,271 niños menores de cinco años, 51.0~\% varones y 65.6~\% residentes del área urbana. La prevalencia de desnutrición crónica fue de 15.8~\% sin ponderar y de 16.2~\% con ponderación muestral (Tabla~\ref{tab:descriptiva}). Fue mayor en el área rural (30.7~\%) que en la urbana (9.4~\%), en la Sierra (26.2~\%) y la Selva (21.8~\%) que en la Costa fuera de Lima (10.0~\%) y en Lima metropolitana (5.4~\%), y entre los 12 y 23 meses de edad (19.8~\%).
+La muestra incluyó 304,271 niños menores de cinco años, 51.0~\% varones y 65.6~\% residentes del área urbana. La prevalencia de desnutrición crónica fue de 15.8~\% sin ponderar y de 16.2~\% ponderada (Tabla~\ref{tab:descriptiva}). Fue mayor en el área rural (30.7~\%) que en la urbana (9.4~\%), en la Sierra (26.2~\%) y la Selva (21.8~\%) que en la Costa fuera de Lima (10.0~\%) y en Lima metropolitana (5.4~\%), y entre los 12 y 23 meses de edad (19.8~\%).
 
 \begin{table}[!tp]
 \centering
@@ -366,7 +366,7 @@ Total & 304,271 & 100.0 & 15.8 & 16.2 \\
 \end{tabular}}
 \end{table}
 
-La prevalencia corresponde a talla para la edad menor de $-2$ DE según el patrón OMS. Con la ponderación muestral, la prevalencia nacional descendió de 29.2~\% en 2007 a 13.0~\% en 2017 y, desde 2018, se mantiene entre 11.3~\% y 12.4~\%, con 12.0~\% en 2025 (Figura~\ref{fig:tendencia}). La brecha entre áreas persiste: en 2025 la prevalencia fue de 21.5~\% en el área rural y de 7.9~\% en la urbana.
+La prevalencia corresponde a talla para la edad menor de $-2$ DE según el patrón OMS. La prevalencia nacional ponderada descendió de 29.2~\% en 2007 a 13.0~\% en 2017 y, desde 2018, se mantiene entre 11.3~\% y 12.4~\%, con 12.0~\% en 2025 (Figura~\ref{fig:tendencia}). La brecha entre áreas persiste: en 2025 la prevalencia fue de 21.5~\% en el área rural y de 7.9~\% en la urbana.
 
 \begin{figure*}[!tp]
 \centering
