@@ -240,7 +240,7 @@ Primero, se descartaron los atributos con más del 60~\% de valores ausentes est
 
 \subsubsection{Verificación de suficiencia del subconjunto seleccionado}
 
-Para descartar que la reducción dimensional hubiese eliminado señal predictiva relevante, se realizó un estudio de ablación sobre las variables excluidas. De las 78 columnas disponibles en el conjunto preprocesado, 33 no formaron parte de las 45 seleccionadas. Estas se ordenaron según su señal marginal respecto de la variable objetivo: para los atributos categóricos se empleó la amplitud entre las tasas de prevalencia máxima y mínima de categorías con al menos 500 observaciones, mientras que para las variables continuas se utilizó el estadístico $2\lvert\mathrm{AUC}-0.5\rvert$.
+Para descartar que la reducción dimensional hubiese eliminado señal predictiva relevante, se realizó una prueba de verificación: se reincorporaron al modelo, por grupos, las variables excluidas y se midió si el desempeño mejoraba. De las 78 columnas disponibles en el conjunto preprocesado, 33 no formaron parte de las 45 seleccionadas. Estas se ordenaron según su señal marginal respecto de la variable objetivo: para los atributos categóricos se empleó la amplitud entre las tasas de prevalencia máxima y mínima de categorías con al menos 500 observaciones, mientras que para las variables continuas se utilizó el estadístico $2\lvert\mathrm{AUC}-0.5\rvert$.
 
 Se contrastaron cuatro configuraciones experimentales manteniendo constantes la partición, la ponderación muestral, la semilla determinista y los hiperparámetros del clasificador. La configuración de referencia reprodujo las cifras del modelo campeón (AUC = 0.8295; Recall = 76.44~\%), lo que verificó la trazabilidad del experimento. Los resultados del estudio de ablación se presentan en la Sección~\ref{sec:seleccion}.
 
@@ -380,11 +380,11 @@ Con la ponderación muestral, la prevalencia nacional descendió de 29.2~\% en 2
 
 La secuencia de selección redujo las 189 columnas crudas a 74 factores estadísticamente significativos y, finalmente, a las 45 variables predictoras de la Tabla~\ref{tab:variables}.
 
-En el estudio de ablación, el ordenamiento identificó diez atributos con señal marginal elevada: material predominante de las paredes (HV214), del piso (HV213) y del techo (HV215); fuente de abastecimiento de agua (HV201); departamento de residencia (HV024); concentración de cloro residual en el agua (SH227); combustible utilizado para cocinar (HV226); y tipo de servicio higiénico (HV205), entre otros. Estos atributos conforman el bloque de agua, saneamiento, higiene y condiciones materiales de la vivienda, reconocido como determinante subyacente del retraso del crecimiento lineal \citep{black2013lancet,victora2021lancet} y recuperado entre los predictores principales en estudios basados en datos DHS \citep{bitew2021ethiopia}. Ninguno constituye fuga de información, pues describen condiciones estructurales del hogar observables antes de una visita domiciliaria.
+En la prueba de verificación, el ordenamiento identificó diez atributos con señal marginal elevada: material predominante de las paredes (HV214), del piso (HV213) y del techo (HV215); fuente de abastecimiento de agua (HV201); departamento de residencia (HV024); concentración de cloro residual en el agua (SH227); combustible utilizado para cocinar (HV226); y tipo de servicio higiénico (HV205), entre otros. Estos atributos conforman el bloque de agua, saneamiento, higiene y condiciones materiales de la vivienda, reconocido como determinante subyacente del retraso del crecimiento lineal \citep{black2013lancet,victora2021lancet} y recuperado entre los predictores principales en estudios basados en datos DHS \citep{bitew2021ethiopia}. Ninguno constituye fuga de información, pues describen condiciones estructurales del hogar observables antes de una visita domiciliaria.
 
 \begin{table*}[!tp]
 \centering
-\caption{Estudio de ablación del subconjunto de características.}
+\caption{Verificación del subconjunto de características: efecto de reincorporar las variables excluidas.}
 \label{tab:ablacion}
 \begin{tabular}{lcccc}
 \hline
