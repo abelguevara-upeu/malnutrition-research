@@ -220,11 +220,21 @@ Vivienda (9) & Habitaciones (SH71), Dormitorios (HV216), Fuente de alumbrado (SH
 \end{tabular}
 \end{table*}
 
-\subsection{Preprocesamiento y selección de características}
+\subsection{Preprocesamiento y limpieza de datos}
 
-Antes de la selección de variables, se armonizaron los códigos de las distintas rondas de la encuesta, se trataron los valores ausentes y se codificaron las variables categóricas para construir un espacio de características comparable entre años. Asimismo, se verificó la consistencia biológica entre los registros del niño y de la madre, descrita en la subsección anterior. El flujo de preparación y selección partió de 189 columnas crudas y se desarrolló en cuatro etapas cuantitativas.
+Antes de la selección de variables, se armonizaron los códigos de las distintas rondas de la encuesta, se trataron los valores ausentes y se codificaron las variables categóricas para construir un espacio de características comparable entre años. Asimismo, se verificó la consistencia biológica entre los registros del niño y de la madre, descrita en la subsección anterior. El flujo partió de 189 columnas crudas.
 
 Los códigos especiales de la encuesta (por ejemplo, «no sabe», «no aplica» o «no se realizó la prueba») se reemplazaron por valores ausentes y las variables categóricas se codificaron con las etiquetas oficiales del INEI. Los ausentes de las variables categóricas se agruparon en la categoría «Desconocido». Los ausentes numéricos se imputaron con la mediana y las variables continuas se estandarizaron en los modelos que lo requieren (regresión logística, XGBoost, árbol de decisión y red neuronal), mientras que LightGBM y CatBoost los tratan de forma nativa.
+
+\subsection{Balanceo de clases y ponderación}
+
+Para reflejar la distribución demográfica del país y corregir el sesgo de sobremuestreo urbano de la encuesta, se incorporó el factor de ponderación muestral del INEI, $w_i=\mathrm{HV005}_i/1{,}000{,}000$, tanto durante el entrenamiento como en el cálculo de las métricas. Además, el umbral de decisión $\tau$ se calibró con un criterio de triaje preventivo que prioriza la cobertura de los casos positivos, en lugar de asumir automáticamente el valor convencional de 0.5.
+
+Para el desbalance de clases (razón de 1:5.3) se emplearon pesos de clase balanceados en la regresión logística, el árbol de decisión, LightGBM y CatBoost, y el peso de la clase positiva (\texttt{scale\_pos\_weight}) en XGBoost; el perceptrón multicapa de scikit-learn no admite ponderación y se entrenó sin ella. La ponderación muestral se aplicó como peso de observación en todos los modelos, salvo en la red neuronal. No se aplicó remuestreo sintético (por ejemplo, SMOTE), de modo que las particiones de validación conservan la distribución real de las clases.
+
+\subsection{Selección de variables}
+
+La selección se desarrolló en cuatro etapas cuantitativas sobre las 189 columnas crudas.
 
 Primero, se descartaron los atributos con más del 60~\% de valores ausentes estructurales históricos. Segundo, se redujo la redundancia dimensional mediante la eliminación de variables colineales, utilizando correlaciones bivariadas de Pearson y Spearman ($r>0.80$) y factores de inflación de varianza ($\mathrm{VIF}>5$). Tercero, se aplicaron pruebas de independencia de chi-cuadrado para variables categóricas y pruebas no paramétricas de Kruskal--Wallis para variables continuas; se retuvieron 74 factores estadísticamente significativos ($p<0.05$). Cuarto, se evaluó la importancia multivariada mediante árboles de decisión potenciados por gradiente y se seleccionaron 45 variables predictoras.
 
@@ -233,12 +243,6 @@ Primero, se descartaron los atributos con más del 60~\% de valores ausentes est
 Para descartar que la reducción dimensional hubiese eliminado señal predictiva relevante, se realizó un estudio de ablación sobre las variables excluidas. De las 78 columnas disponibles en el conjunto preprocesado, 33 no formaron parte de las 45 seleccionadas. Estas se ordenaron según su señal marginal respecto de la variable objetivo: para los atributos categóricos se empleó la amplitud entre las tasas de prevalencia máxima y mínima de categorías con al menos 500 observaciones, mientras que para las variables continuas se utilizó el estadístico $2\lvert\mathrm{AUC}-0.5\rvert$.
 
 Se contrastaron cuatro configuraciones experimentales manteniendo constantes la partición, la ponderación muestral, la semilla determinista y los hiperparámetros del clasificador. La configuración de referencia reprodujo las cifras del modelo campeón (AUC = 0.8295; Recall = 76.44~\%), lo que verificó la trazabilidad del experimento. Los resultados del estudio de ablación se presentan en la Sección~\ref{sec:seleccion}.
-
-\subsection{Tratamiento del desbalance de clases}
-
-Para reflejar la distribución demográfica del país y corregir el sesgo de sobremuestreo urbano de la encuesta, se incorporó el factor de ponderación muestral del INEI, $w_i=\mathrm{HV005}_i/1{,}000{,}000$, tanto durante el entrenamiento como en el cálculo de las métricas. Además, el umbral de decisión $\tau$ se calibró con un criterio de triaje preventivo que prioriza la cobertura de los casos positivos, en lugar de asumir automáticamente el valor convencional de 0.5.
-
-Para el desbalance de clases (razón de 1:5.3) se emplearon pesos de clase balanceados en la regresión logística, el árbol de decisión, LightGBM y CatBoost, y el peso de la clase positiva (\texttt{scale\_pos\_weight}) en XGBoost; el perceptrón multicapa de scikit-learn no admite ponderación y se entrenó sin ella. La ponderación muestral se aplicó como peso de observación en todos los modelos, salvo en la red neuronal. No se aplicó remuestreo sintético (por ejemplo, SMOTE), de modo que las particiones de validación conservan la distribución real de las clases.
 
 \subsection{Entrenamiento y comparación de modelos}
 
