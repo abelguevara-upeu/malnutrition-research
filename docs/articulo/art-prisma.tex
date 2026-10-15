@@ -382,23 +382,7 @@ La secuencia de selección redujo las 189 columnas crudas a 74 factores estadís
 
 En la prueba de verificación, el ordenamiento identificó diez atributos con señal marginal elevada: material predominante de las paredes (HV214), del piso (HV213) y del techo (HV215); fuente de abastecimiento de agua (HV201); departamento de residencia (HV024); concentración de cloro residual en el agua (SH227); combustible utilizado para cocinar (HV226); y tipo de servicio higiénico (HV205), entre otros. Estos atributos conforman el bloque de agua, saneamiento, higiene y condiciones materiales de la vivienda, reconocido como determinante subyacente del retraso del crecimiento lineal \citep{black2013lancet,victora2021lancet} y recuperado entre los predictores principales en estudios basados en datos DHS \citep{bitew2021ethiopia}. Ninguno constituye fuga de información, pues describen condiciones estructurales del hogar observables antes de una visita domiciliaria.
 
-\begin{table*}[!tp]
-\centering
-\caption{Verificación del subconjunto de características: efecto de reincorporar las variables excluidas.}
-\label{tab:ablacion}
-\begin{tabular}{lcccc}
-\hline
-Configuración & Atributos & AUC-ROC & Recall & Precisión \\
-\hline
-Subconjunto seleccionado & 45 & 0.8295 & 76.44~\% & 36.36~\% \\
-Agua, saneamiento y vivienda & 52 & 0.8295 & 76.44~\% & 36.36~\% \\
-Atributos territoriales & 48 & 0.8295 & 76.44~\% & 36.36~\% \\
-Ampliación conjunta & 55 & 0.8295 & 76.44~\% & 36.36~\% \\
-\hline
-\end{tabular}
-\end{table*}
-
-La incorporación de los diez atributos no produjo mejoras en la capacidad discriminativa: el AUC-ROC, la sensibilidad y la precisión permanecieron invariables hasta la cuarta cifra decimal. El análisis descartó la ausencia de señal, pues un clasificador entrenado únicamente con el bloque de agua, saneamiento y vivienda alcanzó un AUC-ROC de 0.6895, así como la redundancia lineal con el índice de riqueza, cuya varianza explicada por cada atributo candidato se situó entre $\eta^2=0.038$ y $\eta^2=0.098$. El subconjunto de 45 variables ya representa el constructo latente de las condiciones materiales del hogar mediante diecinueve atributos correlacionados, por lo que la exclusión de las variables candidatas constituye una decisión metodológicamente sustentada.
+La incorporación de los diez atributos no produjo mejoras en ninguna de las tres configuraciones probadas (agua, saneamiento y vivienda; territorio; y ambas): el AUC-ROC (0.8295), la sensibilidad (76.44~\%) y la precisión (36.36~\%) fueron idénticos a los del modelo de 45 variables, pues el modelo no utilizó las variables añadidas. El análisis descartó la ausencia de señal, pues un clasificador entrenado únicamente con el bloque de agua, saneamiento y vivienda alcanzó un AUC-ROC de 0.6895, así como la redundancia lineal con el índice de riqueza, cuya varianza explicada por cada atributo candidato se situó entre $\eta^2=0.038$ y $\eta^2=0.098$. El subconjunto de 45 variables ya representa el constructo latente de las condiciones materiales del hogar mediante diecinueve atributos correlacionados, por lo que la exclusión de las variables candidatas constituye una decisión metodológicamente sustentada.
 
 \subsection{Desempeño comparativo de los modelos}
 
