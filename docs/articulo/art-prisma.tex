@@ -366,7 +366,7 @@ Total & 304,271 & 100.0 & 15.8 & 16.2 \\
 \end{tabular}}
 \end{table}
 
-Con la ponderación muestral, la prevalencia nacional descendió de 29.2~\% en 2007 a 13.0~\% en 2017 y, desde 2018, se mantiene entre 11.3~\% y 12.4~\%, con 12.0~\% en 2025 (Figura~\ref{fig:tendencia}). La brecha entre áreas persiste: en 2025 la prevalencia fue de 21.5~\% en el área rural y de 7.9~\% en la urbana.
+La prevalencia corresponde a talla para la edad menor de $-2$ DE según el patrón OMS. Con la ponderación muestral, la prevalencia nacional descendió de 29.2~\% en 2007 a 13.0~\% en 2017 y, desde 2018, se mantiene entre 11.3~\% y 12.4~\%, con 12.0~\% en 2025 (Figura~\ref{fig:tendencia}). La brecha entre áreas persiste: en 2025 la prevalencia fue de 21.5~\% en el área rural y de 7.9~\% en la urbana.
 
 \begin{figure*}[!tp]
 \centering
@@ -443,7 +443,7 @@ Con el umbral de 0.5, LightGBM clasificó correctamente al 75.3~\% de los niños
 
 \subsection{Confiabilidad estadística del modelo seleccionado}
 
-Con ponderación muestral, sobre las probabilidades fuera de pliegue de los 304,271 registros, el modelo seleccionado alcanzó un AUC-ROC de 0.8294 (IC 95~\%: 0.8267--0.8324), una sensibilidad de 76.43~\% y una precisión de 36.36~\% con el umbral de 0.5 (Tabla~\ref{tab:bootstrap}). Con el umbral de 0.45, utilizado en la aplicación, la sensibilidad asciende a 80.46~\% y la precisión desciende a 34.04~\%. La prueba de DeLong confirmó la superioridad de LightGBM frente a XGBoost ($z=62.32$) y a la regresión logística ($z=61.48$), con $p<10^{-300}$ en ambos casos y AUC sin ponderar de 0.8193, 0.7775 y 0.7767, respectivamente. Al excluir la hemoglobina, único predictor que exige un procedimiento sobre el niño, el AUC-ROC disminuyó de 0.8294 a 0.8281 (diferencia de $-0.0014$; IC 95~\%: $-0.0019$ a $-0.0009$) y la sensibilidad de 76.43~\% a 76.30~\%.
+Con ponderación muestral y 1,000 repeticiones bootstrap, sobre las probabilidades fuera de pliegue de los 304,271 registros, el modelo seleccionado alcanzó un AUC-ROC de 0.8294 (IC 95~\%: 0.8267--0.8324), una sensibilidad de 76.43~\% y una precisión de 36.36~\% con el umbral de 0.5 (Tabla~\ref{tab:bootstrap}). Con el umbral de 0.45, utilizado en la aplicación, la sensibilidad asciende a 80.46~\% y la precisión desciende a 34.04~\%. La prueba de DeLong confirmó la superioridad de LightGBM frente a XGBoost ($z=62.32$) y a la regresión logística ($z=61.48$), con $p<10^{-300}$ en ambos casos y AUC sin ponderar de 0.8193, 0.7775 y 0.7767, respectivamente. Al excluir la hemoglobina, único predictor que exige un procedimiento sobre el niño, el AUC-ROC disminuyó de 0.8294 a 0.8281 (diferencia de $-0.0014$; IC 95~\%: $-0.0019$ a $-0.0009$) y la sensibilidad de 76.43~\% a 76.30~\%.
 
 \begin{table}[!tp]
 \centering
@@ -463,7 +463,7 @@ F1 & 49.28~\% & 48.85--49.66~\% \\
 
 \subsection{Explicabilidad}
 
-La importancia global de las variables se concentra en pocos factores (Figura~\ref{fig:shap_global}): la pobreza del hogar (0.42), el peso al nacer (0.41), la altitud de residencia (0.26) y el tamaño al nacer (0.25) destacan claramente, y las diez variables principales acumulan el 68.0~\% de la importancia total. En el nivel local, la Figura~\ref{fig:shap_local} descompone la salida del modelo para un perfil sintético de riesgo alto (0.93): el peso al nacer de 2.4~kg, el nivel socioeconómico más bajo, la edad de 18 meses y el tamaño pequeño al nacer son los factores que más elevan el resultado. Estos valores describen asociaciones aprendidas de la encuesta y no relaciones causales. El peso de cada factor varía entre territorios (Figura~\ref{fig:mapa_factores}): en Puno destacan la altitud, la pobreza del hogar y el bajo peso al nacer, mientras que en Huancavelica destacan el bajo peso al nacer, el intervalo entre partos y la edad del jefe del hogar.
+La importancia global se calculó sobre una muestra aleatoria de 10,000 niños y se concentra en pocos factores (Figura~\ref{fig:shap_global}): la pobreza del hogar (0.42), el peso al nacer (0.41), la altitud de residencia (0.26) y el tamaño al nacer (0.25) destacan claramente, y las diez variables principales acumulan el 68.0~\% de la importancia total. En el nivel local, la Figura~\ref{fig:shap_local} descompone la salida del modelo para un perfil sintético de riesgo alto (0.93): el peso al nacer de 2.4~kg, el nivel socioeconómico más bajo, la edad de 18 meses y el tamaño pequeño al nacer son los factores que más elevan el resultado. Estos valores describen asociaciones aprendidas de la encuesta y no relaciones causales. El peso de cada factor varía entre territorios (Figura~\ref{fig:mapa_factores}): en Puno destacan la altitud, la pobreza del hogar y el bajo peso al nacer, mientras que en Huancavelica destacan el bajo peso al nacer, el intervalo entre partos y la edad del jefe del hogar.
 
 \begin{figure}[!tp]
 \centering
