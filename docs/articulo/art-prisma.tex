@@ -200,9 +200,31 @@ Y =
 \label{eq:variable_objetivo}
 \end{equation}
 
+Las 45 variables predictoras finales se agrupan en cinco dominios: el niño, la madre con su embarazo y lactancia, el hogar y el territorio, el agua y el saneamiento, y la vivienda (Tabla~\ref{tab:variables}).
+
+\begin{table*}[!tp]
+\centering
+\caption{Variables predictoras del modelo agrupadas por dominio (código de la ENDES entre paréntesis).}
+\label{tab:variables}
+\small
+\begin{tabular}{p{0.17\textwidth}p{0.77\textwidth}}
+\hline
+Dominio ($n$) & Variables \\
+\hline
+Niño (7) & Sexo (HC27), Edad en meses (HC1), Peso al nacer (m19), Tamaño al nacer según la madre (M18), Hemoglobina ajustada por altitud (HC56), Intervalo con el nacimiento anterior (HC63), Residente habitual (HV102) \\
+Madre, embarazo y lactancia (11) & Educación de la madre (HC62), Controles prenatales (M14), Mes del primer control (M13), Días de hierro en el embarazo (M46), Antiparasitarios en el embarazo (M60), Lugar del parto (m15), Parto por cesárea (M17), Vitamina A posparto (M54), Horas hasta el inicio de la lactancia (m34), Fórmula en los primeros días (M55G), Duración de la lactancia (M4) \\
+Hogar y territorio (8) & Índice de riqueza (HV271), Área de residencia (HV025), Altitud (HV040), Personas en el hogar (HV012), Menores de cinco años en el hogar (HV014), Edad del jefe del hogar (HV220), Sexo del jefe del hogar (HV219), Transporte tradicional (SH77F) \\
+Agua y saneamiento (10) & Agua todo el día (SH42), Tiempo a la fuente de agua (HV204), Tratamiento del agua (HV237), Agua hervida (HV237A), Agua embotellada (HV237G), Agua guardada en recipiente (SH48), Tipo de recipiente (SH49), Recipiente con tapa (SH50), Servicio higiénico compartido (HV225), Yodo en la sal (HV234) \\
+Vivienda (9) & Habitaciones (SH71), Dormitorios (HV216), Fuente de alumbrado (SH70), Salida de humo de la cocina (HV240), Cocina en cuarto separado (HV242), Otro combustible para cocinar (SH63), Ventanas de vidrio (SH76B), Ventanas de madera (SH76C), Ventanas con malla (SH76D) \\
+\hline
+\end{tabular}
+\end{table*}
+
 \subsection{Preprocesamiento y selección de características}
 
 Antes de la selección de variables, se armonizaron los códigos de las distintas rondas de la encuesta, se trataron los valores ausentes y se codificaron las variables categóricas para construir un espacio de características comparable entre años. Asimismo, se verificó la consistencia biológica entre los registros del niño y de la madre, descrita en la subsección anterior. El flujo de preparación y selección partió de 189 columnas crudas y se desarrolló en cuatro etapas cuantitativas.
+
+Los códigos especiales de la encuesta (por ejemplo, «no sabe», «no aplica» o «no se realizó la prueba») se reemplazaron por valores ausentes y las variables categóricas se codificaron con las etiquetas oficiales del INEI. Los ausentes de las variables categóricas se agruparon en la categoría «Desconocido». Los ausentes numéricos se imputaron con la mediana y las variables continuas se estandarizaron en los modelos que lo requieren (regresión logística, XGBoost, árbol de decisión y red neuronal), mientras que LightGBM y CatBoost los tratan de forma nativa.
 
 Primero, se descartaron los atributos con más del 60~\% de valores ausentes estructurales históricos. Segundo, se redujo la redundancia dimensional mediante la eliminación de variables colineales, utilizando correlaciones bivariadas de Pearson y Spearman ($r>0.80$) y factores de inflación de varianza ($\mathrm{VIF}>5$). Tercero, se aplicaron pruebas de independencia de chi-cuadrado para variables categóricas y pruebas no paramétricas de Kruskal--Wallis para variables continuas; se retuvieron 74 factores estadísticamente significativos ($p<0.05$). Cuarto, se evaluó la importancia multivariada mediante árboles de decisión potenciados por gradiente y se seleccionaron 45 variables predictoras.
 
@@ -210,35 +232,36 @@ Primero, se descartaron los atributos con más del 60~\% de valores ausentes est
 
 Para descartar que la reducción dimensional hubiese eliminado señal predictiva relevante, se realizó un estudio de ablación sobre las variables excluidas. De las 78 columnas disponibles en el conjunto preprocesado, 33 no formaron parte de las 45 seleccionadas. Estas se ordenaron según su señal marginal respecto de la variable objetivo: para los atributos categóricos se empleó la amplitud entre las tasas de prevalencia máxima y mínima de categorías con al menos 500 observaciones, mientras que para las variables continuas se utilizó el estadístico $2\lvert\mathrm{AUC}-0.5\rvert$.
 
-El procedimiento identificó diez atributos con señal marginal elevada: material predominante de las paredes (HV214), del piso (HV213) y del techo (HV215); fuente de abastecimiento de agua (HV201); departamento de residencia (HV024); concentración de cloro residual en el agua (SH227); combustible utilizado para cocinar (HV226); y tipo de servicio higiénico (HV205), entre otros. Estos atributos conforman el bloque de agua, saneamiento, higiene y condiciones materiales de la vivienda, reconocido como determinante subyacente del retraso del crecimiento lineal \citep{black2013lancet,victora2021lancet} y recuperado entre los predictores principales en estudios basados en datos DHS \citep{bitew2021ethiopia}. Ninguno constituye fuga de información, pues describen condiciones estructurales del hogar observables antes de una visita domiciliaria.
-
-Se contrastaron cuatro configuraciones experimentales manteniendo constantes la partición, la ponderación muestral, la semilla determinista y los hiperparámetros del clasificador. La configuración de referencia reprodujo las cifras del modelo campeón (AUC = 0.8295; Recall = 76.44~\%), lo que verificó la trazabilidad del experimento.
-
-\begin{table*}[t]
-\centering
-\caption{Estudio de ablación del subconjunto de características.}
-\label{tab:ablacion}
-\begin{tabular}{lcccc}
-\hline
-Configuración & Atributos & AUC-ROC & Recall & Precisión \\
-\hline
-Subconjunto seleccionado & 45 & 0.8295 & 76.44~\% & 36.36~\% \\
-Agua, saneamiento y vivienda & 52 & 0.8295 & 76.44~\% & 36.36~\% \\
-Atributos territoriales & 48 & 0.8295 & 76.44~\% & 36.36~\% \\
-Ampliación conjunta & 55 & 0.8295 & 76.44~\% & 36.36~\% \\
-\hline
-\end{tabular}
-\end{table*}
-
-La incorporación de los diez atributos no produjo mejoras en la capacidad discriminativa: el AUC-ROC, la sensibilidad y la precisión permanecieron invariables hasta la cuarta cifra decimal. El análisis descartó la ausencia de señal, pues un clasificador entrenado únicamente con el bloque de agua, saneamiento y vivienda alcanzó un AUC-ROC de 0.6895, así como la redundancia lineal con el índice de riqueza, cuya varianza explicada por cada atributo candidato se situó entre $\eta^2=0.038$ y $\eta^2=0.098$. El subconjunto de 45 variables ya representa el constructo latente de las condiciones materiales del hogar mediante diecinueve atributos correlacionados, por lo que la exclusión de las variables candidatas constituye una decisión metodológicamente sustentada.
+Se contrastaron cuatro configuraciones experimentales manteniendo constantes la partición, la ponderación muestral, la semilla determinista y los hiperparámetros del clasificador. La configuración de referencia reprodujo las cifras del modelo campeón (AUC = 0.8295; Recall = 76.44~\%), lo que verificó la trazabilidad del experimento. Los resultados del estudio de ablación se presentan en la Sección~\ref{sec:seleccion}.
 
 \subsection{Tratamiento del desbalance de clases}
 
 Para reflejar la distribución demográfica del país y corregir el sesgo de sobremuestreo urbano de la encuesta, se incorporó el factor de ponderación muestral del INEI, $w_i=\mathrm{HV005}_i/1{,}000{,}000$, tanto durante el entrenamiento como en el cálculo de las métricas. Además, el umbral de decisión $\tau$ se calibró con un criterio de triaje preventivo que prioriza la cobertura de los casos positivos, en lugar de asumir automáticamente el valor convencional de 0.5.
 
+Para el desbalance de clases (razón de 1:5.3) se emplearon pesos de clase balanceados en la regresión logística, el árbol de decisión, LightGBM y CatBoost, y el peso de la clase positiva (\texttt{scale\_pos\_weight}) en XGBoost; el perceptrón multicapa de scikit-learn no admite ponderación y se entrenó sin ella. La ponderación muestral se aplicó como peso de observación en todos los modelos, salvo en la red neuronal. No se aplicó remuestreo sintético (por ejemplo, SMOTE), de modo que las particiones de validación conservan la distribución real de las clases.
+
 \subsection{Entrenamiento y comparación de modelos}
 
-Se evaluaron seis algoritmos supervisados: Regresión Logística con regularización L2, Árbol de Decisión CART, XGBoost, CatBoost, Red Neuronal Perceptrón Multicapa (MLP de tres capas ocultas con 200 neuronas cada una) y LightGBM. La comparación utilizó validación cruzada estratificada de cinco pliegues y una semilla determinista (\texttt{random\_state = 42}). LightGBM permite agrupar variables categóricas de alta cardinalidad mediante histogramas, sin recurrir a expansión One-Hot \citep{bentejac2021gradientboosting}. La selección de estos algoritmos, en particular de los ensambles basados en árboles, es coherente con estudios sobre datos DHS que reportan su utilidad para predecir la desnutrición infantil \citep{bitew2021ethiopia,talukder2020bangladesh,chilyabanyama2022zambia}.
+Se evaluaron seis algoritmos supervisados: Regresión Logística con regularización L2, Árbol de Decisión CART, XGBoost, CatBoost, Red Neuronal Perceptrón Multicapa (MLP de tres capas ocultas con 200 neuronas cada una) y LightGBM. La comparación utilizó validación cruzada estratificada de cinco pliegues y una semilla determinista (\texttt{random\_state = 42}). LightGBM permite agrupar variables categóricas de alta cardinalidad mediante histogramas, sin recurrir a expansión One-Hot \citep{bentejac2021gradientboosting}. La selección de estos algoritmos, en particular de los ensambles basados en árboles, es coherente con estudios sobre datos DHS que reportan su utilidad para predecir la desnutrición infantil \citep{bitew2021ethiopia,talukder2020bangladesh,chilyabanyama2022zambia}. Los hiperparámetros se fijaron de antemano, sin búsqueda sistemática de valores (Tabla~\ref{tab:hiperparametros}); los no indicados conservan los valores por defecto de cada biblioteca.
+
+\begin{table}[!tp]
+\centering
+\caption{Configuración de los algoritmos comparados (\texttt{random\_state = 42} en todos).}
+\label{tab:hiperparametros}
+\small
+\begin{tabular}{p{2.4cm}p{5.3cm}}
+\hline
+Modelo & Configuración \\
+\hline
+Regresión logística & Regularización L2; pesos de clase balanceados; máximo de 500 iteraciones \\
+Árbol de decisión & Profundidad máxima de 5; pesos de clase balanceados \\
+XGBoost & 300 árboles; \texttt{scale\_pos\_weight} igual a la razón entre clases negativa y positiva; \texttt{min\_child\_weight} = $10^{-7}$ \\
+CatBoost & 300 iteraciones; pesos de clase balanceados; variables categóricas nativas \\
+Red neuronal & Tres capas ocultas de 200 neuronas; hasta 50 iteraciones con parada temprana; sin ponderación \\
+LightGBM & 300 árboles; pesos de clase balanceados; variables categóricas nativas \\
+\hline
+\end{tabular}
+\end{table}
 
 \subsection{Estrategia de validación y métricas de evaluación}
 
@@ -264,7 +287,7 @@ La solución se implementó como una aplicación web interactiva en Streamlit, o
 \label{fig:arquitectura}
 \end{figure*}
 
-La reproducibilidad se abordó de acuerdo con los principios FAIR mediante la modularización del código en el paquete Python \texttt{mnp/}, el aislamiento del entorno con Docker (\texttt{python:3.12-slim}), la automatización del flujo con Makefile y la publicación del conjunto de datos maestro y del modelo serializado en Zenodo.
+La reproducibilidad se abordó de acuerdo con los principios FAIR mediante la modularización del código en el paquete Python \texttt{mnp/}, el aislamiento del entorno con Docker (\texttt{python:3.12-slim}), la automatización del flujo con Makefile y la publicación del conjunto de datos maestro y del modelo serializado en Zenodo. El flujo se ejecutó con Python 3.12 y las bibliotecas LightGBM 4.6.0, XGBoost 3.2.0, CatBoost 1.2.10, scikit-learn 1.8.0 y SHAP 0.52.0.
 
 La pertinencia se evaluó mediante un panel de cuatro profesionales sanitarios: tres nutricionistas y un enfermero, todos con al menos diez años de experiencia asistencial y grado de maestría. La evaluación se apoyó en el Modelo de Aceptación Tecnológica \citep{davis1989tam} y en su extensión TAM2 \citep{venkatesh2000tam2}; la utilidad percibida fue el criterio central, por el propósito del sistema de aportar información accionable para priorizar la atención sanitaria.
 
@@ -294,12 +317,51 @@ Percepción de control externo & TAM3 & --- & 3 (K1--K3) \\
 \end{tabular}
 \end{table*}
 
+\subsection{Consideraciones éticas}
+
+Los microdatos de la ENDES son de acceso público y no contienen información que identifique a los participantes. Los especialistas del panel participaron de forma voluntaria y sus respuestas se analizaron de forma agregada, sin identificación individual.
+
 \section{Resultados}
 \label{resultados}
 
-\subsection{Evolución de la desnutrición crónica, 2007--2025}
+\subsection{Características de la muestra}
+\label{sec:muestra}
 
-La prevalencia ponderada de desnutrición crónica en menores de cinco años descendió de 29.2~\% en 2007 a 13.0~\% en 2017 y, desde 2018, se mantiene entre 11.3~\% y 12.4~\%, con 12.0~\% en 2025 (Figura~\ref{fig:tendencia}). La brecha entre áreas persiste: en 2025 la prevalencia fue de 21.5~\% en el área rural y de 7.9~\% en la urbana.
+La muestra incluyó 304,271 niños menores de cinco años, 51.0~\% varones y 65.6~\% residentes del área urbana. La prevalencia de desnutrición crónica fue de 15.8~\% sin ponderar y de 16.2~\% con ponderación muestral (Tabla~\ref{tab:descriptiva}). Fue mayor en el área rural (30.7~\%) que en la urbana (9.4~\%), en la Sierra (26.2~\%) y la Selva (21.8~\%) que en la Costa fuera de Lima (10.0~\%) y en Lima metropolitana (5.4~\%), y entre los 12 y 23 meses de edad (19.8~\%).
+
+\begin{table}[!tp]
+\centering
+\caption{Características de la muestra y prevalencia de desnutrición crónica.}
+\label{tab:descriptiva}
+\small
+\begin{tabular}{lrrcc}
+\hline
+Característica & $n$ & \% de la muestra & \multicolumn{2}{c}{Prevalencia (\%)} \\
+\cline{4-5}
+ & & & Sin ponderar & Ponderada \\
+\hline
+Total & 304,271 & 100.0 & 15.8 & 16.2 \\
+\multicolumn{5}{l}{\textit{Sexo}} \\
+\quad Varones & 155,149 & 51.0 & 16.8 & 17.1 \\
+\quad Mujeres & 149,122 & 49.0 & 14.8 & 15.2 \\
+\multicolumn{5}{l}{\textit{Área de residencia}} \\
+\quad Urbana & 199,571 & 65.6 & 9.6 & 9.4 \\
+\quad Rural & 104,700 & 34.4 & 27.7 & 30.7 \\
+\multicolumn{5}{l}{\textit{Región natural}} \\
+\quad Lima metropolitana & 32,004 & 10.5 & 5.2 & 5.4 \\
+\quad Resto de la Costa & 85,227 & 28.0 & 7.7 & 10.0 \\
+\quad Sierra & 104,518 & 34.4 & 23.6 & 26.2 \\
+\quad Selva & 82,522 & 27.1 & 18.3 & 21.8 \\
+\multicolumn{5}{l}{\textit{Edad (meses)}} \\
+\quad 0--5 & 23,615 & 7.8 & 10.8 & 11.2 \\
+\quad 6--11 & 30,742 & 10.1 & 12.3 & 12.5 \\
+\quad 12--23 & 60,560 & 19.9 & 19.8 & 19.8 \\
+\quad 24--59 & 189,354 & 62.2 & 15.7 & 16.2 \\
+\hline
+\end{tabular}
+\end{table}
+
+Con la ponderación muestral, la prevalencia nacional descendió de 29.2~\% en 2007 a 13.0~\% en 2017 y, desde 2018, se mantiene entre 11.3~\% y 12.4~\%, con 12.0~\% en 2025 (Figura~\ref{fig:tendencia}). La brecha entre áreas persiste: en 2025 la prevalencia fue de 21.5~\% en el área rural y de 7.9~\% en la urbana.
 
 \begin{figure*}[!tp]
 \centering
@@ -308,52 +370,75 @@ La prevalencia ponderada de desnutrición crónica en menores de cinco años des
 \label{fig:tendencia}
 \end{figure*}
 
-\subsection{Comparación de modelos}
+\subsection{Selección de variables}
+\label{sec:seleccion}
 
-Con las probabilidades fuera de pliegue sin ponderación muestral (Tabla~\ref{tab:modelos} y Figuras~\ref{fig:roc}, \ref{fig:pr} y \ref{fig:confusion}), LightGBM alcanzó el mayor AUC-ROC (0.8230), seguido de CatBoost (0.8210) y de la red neuronal (0.8144); la regresión logística, XGBoost y el árbol de decisión se ubicaron entre 0.7696 y 0.7894. CatBoost obtuvo un AUC-PR ligeramente superior (0.5014 frente a 0.4894), pero con el umbral de 0.5 detectó solo el 28.2~\% de los casos, y la red neuronal el 24.2~\%, frente al 75.3~\% de LightGBM. Por su discriminación y su sensibilidad con el umbral de referencia se seleccionó LightGBM. Con ponderación muestral, su AUC-ROC es de 0.8295.
+La secuencia de selección redujo las 189 columnas crudas a 74 factores estadísticamente significativos y, finalmente, a las 45 variables predictoras de la Tabla~\ref{tab:variables}.
+
+En el estudio de ablación, el ordenamiento identificó diez atributos con señal marginal elevada: material predominante de las paredes (HV214), del piso (HV213) y del techo (HV215); fuente de abastecimiento de agua (HV201); departamento de residencia (HV024); concentración de cloro residual en el agua (SH227); combustible utilizado para cocinar (HV226); y tipo de servicio higiénico (HV205), entre otros. Estos atributos conforman el bloque de agua, saneamiento, higiene y condiciones materiales de la vivienda, reconocido como determinante subyacente del retraso del crecimiento lineal \citep{black2013lancet,victora2021lancet} y recuperado entre los predictores principales en estudios basados en datos DHS \citep{bitew2021ethiopia}. Ninguno constituye fuga de información, pues describen condiciones estructurales del hogar observables antes de una visita domiciliaria.
 
 \begin{table*}[!tp]
 \centering
-\caption{Desempeño de los seis algoritmos con las probabilidades fuera de pliegue, sin ponderación muestral (umbral de 0.5).}
-\label{tab:modelos}
+\caption{Estudio de ablación del subconjunto de características.}
+\label{tab:ablacion}
 \begin{tabular}{lcccc}
 \hline
-Modelo & AUC-ROC & AUC-PR & Sensibilidad & Especificidad \\
+Configuración & Atributos & AUC-ROC & Recall & Precisión \\
 \hline
-Regresión logística & 0.7894 & 0.4158 & 70.7~\% & 72.9~\% \\
-LightGBM & 0.8230 & 0.4894 & 75.3~\% & 73.8~\% \\
-XGBoost & 0.7847 & 0.4129 & 74.9~\% & 69.4~\% \\
-CatBoost & 0.8210 & 0.5014 & 28.2~\% & 96.4~\% \\
-Árbol de decisión & 0.7696 & 0.3840 & 70.4~\% & 71.1~\% \\
-Red neuronal & 0.8144 & 0.4798 & 24.2~\% & 96.9~\% \\
+Subconjunto seleccionado & 45 & 0.8295 & 76.44~\% & 36.36~\% \\
+Agua, saneamiento y vivienda & 52 & 0.8295 & 76.44~\% & 36.36~\% \\
+Atributos territoriales & 48 & 0.8295 & 76.44~\% & 36.36~\% \\
+Ampliación conjunta & 55 & 0.8295 & 76.44~\% & 36.36~\% \\
 \hline
 \end{tabular}
 \end{table*}
 
+La incorporación de los diez atributos no produjo mejoras en la capacidad discriminativa: el AUC-ROC, la sensibilidad y la precisión permanecieron invariables hasta la cuarta cifra decimal. El análisis descartó la ausencia de señal, pues un clasificador entrenado únicamente con el bloque de agua, saneamiento y vivienda alcanzó un AUC-ROC de 0.6895, así como la redundancia lineal con el índice de riqueza, cuya varianza explicada por cada atributo candidato se situó entre $\eta^2=0.038$ y $\eta^2=0.098$. El subconjunto de 45 variables ya representa el constructo latente de las condiciones materiales del hogar mediante diecinueve atributos correlacionados, por lo que la exclusión de las variables candidatas constituye una decisión metodológicamente sustentada.
+
+\subsection{Desempeño comparativo de los modelos}
+
+En el quinto pliegue de validación, con ponderación muestral y el umbral de 0.5 (Tabla~\ref{tab:modelos}), LightGBM alcanzó el mayor AUC-ROC (0.8230), seguido de CatBoost (0.8210) y de la red neuronal (0.8144); la regresión logística, XGBoost y el árbol de decisión se ubicaron entre 0.7696 y 0.7894. CatBoost obtuvo un AUC-PR ligeramente superior (0.5014 frente a 0.4894), pero detectó solo el 28.2~\% de los casos con el umbral de 0.5, y la red neuronal, entrenada sin ponderación de clases ni muestral, el 24.2~\%, frente al 75.3~\% de LightGBM. Por su discriminación y su sensibilidad con el umbral de referencia se seleccionó LightGBM, cuyo AUC-ROC promedio en los cinco pliegues fue de 0.8295, con una sensibilidad de 76.44~\% y una precisión de 36.36~\%.
+
+\begin{table}[!tp]
+\centering
+\caption{Desempeño de los seis algoritmos en el quinto pliegue de validación, con ponderación muestral (umbral de 0.5). En negrita, el mejor valor de cada columna.}
+\label{tab:modelos}
+\small
+\begin{tabular}{lcccc}
+\hline
+Modelo & AUC-ROC & AUC-PR & Sensib. & Especif. \\
+\hline
+Regresión logística & 0.7894 & 0.4158 & 70.7~\% & 72.9~\% \\
+LightGBM & \textbf{0.8230} & 0.4894 & \textbf{75.3~\%} & 73.8~\% \\
+XGBoost & 0.7847 & 0.4129 & 74.9~\% & 69.4~\% \\
+CatBoost & 0.8210 & \textbf{0.5014} & 28.2~\% & 96.4~\% \\
+Árbol de decisión & 0.7696 & 0.3840 & 70.4~\% & 71.1~\% \\
+Red neuronal & 0.8144 & 0.4798 & 24.2~\% & \textbf{96.9~\%} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Curvas ROC y matriz de confusión}
+
+Con el umbral de 0.5, LightGBM clasificó correctamente al 75.3~\% de los niños con desnutrición crónica y al 73.8~\% de los niños sin ella (Figura~\ref{fig:confusion}). Las curvas ROC de LightGBM, CatBoost y la red neuronal se superponen en la mayor parte del recorrido, por encima de las de la regresión logística, XGBoost y el árbol de decisión (Figura~\ref{fig:roc}).
+
 \begin{figure*}[!tp]
 \centering
 \includegraphics[width=0.55\textwidth]{prism-uploads/Figura5_curvas_roc.png}
-\caption{Curvas ROC de los seis algoritmos con las probabilidades fuera de pliegue, sin ponderación muestral.}
+\caption{Curvas ROC de los seis algoritmos en el quinto pliegue de validación, con ponderación muestral.}
 \label{fig:roc}
 \end{figure*}
 
-\begin{figure*}[!tp]
+\begin{figure}[!tp]
 \centering
-\includegraphics[width=0.55\textwidth]{prism-uploads/Figura6_curvas_precision_recall.png}
-\caption{Curvas de precisión--sensibilidad de los seis algoritmos con las probabilidades fuera de pliegue, sin ponderación muestral.}
-\label{fig:pr}
-\end{figure*}
-
-\begin{figure*}[!tp]
-\centering
-\includegraphics[width=0.75\textwidth]{prism-uploads/Figura7_matrices_confusion.png}
-\caption{Matrices de confusión normalizadas por clase real con el umbral de 0.5, sin ponderación muestral.}
+\includegraphics[width=\columnwidth]{prism-uploads/Figura6_matriz_confusion_lightgbm.png}
+\caption{Matriz de confusión de LightGBM, normalizada por clase real, en el quinto pliegue de validación con ponderación muestral (umbral de 0.5).}
 \label{fig:confusion}
-\end{figure*}
+\end{figure}
 
 \subsection{Confiabilidad estadística del modelo seleccionado}
 
-Con ponderación muestral, el modelo seleccionado alcanzó un AUC-ROC de 0.8294 (IC 95~\%: 0.8267--0.8324), una sensibilidad de 76.43~\% y una precisión de 36.36~\% con el umbral de 0.5 (Tabla~\ref{tab:bootstrap}). Con el umbral de 0.45, utilizado en la aplicación, la sensibilidad asciende a 80.46~\% y la precisión desciende a 34.04~\%. La prueba de DeLong confirmó la superioridad de LightGBM frente a XGBoost ($z=62.32$) y a la regresión logística ($z=61.48$), con $p<10^{-300}$ en ambos casos y AUC sin ponderar de 0.8193, 0.7775 y 0.7767, respectivamente. Al excluir la hemoglobina, único predictor que exige un procedimiento sobre el niño, el AUC-ROC disminuyó de 0.8294 a 0.8281 (diferencia de $-0.0014$; IC 95~\%: $-0.0019$ a $-0.0009$) y la sensibilidad de 76.43~\% a 76.30~\%.
+Con ponderación muestral, sobre las probabilidades fuera de pliegue de los 304,271 registros, el modelo seleccionado alcanzó un AUC-ROC de 0.8294 (IC 95~\%: 0.8267--0.8324), una sensibilidad de 76.43~\% y una precisión de 36.36~\% con el umbral de 0.5 (Tabla~\ref{tab:bootstrap}). Con el umbral de 0.45, utilizado en la aplicación, la sensibilidad asciende a 80.46~\% y la precisión desciende a 34.04~\%. La prueba de DeLong confirmó la superioridad de LightGBM frente a XGBoost ($z=62.32$) y a la regresión logística ($z=61.48$), con $p<10^{-300}$ en ambos casos y AUC sin ponderar de 0.8193, 0.7775 y 0.7767, respectivamente. Al excluir la hemoglobina, único predictor que exige un procedimiento sobre el niño, el AUC-ROC disminuyó de 0.8294 a 0.8281 (diferencia de $-0.0014$; IC 95~\%: $-0.0019$ a $-0.0009$) y la sensibilidad de 76.43~\% a 76.30~\%.
 
 \begin{table}[!tp]
 \centering
@@ -373,14 +458,21 @@ F1 & 49.28~\% & 48.85--49.66~\% \\
 
 \subsection{Explicabilidad}
 
-La importancia global de las variables se concentra en pocos factores (Figura~\ref{fig:shap_global}): la pobreza del hogar (0.42), el peso al nacer (0.41), la altitud de residencia (0.26) y el tamaño al nacer (0.25) destacan claramente, y las diez variables principales acumulan el 68.0~\% de la importancia total. Estos valores describen asociaciones aprendidas de la encuesta y no relaciones causales. El peso de cada factor varía entre territorios (Figura~\ref{fig:mapa_factores}): en Puno destacan la altitud, la pobreza del hogar y el bajo peso al nacer, mientras que en Huancavelica destacan el bajo peso al nacer, el intervalo entre partos y la edad del jefe del hogar.
+La importancia global de las variables se concentra en pocos factores (Figura~\ref{fig:shap_global}): la pobreza del hogar (0.42), el peso al nacer (0.41), la altitud de residencia (0.26) y el tamaño al nacer (0.25) destacan claramente, y las diez variables principales acumulan el 68.0~\% de la importancia total. En el nivel local, la Figura~\ref{fig:shap_local} descompone la salida del modelo para un perfil sintético de riesgo alto (0.93): el peso al nacer de 2.4~kg, el nivel socioeconómico más bajo, la edad de 18 meses y el tamaño pequeño al nacer son los factores que más elevan el resultado. Estos valores describen asociaciones aprendidas de la encuesta y no relaciones causales. El peso de cada factor varía entre territorios (Figura~\ref{fig:mapa_factores}): en Puno destacan la altitud, la pobreza del hogar y el bajo peso al nacer, mientras que en Huancavelica destacan el bajo peso al nacer, el intervalo entre partos y la edad del jefe del hogar.
 
 \begin{figure}[!tp]
 \centering
-\includegraphics[width=\columnwidth]{prism-uploads/Figura8_importancia_global_shap.png}
+\includegraphics[width=\columnwidth]{prism-uploads/Figura7_importancia_global_shap.png}
 \caption{Importancia global de las 15 variables con mayor valor SHAP absoluto promedio del modelo seleccionado, sobre una muestra aleatoria de 10,000 niños.}
 \label{fig:shap_global}
 \end{figure}
+
+\begin{figure*}[!tp]
+\centering
+\includegraphics[width=0.6\textwidth]{prism-uploads/Figura8_explicacion_local.png}
+\caption{Explicación local de un perfil sintético de riesgo alto (salida del modelo de 0.93): contribución de las diez variables con mayor efecto. Todas elevan el resultado.}
+\label{fig:shap_local}
+\end{figure*}
 
 \begin{figure*}[!tp]
 \centering
