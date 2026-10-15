@@ -269,7 +269,7 @@ LightGBM & 300 árboles; pesos de clase balanceados; variables categóricas nati
 
 \subsection{Estrategia de validación y métricas de evaluación}
 
-La evaluación del desempeño se basó en las probabilidades fuera de pliegue (out-of-fold) de los 304,271 registros, siguiendo las recomendaciones para reportar modelos predictivos en salud \citep{moons2015tripod}. Se calcularon AUC-ROC, sensibilidad, precisión y especificidad con ponderación muestral. La incertidumbre de las estimaciones se cuantificó mediante 1,000 repeticiones de bootstrap no paramétrico y sus intervalos de confianza del 95~\%. La comparación del modelo seleccionado con los modelos de referencia se efectuó con la prueba de DeLong para curvas ROC correlacionadas. Como dicha prueba se basa en rangos y no admite ponderación muestral, se aplicó sobre la muestra sin expandir, utilizando los mismos individuos para todos los modelos.
+La evaluación del desempeño se basó en las probabilidades fuera de pliegue (out-of-fold) de los 304,271 registros, siguiendo las recomendaciones para reportar modelos predictivos en salud \citep{moons2015tripod}. Se calcularon AUC-ROC, sensibilidad, precisión y especificidad, todas ponderadas con el factor de expansión. La incertidumbre de las estimaciones se cuantificó mediante 1,000 repeticiones de bootstrap no paramétrico y sus intervalos de confianza del 95~\%. La comparación del modelo seleccionado con los modelos de referencia se efectuó con la prueba de DeLong para curvas ROC correlacionadas. Como dicha prueba se basa en rangos y no admite ponderación muestral, se aplicó sobre la muestra sin expandir, utilizando los mismos individuos para todos los modelos.
 
 \subsection{Explicabilidad algorítmica con valores SHAP}
 
@@ -402,7 +402,7 @@ La incorporación de los diez atributos no produjo mejoras en la capacidad discr
 
 \subsection{Desempeño comparativo de los modelos}
 
-En el quinto pliegue de validación, con ponderación muestral y el umbral de 0.5 (Tabla~\ref{tab:modelos}), LightGBM alcanzó el mayor AUC-ROC (0.8230), seguido de CatBoost (0.8210) y de la red neuronal (0.8144); la regresión logística, XGBoost y el árbol de decisión se ubicaron entre 0.7696 y 0.7894. CatBoost obtuvo un AUC-PR ligeramente superior (0.5014 frente a 0.4894), pero detectó solo el 28.2~\% de los casos con el umbral de 0.5, y la red neuronal, entrenada sin ponderación de clases ni muestral, el 24.2~\%, frente al 75.3~\% de LightGBM. Por su discriminación y su sensibilidad con el umbral de referencia se seleccionó LightGBM, cuyo AUC-ROC promedio en los cinco pliegues fue de 0.8295, con una sensibilidad de 76.44~\% y una precisión de 36.36~\%.
+En el quinto pliegue de validación, con el umbral de 0.5 (Tabla~\ref{tab:modelos}), LightGBM alcanzó el mayor AUC-ROC (0.8230), seguido de CatBoost (0.8210) y de la red neuronal (0.8144); la regresión logística, XGBoost y el árbol de decisión se ubicaron entre 0.7696 y 0.7894. CatBoost obtuvo un AUC-PR ligeramente superior (0.5014 frente a 0.4894), pero detectó solo el 28.2~\% de los casos con el umbral de 0.5, y la red neuronal, entrenada sin ponderación de clases ni muestral, el 24.2~\%, frente al 75.3~\% de LightGBM. Por su discriminación y su sensibilidad con el umbral de referencia se seleccionó LightGBM, cuyo AUC-ROC promedio en los cinco pliegues fue de 0.8295, con una sensibilidad de 76.44~\% y una precisión de 36.36~\%.
 
 \begin{table}[!tp]
 \centering
@@ -430,7 +430,7 @@ Con el umbral de 0.5, LightGBM clasificó correctamente al 75.3~\% de los niños
 \begin{figure*}[!tp]
 \centering
 \includegraphics[width=0.55\textwidth]{prism-uploads/Figura5_curvas_roc.png}
-\caption{Curvas ROC de los seis algoritmos en el quinto pliegue de validación, con ponderación muestral.}
+\caption{Curvas ROC de los seis algoritmos en el quinto pliegue de validación.}
 \label{fig:roc}
 \end{figure*}
 
@@ -443,7 +443,7 @@ Con el umbral de 0.5, LightGBM clasificó correctamente al 75.3~\% de los niños
 
 \subsection{Confiabilidad estadística del modelo seleccionado}
 
-Con ponderación muestral y 1,000 repeticiones bootstrap, sobre las probabilidades fuera de pliegue de los 304,271 registros, el modelo seleccionado alcanzó un AUC-ROC de 0.8294 (IC 95~\%: 0.8267--0.8324), una sensibilidad de 76.43~\% y una precisión de 36.36~\% con el umbral de 0.5 (Tabla~\ref{tab:bootstrap}). Con el umbral de 0.45, utilizado en la aplicación, la sensibilidad asciende a 80.46~\% y la precisión desciende a 34.04~\%. La prueba de DeLong confirmó la superioridad de LightGBM frente a XGBoost ($z=62.32$) y a la regresión logística ($z=61.48$), con $p<10^{-300}$ en ambos casos y AUC sin ponderar de 0.8193, 0.7775 y 0.7767, respectivamente. Al excluir la hemoglobina, único predictor que exige un procedimiento sobre el niño, el AUC-ROC disminuyó de 0.8294 a 0.8281 (diferencia de $-0.0014$; IC 95~\%: $-0.0019$ a $-0.0009$) y la sensibilidad de 76.43~\% a 76.30~\%.
+Con 1,000 repeticiones bootstrap, sobre las probabilidades fuera de pliegue de los 304,271 registros, el modelo seleccionado alcanzó un AUC-ROC de 0.8294 (IC 95~\%: 0.8267--0.8324), una sensibilidad de 76.43~\% y una precisión de 36.36~\% con el umbral de 0.5 (Tabla~\ref{tab:bootstrap}). Con el umbral de 0.45, utilizado en la aplicación, la sensibilidad asciende a 80.46~\% y la precisión desciende a 34.04~\%. La prueba de DeLong confirmó la superioridad de LightGBM frente a XGBoost ($z=62.32$) y a la regresión logística ($z=61.48$), con $p<10^{-300}$ en ambos casos y AUC sin ponderar de 0.8193, 0.7775 y 0.7767, respectivamente. Al excluir la hemoglobina, único predictor que exige un procedimiento sobre el niño, el AUC-ROC disminuyó de 0.8294 a 0.8281 (diferencia de $-0.0014$; IC 95~\%: $-0.0019$ a $-0.0009$) y la sensibilidad de 76.43~\% a 76.30~\%.
 
 \begin{table}[!tp]
 \centering
