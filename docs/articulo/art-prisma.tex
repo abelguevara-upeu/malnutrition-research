@@ -228,9 +228,13 @@ Los códigos especiales de la encuesta (por ejemplo, «no sabe», «no aplica» 
 
 \subsection{Balanceo de clases y ponderación}
 
-Para reflejar la distribución demográfica del país y corregir el sesgo de sobremuestreo urbano de la encuesta, se incorporó el factor de ponderación muestral del INEI, $w_i=\mathrm{HV005}_i/1{,}000{,}000$, tanto durante el entrenamiento como en el cálculo de las métricas. Además, el umbral de decisión $\tau$ se calibró con un criterio de triaje preventivo que prioriza la cobertura de los casos positivos, en lugar de asumir automáticamente el valor convencional de 0.5.
+Por cada niño con desnutrición crónica hay 5.3 sin ella. Para que los modelos no ignoren la clase minoritaria, se usaron pesos de clase: equivocarse con un niño desnutrido cuesta más que equivocarse con uno sano, en proporción inversa a la frecuencia de cada clase. Se aplicaron como pesos de clase balanceados en la regresión logística, el árbol de decisión, LightGBM y CatBoost, y como \texttt{scale\_pos\_weight} en XGBoost; la red neuronal de scikit-learn no admite pesos y se entrenó sin ellos.
 
-Para el desbalance de clases (razón de 1:5.3) se emplearon pesos de clase balanceados en la regresión logística, el árbol de decisión, LightGBM y CatBoost, y el peso de la clase positiva (\texttt{scale\_pos\_weight}) en XGBoost; el perceptrón multicapa de scikit-learn no admite ponderación y se entrenó sin ella. La ponderación muestral se aplicó como peso de observación en todos los modelos, salvo en la red neuronal. No se aplicó remuestreo sintético (por ejemplo, SMOTE), de modo que las particiones de validación conservan la distribución real de las clases.
+No se generaron registros sintéticos (por ejemplo, con SMOTE). La clase minoritaria ya cuenta con más de 48,000 casos reales, los registros sintéticos no tendrían un factor de expansión propio y, sin ellos, las métricas se calculan sobre la distribución real de la población.
+
+Por separado, se aplicó el factor de expansión del INEI, $w_i=\mathrm{HV005}_i/1{,}000{,}000$, en el entrenamiento y en el cálculo de las métricas. Este factor no corrige el desbalance: corrige la representatividad de la encuesta, que sobremuestrea algunas zonas, de modo que los resultados reflejen a la población del país.
+
+Por último, el umbral de decisión $\tau$ se fijó con un criterio de triaje preventivo, que prioriza detectar los casos positivos, en lugar de asumir el valor convencional de 0.5.
 
 \subsection{Selección de variables}
 
