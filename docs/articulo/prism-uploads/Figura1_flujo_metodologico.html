@@ -1,0 +1,44 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;background:#fff;font-family:Arial,Helvetica,sans-serif;width:1000px;padding:20px;box-sizing:border-box}
+.row{display:grid;grid-template-columns:120px 1fr;gap:20px;margin-bottom:0}
+.ph{border:1.5px solid;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:bold;font-size:13px;padding:6px}
+.col{display:flex;flex-direction:column}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.b{border:1.5px solid;padding:9px 12px;text-align:center;font-size:11.5px;line-height:1.45;background:#fff}
+.b strong{display:block;font-size:12.5px;margin-bottom:2px}
+.ar{text-align:center;font-size:18px;line-height:22px;color:#333}
+.blue{border-color:#6c8ebf}.ph.blue{background:#dae8fc}
+.green{border-color:#82b366}.ph.green{background:#d5e8d4}
+.yel{border-color:#d6b656}.ph.yel{background:#fff2cc}
+.red{border-color:#b85450}.ph.red{background:#f8cecc}
+.pur{border-color:#9673a6}.ph.pur{background:#e1d5e7}
+.gap{height:22px}
+</style></head><body>
+<div class="row"><div class="ph blue">Comprensión de los datos</div><div class="col">
+<div class="b blue"><strong>Fuente de datos e integración relacional</strong>ENDES 2007–2025 (INEI): módulos RECH0, RECH1, RECH6, RECH23 y REC41 (vía REC21), unidos por HHID / CASEID → N = 304,271 niños menores de 5 años</div>
+<div class="ar">↓</div>
+<div class="b blue"><strong>Variable objetivo y prevención de la fuga de información</strong>Y = 1 si HAZ &lt; −2 DE (OMS); prevalencia 15.8 % (1 : 5.3). Se excluyen talla (HC3), peso (HC2) y variables posteriores a la medición</div>
+</div></div>
+<div class="row"><div></div><div class="ar">↓</div></div>
+<div class="row"><div class="ph green">Preparación de los datos</div><div class="col">
+<div class="b green"><strong>Preprocesamiento</strong>Armonización de códigos entre años · valores ausentes · codificación categórica · consistencia niño–madre &gt; 99.9 %</div>
+<div class="ar">↓</div>
+<div class="b green"><strong>Selección de características en cuatro etapas</strong>189 columnas → E1: ausentes &gt; 60 % · E2: |r| &gt; 0.80 y VIF &gt; 5 · E3: χ² y Kruskal–Wallis (p &lt; 0.05) → 74 → E4: importancia en gradient boosting → <b>45 variables</b> (+ verificación de suficiencia)</div>
+</div></div>
+<div class="row"><div></div><div class="ar">↓</div></div>
+<div class="row"><div class="ph yel">Modelado</div><div class="col">
+<div class="b yel"><strong>Tratamiento del desbalance</strong>Pesos de clase (balanced / scale_pos_weight) · factor de expansión del INEI (HV005) para la representatividad · umbral de decisión τ orientado al triaje</div>
+<div class="ar">↓</div>
+<div class="b yel"><strong>Entrenamiento y comparación de modelos</strong>Regresión logística (L2), CART, XGBoost, CatBoost, MLP 3×200 y LightGBM · validación cruzada estratificada de 5 pliegues</div>
+</div></div>
+<div class="row" style="margin-top:0"><div></div><div class="two"><div class="ar">↓</div><div class="ar">↓</div></div></div>
+<div class="row"><div class="ph red">Evaluación</div><div class="two">
+<div class="b red"><strong>Evaluación del desempeño</strong>AUC-ROC, AUC-PR, sensibilidad, precisión, especificidad y F1 · IC 95 % por bootstrap (1,000) · prueba de DeLong</div>
+<div class="b red"><strong>Explicabilidad con SHAP</strong>TreeExplainer · explicación local y agregada por departamento y región natural</div>
+</div></div>
+<div class="row"><div></div><div class="two"><div class="ar">↓</div><div class="ar">↓</div></div></div>
+<div class="row"><div class="ph pur">Despliegue</div><div class="two">
+<div class="b pur"><strong>Implementación y reproducibilidad</strong>Aplicación web en Streamlit (3 capas) · Docker, Makefile y Zenodo</div>
+<div class="b pur"><strong>Evaluación de la pertinencia</strong>Panel de 4 profesionales de salud · instrumento basado en TAM2</div>
+</div></div>
+</body></html>
