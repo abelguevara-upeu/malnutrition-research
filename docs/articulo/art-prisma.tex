@@ -114,7 +114,7 @@
 
 \begin{abstract}
 %% Text of abstract
-Example abstract for the astronomy and computing journal. Here you provide a brief summary of the research and the results.
+La desnutrición crónica infantil en el Perú se mantiene alrededor del 12~\% desde 2018, con una brecha persistente entre las áreas rural y urbana. Este estudio desarrolló un modelo predictivo de riesgo de desnutrición crónica en menores de cinco años a partir de los microdatos de la ENDES 2007--2025 (304,271 niños), siguiendo el marco CRISP-DM. Tras una selección de características en cuatro etapas, se compararon seis algoritmos mediante validación cruzada estratificada de cinco pliegues, con pesos de clase y el factor de expansión de la encuesta. LightGBM obtuvo el mejor desempeño (AUC-ROC de 0.83, sensibilidad de 76.4~\% y F1 de 49.3~\%), y con un umbral de 0.45 detectó el 80.5~\% de los casos. Los valores SHAP identificaron la pobreza del hogar, el peso al nacer, la altitud y el tamaño al nacer como los factores más asociados al riesgo, con perfiles diferenciados por departamento. El modelo se implementó en una aplicación web que evalúa a un niño o a un grupo y explica cada resultado; un panel de cuatro profesionales de salud la valoró favorablemente (mediana de 9 sobre 10). El sistema sirve como apoyo al triaje y a la priorización, no como diagnóstico.
 \end{abstract}
 
 %%Graphical abstract
@@ -130,7 +130,7 @@ Example abstract for the astronomy and computing journal. Here you provide a bri
 
 \begin{keyword}
 %% keywords here, in the form: keyword \sep keyword, up to a maximum of 6 keywords
-keyword 1 \sep keyword 2 \sep keyword 3 \sep keyword 4
+Desnutrición crónica \sep Aprendizaje automático \sep LightGBM \sep SHAP \sep ENDES \sep Perú
 
 %% PACS codes here, in the form: \PACS code \sep code
 
@@ -505,7 +505,21 @@ Valoración global (1 a 10) & 9 & 8--10 & --- \\
 \FloatBarrier
 \section{Discusión}
 
+El modelo seleccionado alcanzó un AUC-ROC de 0.83 sobre 304,271 niños y diecinueve años de encuesta, un desempeño comparable al de estudios con datos DHS de un solo año. En Etiopía, \citet{bitew2021ethiopia} también obtuvieron el mejor resultado con un ensamble de árboles potenciados, y en Zambia \citet{chilyabanyama2022zambia} alcanzaron una exactitud del 79~\%. \citet{talukder2020bangladesh} reportaron una sensibilidad del 94.7~\% en Bangladesh, pero con un kappa de Cohen de 0.24, lo que muestra que una sensibilidad alta puede ocultar una concordancia baja. Por ello, este estudio reportó en conjunto la sensibilidad, la precisión, la especificidad, el F1 y el AUC-PR, y no solo la exactitud, que con una prevalencia del 16~\% favorece a los modelos que casi no marcan casos. Así ocurrió con CatBoost y la red neuronal: con AUC-ROC cercanos al de LightGBM, detectaron menos del 30~\% de los niños con desnutrición crónica con el umbral de 0.5.
+
+La precisión del 36~\% implica que, de cada tres niños señalados, aproximadamente uno presenta desnutrición crónica. Para un instrumento de triaje este equilibrio es aceptable, porque el costo de un falso positivo es una evaluación adicional, mientras que un falso negativo deja sin atención a un niño en riesgo. Con este criterio se fijó el umbral de 0.45, que eleva la sensibilidad al 80.5~\% a cambio de una precisión del 34.0~\%.
+
+Los factores con mayor peso coinciden con el marco de causas de la desnutrición materno-infantil \citep{black2013lancet,victora2021lancet}: la pobreza del hogar como causa básica, el peso y el tamaño al nacer como reflejo de la nutrición durante el embarazo, y la altitud, asociada en el Perú a la concentración de hemoglobina \citep{accinelli2020anemia}. La variación del peso de cada factor entre departamentos, como la altitud en Puno o el intervalo entre partos en Huancavelica, sugiere que las intervenciones podrían priorizarse según el perfil de cada territorio y no solo según la prevalencia. Estos resultados describen asociaciones aprendidas por el modelo y no relaciones causales.
+
+El estancamiento de la prevalencia en torno al 12~\% desde 2018 y la brecha rural de 21.5~\% frente a 7.9~\% en el área urbana coinciden con la desigualdad territorial descrita por \citet{santos2021peru}, y refuerzan la utilidad de focalizar los recursos. El panel de especialistas valoró favorablemente la utilidad y la facilidad de uso de la aplicación, y sus observaciones se centraron en la vigencia de los datos y en la incorporación de nuevas variables, no en los factores mostrados.
+
+El estudio tiene limitaciones. Primero, la ENDES es una encuesta transversal, por lo que el modelo identifica asociaciones y no permite inferir causalidad. Segundo, la validación cruzada mezcla los años de la encuesta; no se evaluó el desempeño entrenando con un periodo y probando con otro, ni con datos externos a la ENDES. Tercero, el índice de riqueza (HV271) se calcula en cada ronda con una escala propia, lo que puede afectar su comparabilidad entre años. Cuarto, los hiperparámetros se fijaron sin búsqueda sistemática y la comparación entre algoritmos se realizó sobre los 74 factores significativos. Quinto, la hemoglobina requiere un procedimiento sobre el niño, aunque su exclusión redujo el AUC-ROC en solo 0.0014. Por último, el panel de cuatro especialistas no permite generalizar la evaluación de la aplicación.
+
 \section{Conclusiones}
+
+Este estudio desarrolló un modelo predictivo de riesgo de desnutrición crónica infantil en el Perú a partir de los microdatos de la ENDES 2007--2025. Entre seis algoritmos, LightGBM obtuvo el mejor equilibrio entre discriminación y detección de casos, con un AUC-ROC de 0.83 y una sensibilidad del 80.5~\% con el umbral de triaje. La pobreza del hogar, el peso y el tamaño al nacer y la altitud fueron los factores más asociados al riesgo, con perfiles que varían entre departamentos.
+
+La aplicación web desarrollada permite evaluar a un niño o a un grupo y explica cada resultado, y fue valorada favorablemente por profesionales de salud como apoyo a la focalización y a la priorización de la atención. Como trabajo futuro se propone validar el modelo por periodos de la encuesta, corregir la escala del índice de riqueza entre años, incorporar datos locales de los establecimientos de salud y extender el enfoque a la malnutrición por exceso y a las deficiencias de micronutrientes.
 
 \FloatBarrier
 \section*{Agradecimientos}
