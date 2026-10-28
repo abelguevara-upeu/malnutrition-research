@@ -188,7 +188,7 @@ El estudio utilizó los microdatos anuales de la Encuesta Demográfica y de Salu
 \label{fig:integracion_endes}
 \end{figure*}
 
-\subsection{Definición de la variable objetivo y protocolo anti-leakage}
+\subsection{Variable objetivo y prevención de la fuga de información}
 
 La variable dependiente es la desnutrición crónica infantil, categorizada de acuerdo con los estándares internacionales de crecimiento de la Organización Mundial de la Salud, criterio empleado sistemáticamente en el análisis de la desnutrición infantil peruana \citep{sobrino2014peru,santos2021peru}. Se definió como caso positivo ($Y=1$) a todo infante cuyo puntaje Z de talla para la edad ($\mathrm{HAZ}=\mathrm{HC70}/100$) se situó por debajo de menos dos desviaciones estándar respecto de la mediana de referencia, y como caso control ($Y=0$) en caso contrario. La prevalencia global en la serie histórica fue del 15.8~\%, con una razón de desbalance de 1:5.3 (Tabla~\ref{tab:descriptiva}). Para preservar la validez metodológica y evitar el sobreajuste espurio por fuga de datos (data leakage) \citep{kaufman2011leakage}, se excluyeron de las variables predictoras la talla directa en centímetros (HC3), el peso crudo (HC2) y cualquier intervención terapéutica o diagnóstico clínico registrado después de la medición antropométrica.
 
@@ -243,8 +243,6 @@ La selección se desarrolló en cuatro etapas cuantitativas sobre las 189 column
 
 Primero, se descartaron los atributos con más del 60~\% de valores ausentes estructurales históricos. Segundo, se redujo la redundancia dimensional mediante la eliminación de variables colineales, utilizando correlaciones bivariadas de Pearson y Spearman ($r>0.80$) y factores de inflación de varianza ($\mathrm{VIF}>5$). Tercero, se aplicaron pruebas de independencia de chi-cuadrado para variables categóricas y pruebas no paramétricas de Kruskal--Wallis para variables continuas; se retuvieron 74 factores estadísticamente significativos ($p<0.05$). Cuarto, se evaluó la importancia multivariada mediante árboles de decisión potenciados por gradiente y se seleccionaron 45 variables predictoras.
 
-\subsubsection{Verificación de suficiencia del subconjunto seleccionado}
-
 Para descartar que la reducción dimensional hubiese eliminado señal predictiva relevante, se verificó el efecto de reincorporar las variables excluidas. De las 78 columnas disponibles en el conjunto preprocesado, 33 no formaron parte de las 45 seleccionadas. Estas se ordenaron según su señal marginal respecto de la variable objetivo: para los atributos categóricos se empleó la amplitud entre las tasas de prevalencia máxima y mínima de categorías con al menos 500 observaciones, mientras que para las variables continuas se utilizó el estadístico $2\lvert\mathrm{AUC}-0.5\rvert$.
 
 Se contrastaron cuatro configuraciones experimentales manteniendo constantes la partición, los pesos, la semilla determinista y los hiperparámetros del clasificador. Los resultados de esta verificación se presentan en la Sección~\ref{sec:seleccion}.
@@ -285,7 +283,7 @@ f(x)=\phi_0+\sum_{j=1}^{M}\phi_j(x).
 \label{eq:shap}
 \end{equation}
 
-\subsection{Implementación, reproducibilidad y evaluación de pertinencia}
+\subsection{Implementación del sistema}
 
 La solución se implementó como una aplicación web interactiva en Streamlit, organizada en tres capas (Figura~\ref{fig:arquitectura}). La capa de presentación integra la visualización coroplética departamental basada en geometrías GeoJSON, la evaluación de un niño con la explicación de su puntaje y la evaluación de un grupo de niños a partir de un archivo CSV o Excel, que devuelve una lista ordenada por riesgo. La capa lógica reúne el motor de inferencia LightGBM, el selector del umbral de prioridad según la cobertura elegida y el cálculo de la contribución de cada variable mediante valores SHAP en tiempo de ejecución. La capa de datos contiene el modelo serializado y sus metadatos, la curva cobertura--umbral, los valores SHAP agregados por departamento y las geometrías departamentales; el conjunto maestro en formato Parquet se utiliza únicamente en el flujo de entrenamiento.
 
@@ -296,11 +294,11 @@ La solución se implementó como una aplicación web interactiva en Streamlit, o
 \label{fig:arquitectura}
 \end{figure*}
 
-La reproducibilidad se abordó de acuerdo con los principios FAIR mediante la modularización del código en el paquete Python \texttt{mnp/}, el aislamiento del entorno con Docker (\texttt{python:3.12-slim}), la automatización del flujo con Makefile y el depósito del conjunto de datos final y del modelo serializado en Zenodo (véase la sección de disponibilidad de datos). El flujo se ejecutó con Python 3.12 y las bibliotecas LightGBM 4.6.0, XGBoost 3.2.0, CatBoost 1.2.10, scikit-learn 1.8.0 y SHAP 0.52.0.
+La reproducibilidad se abordó de acuerdo con los principios FAIR mediante la modularización del código en el paquete Python \texttt{mnp/}, el aislamiento del entorno con Docker (\texttt{python:3.12-slim}), la automatización del flujo con Makefile y el depósito del conjunto de datos final y del modelo serializado en Zenodo. El flujo se ejecutó con Python 3.12 y las bibliotecas LightGBM 4.6.0, XGBoost 3.2.0, CatBoost 1.2.10, scikit-learn 1.8.0 y SHAP 0.52.0.
+
+\subsection{Evaluación de la pertinencia}
 
 La pertinencia se evaluó mediante un panel de cuatro profesionales sanitarios: tres nutricionistas y un enfermero, todos con al menos diez años de experiencia asistencial y grado de maestría. La evaluación se apoyó en el Modelo de Aceptación Tecnológica \citep{davis1989tam} y en su extensión TAM2 \citep{venkatesh2000tam2}; la utilidad percibida fue el criterio central, por el propósito del sistema de aportar información accionable para priorizar la atención sanitaria.
-
-\subsubsection{Instrumento de evaluación de la pertinencia}
 
 La selección del modelo de aceptación siguió el marco de decisión de \citet{britto2026framework}, que compara TAM, TAM2, TAM3, UTAUT y UTAUT2 según el contexto, el régimen de uso, la etapa de adopción, el foco explicativo y la granularidad. Se eligió TAM2 por tratarse de una evaluación organizacional de aceptación inicial con un panel reducido. De TAM3 \citep{venkatesh2008tam3} se incorporó únicamente la percepción de control externo, para determinar si los datos requeridos por el sistema están disponibles en la práctica asistencial; se omitieron los constructos de imagen y voluntariedad, que no corresponden a especialistas que evalúan la herramienta sin obligación de adoptarla.
 
@@ -521,7 +519,7 @@ Valoración global (1 a 10) & 9 & 8--10 & --- \\
 
 \FloatBarrier
 \section*{Disponibilidad de datos y código}
-Los microdatos de la ENDES son públicos en \url{https://proyectos.inei.gob.pe/microdatos/}. El código está disponible en \url{https://github.com/abelguevara-upeu/malnutrition-research}. El conjunto de datos final y el modelo se depositarán en Zenodo: [DOI pendiente].
+Los microdatos de la ENDES son públicos en \url{https://proyectos.inei.gob.pe/microdatos/}. El código está disponible en \url{https://github.com/abelguevara-upeu/malnutrition-research}. El conjunto de datos final y el modelo están disponibles en Zenodo: [DOI pendiente].
 
 \section*{Contribución de los autores (CRediT)}
 [Pendiente: rol de cada autor según la taxonomía CRediT.]
