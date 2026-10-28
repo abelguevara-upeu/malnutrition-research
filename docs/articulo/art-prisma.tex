@@ -41,6 +41,7 @@
 \usepackage{lipsum}
 \usepackage{sectsty}
 \usepackage{placeins}
+\usepackage{url}
 \sectionfont{\bfseries}
 \subsectionfont{\bfseries}
 \subsubsectionfont{\bfseries}
@@ -160,7 +161,7 @@ A pesar de estos avances, se identifican limitaciones metodológicas específica
 
 Por lo tanto, el presente estudio tiene como objetivo desarrollar un modelo predictivo de riesgo de desnutrición crónica infantil en el Perú mediante machine learning, que permita analizar territorialmente los factores predominantes por departamento y estimar el riesgo nutricional a nivel individual y territorial.
 
-Las contribuciones de este estudio son las siguientes: 1) la depuración y estructuración de una base de datos consistente que integra el estado nutricional infantil a nivel nacional a partir de los microdatos de la ENDES correspondientes al periodo 2007--2024; 2) la comparación sistemática de algoritmos de machine learning (Regresión Logística, Árbol de Decisión, XGBoost, LightGBM, CatBoost y Red Neuronal) bajo un mismo protocolo de validación cruzada estratificada, con el fin de seleccionar el modelo con el mejor desempeño predictivo; 3) la evaluación del modelo mediante métricas de validación (Accuracy, Precision, Recall, F1-score y AUC) y la interpretación de la influencia de las variables mediante valores SHAP, lo que incrementa su capacidad explicativa; y 4) la implementación de un sistema interactivo de análisis territorial que permite visualizar el riesgo de desnutrición según el perfil ingresado, facilitando su aplicación por parte de instituciones públicas de salud [34][37].
+Las contribuciones de este estudio son las siguientes: 1) la depuración y estructuración de una base de datos consistente que integra el estado nutricional infantil a nivel nacional a partir de los microdatos de la ENDES correspondientes al periodo 2007--2025; 2) la comparación sistemática de algoritmos de machine learning (Regresión Logística, Árbol de Decisión, XGBoost, LightGBM, CatBoost y Red Neuronal) bajo un mismo protocolo de validación cruzada estratificada, con el fin de seleccionar el modelo con el mejor desempeño predictivo; 3) la evaluación del modelo mediante métricas de validación (Accuracy, Precision, Recall, F1-score y AUC) y la interpretación de la influencia de las variables mediante valores SHAP, lo que incrementa su capacidad explicativa; y 4) la implementación de un sistema interactivo de análisis territorial que permite visualizar el riesgo de desnutrición según el perfil ingresado, facilitando su aplicación por parte de instituciones públicas de salud [34][37].
 
 Este artículo se organiza de la siguiente manera: la Sección 2 describe la metodología empleada, incluyendo el diseño CRISP-DM, la construcción de la base de datos y el modelo híbrido propuesto. La Sección 3 presenta los resultados obtenidos en la comparación de algoritmos y en la interpretación de variables mediante SHAP. La Sección 4 discute la interpretación de los resultados, su comparación con estudios similares y las limitaciones del estudio. Finalmente, la Sección 5 presenta las conclusiones, replanteando los objetivos, los principales hallazgos y las líneas de trabajo futuro.
 
@@ -178,7 +179,7 @@ La presente investigación se desarrolló bajo el marco CRISP-DM (Cross-Industry
 
 \subsection{Fuente de datos e integración relacional}
 
-El estudio utilizó los microdatos anuales de la Encuesta Demográfica y de Salud Familiar (ENDES), recolectados y publicados por el Instituto Nacional de Estadística e Informática (INEI) del Perú entre 2007 y 2025. Para estructurar la unidad de análisis, se diseñó un flujo de extracción e integración relacional que vinculó cinco módulos mediante las llaves \texttt{HHID} y \texttt{CASEID}. El módulo RECH0 proveyó los metadatos de la entrevista; RECH1, las características demográficas de los integrantes del hogar; RECH6, los indicadores antropométricos y de salud infantil; RECH23, las condiciones de vivienda y saneamiento, además de la altitud geográfica, relacionada con la concentración de hemoglobina en la población infantil peruana \citep{accinelli2020anemia}; y REC41, la historia obstétrica materna, los controles prenatales y el peso al nacer. Este último se vinculó de forma unívoca con el registro infantil mediante la tabla puente REC21. La integración y la auditoría de consistencia niño--madre presentaron una coincidencia superior al 99.9~\% en sexo y año de nacimiento. La muestra consolidada incluyó 304,271 niños y niñas menores de cinco años con registros antropométricos válidos; la Figura~\ref{fig:integracion_endes} resume la estructura de integración.
+El estudio utilizó los microdatos anuales de la Encuesta Demográfica y de Salud Familiar (ENDES), recolectados y publicados por el Instituto Nacional de Estadística e Informática (INEI) del Perú entre 2007 y 2025, disponibles en el portal de microdatos del INEI (\url{https://proyectos.inei.gob.pe/microdatos/}). Para estructurar la unidad de análisis, se diseñó un flujo de extracción e integración relacional que vinculó cinco módulos mediante las llaves \texttt{HHID} y \texttt{CASEID}. El módulo RECH0 proveyó los metadatos de la entrevista; RECH1, las características demográficas de los integrantes del hogar; RECH6, los indicadores antropométricos y de salud infantil; RECH23, las condiciones de vivienda y saneamiento, además de la altitud geográfica, relacionada con la concentración de hemoglobina en la población infantil peruana \citep{accinelli2020anemia}; y REC41, la historia obstétrica materna, los controles prenatales y el peso al nacer. Este último se vinculó de forma unívoca con el registro infantil mediante la tabla puente REC21. La integración y la auditoría de consistencia niño--madre presentaron una coincidencia superior al 99.9~\% en sexo y año de nacimiento. La muestra consolidada incluyó 304,271 niños y niñas menores de cinco años con registros antropométricos válidos; la Figura~\ref{fig:integracion_endes} resume la estructura de integración.
 
 \begin{figure*}[t]
 \centering
@@ -189,7 +190,7 @@ El estudio utilizó los microdatos anuales de la Encuesta Demográfica y de Salu
 
 \subsection{Definición de la variable objetivo y protocolo anti-leakage}
 
-La variable dependiente es la desnutrición crónica infantil, categorizada de acuerdo con los estándares internacionales de crecimiento de la Organización Mundial de la Salud, criterio empleado sistemáticamente en el análisis de la desnutrición infantil peruana \citep{sobrino2014peru,santos2021peru}. Se definió como caso positivo ($Y=1$) a todo infante cuyo puntaje Z de talla para la edad ($\mathrm{HAZ}=\mathrm{HC70}/100$) se situó por debajo de menos dos desviaciones estándar respecto de la mediana de referencia, y como caso control ($Y=0$) en caso contrario. La prevalencia global en la serie histórica fue del 15.8~\%, con una razón de desbalance de 1:5.3. Para preservar la validez metodológica y evitar el sobreajuste espurio por fuga de datos (data leakage) \citep{kaufman2011leakage}, se excluyeron de las variables predictoras la talla directa en centímetros (HC3), el peso crudo (HC2) y cualquier intervención terapéutica o diagnóstico clínico registrado después de la medición antropométrica.
+La variable dependiente es la desnutrición crónica infantil, categorizada de acuerdo con los estándares internacionales de crecimiento de la Organización Mundial de la Salud, criterio empleado sistemáticamente en el análisis de la desnutrición infantil peruana \citep{sobrino2014peru,santos2021peru}. Se definió como caso positivo ($Y=1$) a todo infante cuyo puntaje Z de talla para la edad ($\mathrm{HAZ}=\mathrm{HC70}/100$) se situó por debajo de menos dos desviaciones estándar respecto de la mediana de referencia, y como caso control ($Y=0$) en caso contrario. La prevalencia global en la serie histórica fue del 15.8~\%, con una razón de desbalance de 1:5.3 (Tabla~\ref{tab:descriptiva}). Para preservar la validez metodológica y evitar el sobreajuste espurio por fuga de datos (data leakage) \citep{kaufman2011leakage}, se excluyeron de las variables predictoras la talla directa en centímetros (HC3), el peso crudo (HC2) y cualquier intervención terapéutica o diagnóstico clínico registrado después de la medición antropométrica.
 
 \begin{equation}
 Y =
@@ -228,7 +229,7 @@ Los códigos especiales de la encuesta (por ejemplo, «no sabe», «no aplica» 
 
 \subsection{Balanceo de clases y ponderación}
 
-Por cada niño con desnutrición crónica hay 5.3 sin ella. Para que los modelos no ignoren la clase minoritaria, se usaron pesos de clase: equivocarse con un niño desnutrido cuesta más que equivocarse con uno sano, en proporción inversa a la frecuencia de cada clase. Se aplicaron como pesos de clase balanceados en la regresión logística, el árbol de decisión, LightGBM y CatBoost, y como \texttt{scale\_pos\_weight} en XGBoost; la red neuronal de scikit-learn no admite pesos y se entrenó sin ellos.
+Por cada niño con desnutrición crónica hay 5.3 sin ella (Tabla~\ref{tab:descriptiva}). Para que los modelos no ignoren la clase minoritaria, se usaron pesos de clase: equivocarse con un niño desnutrido cuesta más que equivocarse con uno sano, en proporción inversa a la frecuencia de cada clase. Se aplicaron como pesos de clase balanceados en la regresión logística, el árbol de decisión, LightGBM y CatBoost, y como \texttt{scale\_pos\_weight} en XGBoost; la red neuronal de scikit-learn no admite pesos y se entrenó sin ellos.
 
 No se generaron registros sintéticos (por ejemplo, con SMOTE). La clase minoritaria ya cuenta con más de 48,000 casos reales, los registros sintéticos no tendrían un factor de expansión propio y, sin ellos, las métricas se calculan sobre la distribución real de la población.
 
@@ -246,7 +247,7 @@ Primero, se descartaron los atributos con más del 60~\% de valores ausentes est
 
 Para descartar que la reducción dimensional hubiese eliminado señal predictiva relevante, se verificó el efecto de reincorporar las variables excluidas. De las 78 columnas disponibles en el conjunto preprocesado, 33 no formaron parte de las 45 seleccionadas. Estas se ordenaron según su señal marginal respecto de la variable objetivo: para los atributos categóricos se empleó la amplitud entre las tasas de prevalencia máxima y mínima de categorías con al menos 500 observaciones, mientras que para las variables continuas se utilizó el estadístico $2\lvert\mathrm{AUC}-0.5\rvert$.
 
-Se contrastaron cuatro configuraciones experimentales manteniendo constantes la partición, los pesos, la semilla determinista y los hiperparámetros del clasificador. La configuración de referencia reprodujo las cifras del modelo campeón (AUC = 0.8295; Recall = 76.44~\%), lo que verificó la trazabilidad del experimento. Los resultados del estudio de ablación se presentan en la Sección~\ref{sec:seleccion}.
+Se contrastaron cuatro configuraciones experimentales manteniendo constantes la partición, los pesos, la semilla determinista y los hiperparámetros del clasificador. Los resultados de esta verificación se presentan en la Sección~\ref{sec:seleccion}.
 
 \subsection{Entrenamiento y comparación de modelos}
 
@@ -295,7 +296,7 @@ La solución se implementó como una aplicación web interactiva en Streamlit, o
 \label{fig:arquitectura}
 \end{figure*}
 
-La reproducibilidad se abordó de acuerdo con los principios FAIR mediante la modularización del código en el paquete Python \texttt{mnp/}, el aislamiento del entorno con Docker (\texttt{python:3.12-slim}), la automatización del flujo con Makefile y la publicación del conjunto de datos maestro y del modelo serializado en Zenodo. El flujo se ejecutó con Python 3.12 y las bibliotecas LightGBM 4.6.0, XGBoost 3.2.0, CatBoost 1.2.10, scikit-learn 1.8.0 y SHAP 0.52.0.
+La reproducibilidad se abordó de acuerdo con los principios FAIR mediante la modularización del código en el paquete Python \texttt{mnp/}, el aislamiento del entorno con Docker (\texttt{python:3.12-slim}), la automatización del flujo con Makefile y el depósito del conjunto de datos final y del modelo serializado en Zenodo (véase la sección de disponibilidad de datos). El flujo se ejecutó con Python 3.12 y las bibliotecas LightGBM 4.6.0, XGBoost 3.2.0, CatBoost 1.2.10, scikit-learn 1.8.0 y SHAP 0.52.0.
 
 La pertinencia se evaluó mediante un panel de cuatro profesionales sanitarios: tres nutricionistas y un enfermero, todos con al menos diez años de experiencia asistencial y grado de maestría. La evaluación se apoyó en el Modelo de Aceptación Tecnológica \citep{davis1989tam} y en su extensión TAM2 \citep{venkatesh2000tam2}; la utilidad percibida fue el criterio central, por el propósito del sistema de aportar información accionable para priorizar la atención sanitaria.
 
@@ -423,7 +424,7 @@ En el quinto pliegue y con el umbral de 0.5, LightGBM clasificó correctamente a
 
 \begin{figure}[!tp]
 \centering
-\includegraphics[width=\columnwidth]{prism-uploads/Figura6_matriz_confusion_lightgbm.png}
+\includegraphics[width=0.6\columnwidth]{prism-uploads/Figura6_matriz_confusion_lightgbm.png}
 \caption{Matriz de confusión de LightGBM en el quinto pliegue (umbral de 0.5).}
 \label{fig:confusion}
 \end{figure}
@@ -473,9 +474,21 @@ La importancia global se calculó sobre una muestra aleatoria de 10,000 niños y
 \label{fig:mapa_factores}
 \end{figure*}
 
+\subsection{Sistema desplegado}
+
+La aplicación permite evaluar a un niño, con la explicación de los factores que elevan o reducen su puntaje, y a un grupo de niños a partir de un archivo, con una lista ordenada por riesgo (Figura~\ref{fig:app}). También muestra, por departamento, los factores con mayor peso según la Figura~\ref{fig:mapa_factores}.
+
+\begin{figure*}[!tp]
+\centering
+%% PENDIENTE: reemplazar por las capturas de pantalla de la aplicación.
+\fbox{\parbox[c][4cm][c]{0.8\textwidth}{\centering Capturas de la aplicación (pendiente)}}
+\caption{Pantallas de la aplicación: evaluación individual con su explicación y evaluación de un grupo de niños.}
+\label{fig:app}
+\end{figure*}
+
 \subsection{Evaluación de la pertinencia por el panel}
 
-Respondieron la ficha cuatro especialistas (tres nutricionistas y un enfermero; Costa y Selva; entre 10 y 20 años de experiencia asistencial). Todos los constructos alcanzaron una mediana igual o superior a 4 (Tabla~\ref{tab:panel}) y la valoración global tuvo una mediana de 9 sobre 10. Los puntos con menor acuerdo fueron la confianza en que los niveles de riesgo asignados son acertados y la disponibilidad en los registros de los datos solicitados y de la hemoglobina, con un evaluador en el puntaje 3 en cada caso (75~\% de acuerdo). Con cuatro evaluadores no se estimaron la confiabilidad ni las relaciones entre constructos: los resultados describen la percepción del panel y no son generalizables.
+Respondieron la ficha cuatro especialistas (tres nutricionistas y un enfermero; Costa y Selva; entre 10 y 20 años de experiencia asistencial). Todos los constructos alcanzaron una mediana igual o superior a 4 (Tabla~\ref{tab:panel}) y la valoración global tuvo una mediana de 9 sobre 10. Los puntos con menor acuerdo fueron la confianza en que los niveles de riesgo asignados son acertados y la disponibilidad en los registros de los datos solicitados y de la hemoglobina, con un evaluador en el puntaje 3 en cada caso (75~\% de acuerdo). Los constructos más cercanos a las explicaciones del modelo, la calidad y la demostrabilidad del resultado, obtuvieron 88~\% y 100~\% de acuerdo, y ningún evaluador objetó los factores que el sistema muestra por niño y por departamento (Figuras~\ref{fig:shap_local} y \ref{fig:mapa_factores}); sus sugerencias se orientaron a añadir variables. Con cuatro evaluadores no se estimaron la confiabilidad ni las relaciones entre constructos: los resultados describen la percepción del panel y no son generalizables.
 
 Las respuestas abiertas coincidieron en cuatro temas: la vigencia de los datos y la equivalencia de las variables entre años, planteada por los cuatro evaluadores; la ampliación a la malnutrición por exceso y a las deficiencias de micronutrientes; un mayor detalle territorial, por ciudad o establecimiento, con retroalimentación de datos locales; y la incorporación de variables adicionales, como la lactancia exclusiva, el consumo de alimentos y las enfermedades crónicas.
 
@@ -507,6 +520,21 @@ Valoración global (1 a 10) & 9 & 8--10 & --- \\
 \section{Conclusiones}
 
 \FloatBarrier
+\section*{Disponibilidad de datos y código}
+Los microdatos de la ENDES son públicos en \url{https://proyectos.inei.gob.pe/microdatos/}. El código está disponible en \url{https://github.com/abelguevara-upeu/malnutrition-research}. El conjunto de datos final y el modelo se depositarán en Zenodo: [DOI pendiente].
+
+\section*{Contribución de los autores (CRediT)}
+[Pendiente: rol de cada autor según la taxonomía CRediT.]
+
+\section*{Financiamiento}
+[Pendiente.]
+
+\section*{Conflicto de intereses}
+[Pendiente: declaración de los autores.]
+
+\section*{Declaración sobre el uso de IA generativa}
+[Pendiente: durante la preparación de este trabajo los autores utilizaron [herramienta] para [motivo]. Después de usarla, los autores revisaron y editaron el contenido y asumen plena responsabilidad por el contenido de la publicación.]
+
 \section*{Agradecimientos}
 \bibliographystyle{elsarticle-harv} 
 \bibliography{example}
