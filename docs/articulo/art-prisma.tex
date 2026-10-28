@@ -199,7 +199,7 @@ Y =
 \label{eq:variable_objetivo}
 \end{equation}
 
-Las 45 variables predictoras finales se agrupan en cinco dominios: el niño, la madre con su embarazo y lactancia, el hogar y el territorio, el agua y el saneamiento, y la vivienda (Tabla~\ref{tab:variables}).
+Las 45 variables predictoras finales se agrupan en cinco dominios: el niño, la madre con su embarazo y lactancia, el hogar y el territorio, el agua y el saneamiento, y la vivienda (Tabla~\ref{tab:variables}). Estos dominios corresponden a las causas inmediatas, subyacentes y básicas de la desnutrición materno-infantil \citep{black2013lancet,victora2021lancet}. La inclusión de la altitud y de la hemoglobina ajustada se apoya en su relación con la anemia en la población infantil peruana \citep{accinelli2020anemia}, y la del tiempo a la fuente de agua y las condiciones de la vivienda, en su aparición entre los predictores principales en datos DHS \citep{bitew2021ethiopia}.
 
 \begin{table*}[!tp]
 \centering
@@ -401,11 +401,11 @@ Red neuronal & 0.8227 (0.0059) & 0.4874 (0.0058) & 24.5 (2.1) & \textbf{61.3 (1.
 
 \subsection{Curvas ROC y matriz de confusión}
 
-En el quinto pliegue y con el umbral de 0.5, LightGBM clasificó correctamente al 75.3~\% de los niños con desnutrición crónica y al 73.8~\% de los niños sin ella (Figura~\ref{fig:confusion}). Las curvas ROC de LightGBM, CatBoost y la red neuronal se superponen en la mayor parte del recorrido, por encima de las de la regresión logística, XGBoost y el árbol de decisión (Figura~\ref{fig:roc}).
+En el quinto pliegue y con el umbral de 0.5, LightGBM clasificó correctamente al 75.3~\% de los niños con desnutrición crónica y al 73.8~\% de los niños sin ella (Figura~\ref{fig:confusion}). Cada curva ROC muestra, para todos los umbrales posibles, la proporción de casos detectados frente a la de falsos positivos; la diagonal corresponde a una clasificación al azar, y cuanto más se acerca la curva a la esquina superior izquierda, mejor discrimina el modelo. Las curvas de LightGBM, CatBoost y la red neuronal se superponen en la mayor parte del recorrido, por encima de las de la regresión logística, XGBoost y el árbol de decisión (Figura~\ref{fig:roc}).
 
 \begin{figure*}[!tp]
 \centering
-\includegraphics[width=0.55\textwidth]{prism-uploads/Figura5_curvas_roc.png}
+\includegraphics[width=0.75\textwidth]{prism-uploads/Figura5_curvas_roc.png}
 \caption{Curvas ROC de los seis algoritmos en el quinto pliegue de validación.}
 \label{fig:roc}
 \end{figure*}
@@ -439,7 +439,7 @@ F1 & 49.28~\% & 48.85--49.66~\% \\
 
 \subsection{Explicabilidad}
 
-La importancia global se calculó sobre una muestra aleatoria de 10,000 niños y se concentra en pocos factores (Figura~\ref{fig:shap_global}): la pobreza del hogar (0.42), el peso al nacer (0.41), la altitud de residencia (0.26) y el tamaño al nacer (0.25) destacan claramente, y las diez variables principales acumulan el 68.0~\% de la importancia total. En el nivel local, la Figura~\ref{fig:shap_local} descompone la salida del modelo para un perfil sintético de riesgo alto (0.93): el peso al nacer de 2.4~kg, el nivel socioeconómico más bajo, la edad de 18 meses y el tamaño pequeño al nacer son los factores que más elevan el resultado. Estos valores describen asociaciones aprendidas de la encuesta y no relaciones causales. El peso de cada factor varía entre territorios (Figura~\ref{fig:mapa_factores}): en Puno destacan la altitud, la pobreza del hogar y el bajo peso al nacer, mientras que en Huancavelica destacan el bajo peso al nacer, el intervalo entre partos y la edad del jefe del hogar.
+La importancia global, que mide cuánto cambia en promedio la salida del modelo por cada variable sin indicar si la eleva o la reduce, se calculó sobre una muestra aleatoria de 10,000 niños y se concentra en pocos factores (Figura~\ref{fig:shap_global}): la pobreza del hogar (0.42), el peso al nacer (0.41), la altitud de residencia (0.26) y el tamaño al nacer (0.25) destacan claramente, y las diez variables principales acumulan el 68.0~\% de la importancia total. En el nivel local, la Figura~\ref{fig:shap_local} descompone la salida del modelo para un perfil sintético de riesgo alto (0.93); cada barra es la contribución de una variable, y las barras hacia la derecha elevan el resultado: el peso al nacer de 2.4~kg, el nivel socioeconómico más bajo, la edad de 18 meses y el tamaño pequeño al nacer son los factores que más elevan el resultado. Estos valores describen asociaciones aprendidas de la encuesta y no relaciones causales. El peso de cada factor varía entre territorios (Figura~\ref{fig:mapa_factores}); en esa figura, cada fila es un departamento y cada columna un factor, y el color indica su peso relativo frente a los demás departamentos, de modo que los tonos más intensos señalan dónde ese factor pesa más: en Puno destacan la altitud, la pobreza del hogar y el bajo peso al nacer, mientras que en Huancavelica destacan el bajo peso al nacer, el intervalo entre partos y la edad del jefe del hogar.
 
 \begin{figure}[!tp]
 \centering
