@@ -32,8 +32,8 @@ clean:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
 	@echo ">>> Cleaning up LaTeX auxiliary files in docs/..."
-	@find docs/ -type f \( -name "*.aux" -o -name "*.log" -o -name "*.out" -o -name "*.toc" -o -name "*.lof" -o -name "*.lot" -o -name "*.synctex.gz" -o -name "*.fls" -o -name "*.fdb_latexmk" -o -name "*.blg" -o -name "*.bbl" \) -delete
-	@find docs/ -type d -name ".tmp" -exec rm -rf {} +
+	@find docs/ manuscrito/ -type f \( -name "*.aux" -o -name "*.log" -o -name "*.out" -o -name "*.toc" -o -name "*.lof" -o -name "*.lot" -o -name "*.synctex.gz" -o -name "*.fls" -o -name "*.fdb_latexmk" -o -name "*.blg" -o -name "*.bbl" \) -delete
+	@find docs/ manuscrito/ -type d -name ".tmp" -exec rm -rf {} +
 
 ## Lint using ruff
 .PHONY: lint

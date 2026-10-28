@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Genera el PDF de un documento markdown de docs/.
-# Uso: docs/assets/build-pdf.sh <carpeta>/<nombre-sin-extension>  (ej. validacion/protocolo_sesion_panel)
+# Genera el PDF de un documento markdown de manuscrito/.
+# Uso: manuscrito/assets/build-pdf.sh <carpeta>/<nombre-sin-extension>  (ej. validacion/protocolo_sesion_panel)
 #
 # Pandoc escapa las entidades HTML dentro de los bloques mermaid, de modo que
 # hay que desescaparlas antes de que la libreria las lea; sin ese paso el
@@ -9,13 +9,13 @@ set -euo pipefail
 
 DOC_PATH="${1:?uso: build-pdf.sh <carpeta>/<nombre-sin-extension>}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-DIR="$ROOT/docs/$(dirname "$DOC_PATH")"
+DIR="$ROOT/manuscrito/$(dirname "$DOC_PATH")"
 DOC="$(basename "$DOC_PATH")"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
 pandoc "$DIR/$DOC.md" -o "$TMP/doc.html" --standalone \
-  --css="$ROOT/docs/assets/doc-print.css" --embed-resources
+  --css="$ROOT/manuscrito/assets/doc-print.css" --embed-resources
 
 python3 - "$TMP/doc.html" <<'PY'
 import sys, re, html, pathlib

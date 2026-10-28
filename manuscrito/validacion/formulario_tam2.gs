@@ -6,7 +6,7 @@
  * seleccionar crearFicha > Ejecutar > autorizar. Los enlaces salen en
  * el registro de ejecución.
  *
- * Fuente de los ítems: docs/validacion/instrumento_validacion_tam.md
+ * Fuente de los ítems: manuscrito/validacion/instrumento_validacion_tam.md
  */
 
 const TITULO = 'Ficha de validación por juicio de expertos';

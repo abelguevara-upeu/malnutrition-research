@@ -118,7 +118,7 @@ graph TD
 ## REFERENCIAS
 
 > Al compilar con pandoc, esta sección se genera automáticamente desde
-> `docs/papers/referencias.bib` (`--bibliography=docs/papers/referencias.bib --citeproc`).
+> `manuscrito/referencias/referencias.bib` (`--bibliography=manuscrito/referencias/referencias.bib --citeproc`).
 > Se transcribe a continuación para consulta directa del documento en Markdown.
 
 1. Accinelli, R. A., & Leon-Abarca, J. A. (2020). Age and altitude of residence determine anemia

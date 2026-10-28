@@ -55,7 +55,7 @@ Sin estas, la discusión no aterriza en el país. Las tres usan ENDES o datos pe
 
 ## Cómo queda el conjunto
 
-El archivo `docs/papers/referencias.bib` contiene **estas 12 y solo estas**, todas provenientes de la
+El archivo `manuscrito/referencias/referencias.bib` contiene **estas 12 y solo estas**, todas provenientes de la
 búsqueda con Scopus AI. Las referencias metodológicas que figuraban en el Momento 6 (Aiken, Bangor,
 Davis, DeLong, Efron & Tibshirani, Kohavi, Lipton, Wilkinson) quedan fuera del archivo.
 
