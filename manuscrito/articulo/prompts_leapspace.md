@@ -1,6 +1,6 @@
 # Prompts de LeapSpace para las citas del artículo
 
-Revista destino: *Nutrition* (Elsevier). Pegar cada prompt por separado y guardar la respuesta en `leapspace/`.
+Revista destino: *Nutrition* (Elsevier). Pegar cada prompt por separado y guardar la respuesta en `manuscrito/leapspace/2026-10_citas_articulo/<número>_<tema>/` (ver el README de esa carpeta).
 Cada prompt pide una matriz con DOI para poder verificar cada cita antes de usarla.
 
 | # | Sección del artículo | Qué debe sostener la cita |
@@ -85,7 +85,7 @@ Studies evaluating clinical decision support or machine learning tools with heal
 
 ## Después de correrlos
 
-1. Guardar cada respuesta en `leapspace/` con el número del prompt en el nombre.
+1. Guardar cada respuesta (informe y matriz) en su carpeta de `manuscrito/leapspace/2026-10_citas_articulo/`.
 2. Elegir de 1 a 3 referencias por prompt, priorizando las de *Nutrition* y las de Q1.
 3. Verificar cada DOI en doi.org antes de citarlo; descartar las filas con "Not surfaced in excerpt" en datos clave.
 4. Pasar las elegidas al `.bib` y reemplazar las citas manuales [1], [2]… de la Introducción por `\cite{}`.
