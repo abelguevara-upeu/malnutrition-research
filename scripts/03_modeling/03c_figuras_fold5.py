@@ -238,5 +238,5 @@ for i in range(2):
 ax.set_xticks([0, 1], ["Sin desnutrición", "Con desnutrición"], fontsize=8)
 ax.set_yticks([0, 1], ["Sin desnutrición", "Con desnutrición"], fontsize=8)
 ax.set_xlabel("Predicción", fontsize=9); ax.set_ylabel("Valor real", fontsize=9)
-fig.tight_layout(); fig.savefig(out + "Figura6_matriz_confusion_lightgbm.png", dpi=320); plt.close(fig)
+fig.savefig(out + "Figura6_matriz_confusion_lightgbm.png", dpi=330, bbox_inches="tight", pad_inches=0.08); plt.close(fig)
 print(cm.round(1))
