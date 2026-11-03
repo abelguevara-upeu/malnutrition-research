@@ -41,6 +41,27 @@
 \usepackage{lipsum}
 \usepackage{sectsty}
 \usepackage{placeins}
+\usepackage{float}
+\usepackage{cuted}
+\usepackage{capt-of}
+\widowpenalty=10000
+\clubpenalty=10000
+\raggedbottom
+\renewcommand{\dbltopfraction}{0.9}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.07}
+\setcounter{dbltopnumber}{2}
+% Ubicacion de figuras: lo mas cerca posible del parrafo que las cita
+\renewcommand{\topfraction}{0.8}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.95}
+\renewcommand{\dbltopfraction}{0.8}
+\renewcommand{\dblfloatpagefraction}{0.95}
+\setcounter{topnumber}{4}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{6}
+\setcounter{dbltopnumber}{2}
 \usepackage{url}
 \sectionfont{\bfseries}
 \subsectionfont{\bfseries}
@@ -151,13 +172,13 @@ Desnutrición crónica \sep Aprendizaje automático \sep LightGBM \sep SHAP \sep
 \section{Introducción}
 \label{introduction}
 
-La desnutrición crónica infantil constituye uno de los principales desafíos de salud pública a nivel mundial, ya que afecta el desarrollo físico, cognitivo y social de los niños menores de cinco años \citep{black2013lancet,victora2021lancet}. Sus efectos persisten en la vida adulta: se asocia con menor talla, menos años de escolaridad y menor productividad económica \citep{victora2008consequences}, y cada mejora en la talla para la edad se relaciona con un mejor desarrollo cognitivo \citep{sudfeld2015growth}. El retraso del crecimiento comienza en los primeros meses de vida y rara vez se revierte \citep{benjaminchung2023faltering}, por lo que la Organización Mundial de la Salud fijó la meta de reducir en 40~\% el número de niños con desnutrición crónica al 2025 \citep{deonis2013who}. Se trata de un fenómeno complejo, influido por las condiciones económicas, la educación materna, el acceso a servicios básicos y las desigualdades territoriales \citep{black2013lancet}.
+La desnutrición crónica infantil constituye uno de los principales desafíos de salud pública a nivel mundial, ya que afecta el desarrollo físico, cognitivo y social de los niños menores de cinco años \citep{black2013lancet,victora2021lancet}. Sus efectos persisten en la vida adulta: se asocia con menor talla, menos años de escolaridad y menor productividad económica \citep{victora2008consequences}, y cada mejora en la talla para la edad se relaciona con un mejor desarrollo cognitivo \citep{sudfeld2015growth}. El retraso del crecimiento comienza en los primeros meses de vida y rara vez se revierte \citep{benjaminchung2023faltering}, por lo que la Organización Mundial de la Salud fijó la meta de reducir en 40~\% el número de niños con desnutrición crónica al 2025 \citep{deonis2013who}. Se trata de un fenómeno complejo, influido por las condiciones económicas, la educación materna, el acceso a servicios básicos y las desigualdades territoriales \citep{black2013lancet}; aunque su prevalencia desciende en los países de ingresos bajos y medios, las brechas socioeconómicas persisten \citep{dasilva2018inequalities}.
 
-En el Perú, la desnutrición crónica se redujo de forma sostenida durante la década de 2000 \citep{sobrino2014peru}, gracias a la mejora de la educación de los padres, la atención materna y neonatal y la migración a las ciudades \citep{huicho2020peru}. Sin embargo, la reducción fue más lenta en el área rural \citep{santos2021peru}, y en la ENDES la prevalencia nacional se mantiene alrededor del 12~\% desde 2018, con una brecha persistente entre las áreas rural y urbana (Sección~\ref{sec:muestra}). Este estancamiento sugiere que las estrategias generales ya no bastan y que los recursos deben dirigirse a los niños y territorios con mayor riesgo, en línea con la evidencia sobre intervenciones nutricionales focalizadas \citep{bhutta2013interventions}.
+En el Perú, la desnutrición crónica se redujo de forma sostenida durante la década de 2000 \citep{sobrino2014peru}, gracias a la mejora de la educación de los padres, la atención materna y neonatal y la migración a las ciudades \citep{huicho2020peru}. Sin embargo, la reducción fue más lenta en el área rural \citep{santos2021peru}, y en la ENDES la prevalencia nacional se mantiene alrededor del 12~\% desde 2018, con una brecha persistente entre las áreas rural y urbana (Sección~\ref{sec:muestra}). Este estancamiento sugiere que las estrategias generales ya no bastan y que los recursos deben dirigirse a los niños y territorios con mayor riesgo, en línea con la evidencia sobre la ampliación de intervenciones nutricionales probadas \citep{bhutta2013interventions,scott2020ending}. En el país, la desnutrición en todas sus formas sigue concentrada en los hogares más pobres \citep{curiquinto2020peru}.
 
 Este estudio se justifica desde tres ámbitos complementarios. Desde el ámbito teórico, incorpora los determinantes sociales, ambientales y territoriales en el análisis de la desnutrición infantil mediante machine learning, más allá de los modelos estadísticos centrados en variables antropométricas. Desde el ámbito práctico, ofrece una herramienta que identifica a los niños con mayor riesgo y los factores predominantes de cada departamento, para que instituciones como el Ministerio de Salud, el MIDIS y los gobiernos regionales prioricen sus intervenciones. Desde el ámbito metodológico, propone un flujo replicable sobre una encuesta pública de diecinueve años.
 
-Durante la última década, diversas investigaciones han aplicado machine learning para predecir la desnutrición infantil con datos de las Encuestas de Demografía y Salud (DHS). En Bangladesh, Etiopía y Zambia, los ensambles de árboles obtuvieron los mejores resultados \citep{talukder2020bangladesh,bitew2021ethiopia,chilyabanyama2022zambia}, y en Ruanda una red neuronal alcanzó un AUC-ROC de 0.84 \citep{ndagijimana2025rwanda}. En la revista \textit{Nutrition}, estudios recientes combinaron varios algoritmos en un ensamble para catorce países de África subsahariana \citep{khan2023hybrid}, identificaron los factores de riesgo de la emaciación en Egipto \citep{hendy2025egypt}, integraron datos satelitales para estimar la desnutrición crónica de los hogares en India \citep{arya2025india} y predijeron la desnutrición de escolares en Filipinas \citep{siy2022philippines}. Otros trabajos incorporaron técnicas de explicabilidad para identificar los determinantes del riesgo \citep{yehuala2026xai} o técnicas de balanceo de clases con exactitudes cercanas al 100~\% \citep{mgomezulu2025malawi}.
+Durante la última década, diversas investigaciones han aplicado machine learning para predecir la desnutrición infantil con datos de las Encuestas de Demografía y Salud (DHS). En Bangladesh, Etiopía y Zambia, los ensambles de árboles obtuvieron los mejores resultados \citep{talukder2020bangladesh,bitew2021ethiopia,chilyabanyama2022zambia}, y otros trabajos con datos DHS identificaron los determinantes de la desnutrición mediante clasificadores similares \citep{fenta2021determinants,anku2024undernutrition}; y en Ruanda una red neuronal alcanzó un AUC-ROC de 0.84 \citep{ndagijimana2025rwanda}. En la revista \textit{Nutrition}, estudios recientes combinaron varios algoritmos en un ensamble para catorce países de África subsahariana \citep{khan2023hybrid}, identificaron los factores de riesgo de la emaciación en Egipto \citep{hendy2025egypt}, integraron datos satelitales para estimar la desnutrición crónica de los hogares en India \citep{arya2025india} y predijeron la desnutrición de escolares en Filipinas \citep{siy2022philippines}. Otros trabajos incorporaron técnicas de explicabilidad para identificar los determinantes del riesgo \citep{yehuala2026xai} o técnicas de balanceo de clases con exactitudes cercanas al 100~\% \citep{mgomezulu2025malawi}.
 
 A pesar de estos avances, persisten limitaciones. Un metaanálisis de estudios con datos DHS encontró una exactitud combinada de 68.9~\% para la desnutrición crónica y una heterogeneidad muy alta entre estudios \citep{rao2025metaanalysis}. La mayoría se basa en una sola ronda de la encuesta, reporta principalmente la exactitud, una métrica poco informativa cuando los casos son minoritarios, y no ofrece una herramienta que los profesionales de salud puedan usar. Además, estos estudios se han desarrollado sobre todo en Asia y África, y en el Perú no se han aplicado enfoques predictivos con explicación territorial sobre la serie completa de la ENDES.
 
@@ -170,9 +191,9 @@ Este artículo se organiza de la siguiente manera: la Sección 2 describe la met
 \section{Metodología}
 \label{metodologia}
 
-La presente investigación se desarrolló bajo el marco CRISP-DM (Cross-Industry Standard Process for Data Mining), organizado en las fases de comprensión de los datos, preparación, modelado, evaluación y despliegue. En primer lugar, se integraron los microdatos de la ENDES y se definió la variable objetivo, aplicando controles para prevenir la fuga de información. A continuación, se armonizaron y preprocesaron los registros, y se seleccionaron las características predictoras. En la fase de modelado se trataron las diferencias de representación muestral y se compararon seis algoritmos supervisados. Luego, el desempeño se evaluó mediante validación cruzada, métricas ponderadas, remuestreo bootstrap y comparación de curvas ROC; las predicciones también se interpretaron con SHAP. Finalmente, se implementó la aplicación de soporte a la decisión y se evaluó su pertinencia con profesionales de salud. El flujo metodológico completo se resume en la Figura~\ref{fig:flujo_metodologico}; las subsecciones siguientes describen estas etapas en ese orden.
+La presente investigación se desarrolló bajo el marco CRISP-DM (Cross-Industry Standard Process for Data Mining) \citep{wirth2000crispdm}, organizado en las fases de comprensión de los datos, preparación, modelado, evaluación y despliegue. En primer lugar, se integraron los microdatos de la ENDES y se definió la variable objetivo, aplicando controles para prevenir la fuga de información. A continuación, se armonizaron y preprocesaron los registros, y se seleccionaron las características predictoras. En la fase de modelado se trataron las diferencias de representación muestral y se compararon seis algoritmos supervisados. Luego, el desempeño se evaluó mediante validación cruzada, métricas ponderadas, remuestreo bootstrap y comparación de curvas ROC; las predicciones también se interpretaron con SHAP. Finalmente, se implementó la aplicación de soporte a la decisión y se evaluó su pertinencia con profesionales de salud. El flujo metodológico completo se resume en la Figura~\ref{fig:flujo_metodologico}; las subsecciones siguientes describen estas etapas en ese orden.
 
-\begin{figure*}[t]
+\begin{figure*}[!t]
 \centering
 \includegraphics[width=0.98\textwidth]{prism-uploads/Figura1_flujo_metodologico.png}
 \caption{Flujo metodológico del estudio según las fases de CRISP-DM.}
@@ -183,14 +204,14 @@ La presente investigación se desarrolló bajo el marco CRISP-DM (Cross-Industry
 
 El estudio utilizó los microdatos anuales de la Encuesta Demográfica y de Salud Familiar (ENDES), recolectados y publicados por el Instituto Nacional de Estadística e Informática (INEI) del Perú entre 2007 y 2025, disponibles en el portal de microdatos del INEI (\url{https://proyectos.inei.gob.pe/microdatos/}). Para estructurar la unidad de análisis, se diseñó un flujo de extracción e integración relacional que vinculó cinco módulos mediante las llaves \texttt{HHID} y \texttt{CASEID}. El módulo RECH0 proveyó los metadatos de la entrevista; RECH1, las características demográficas de los integrantes del hogar; RECH6, los indicadores antropométricos y de salud infantil; RECH23, las condiciones de vivienda y saneamiento, además de la altitud geográfica, relacionada con la concentración de hemoglobina en la población infantil peruana \citep{accinelli2020anemia}; y REC41, la historia obstétrica materna, los controles prenatales y el peso al nacer. Este último se vinculó de forma unívoca con el registro infantil mediante la tabla puente REC21. La integración y la auditoría de consistencia niño--madre presentaron una coincidencia superior al 99.9~\% en sexo y año de nacimiento. La muestra consolidada incluyó 304,271 niños y niñas menores de cinco años con registros antropométricos válidos; la Figura~\ref{fig:integracion_endes} resume la estructura de integración.
 
-\begin{figure*}[t]
+\begin{figure*}[!t]
 \centering
 \includegraphics[width=0.98\textwidth]{prism-uploads/Figura2_integracion_ENDES.png}
 \caption{Integración relacional de los módulos de la ENDES 2007--2025.}
 \label{fig:integracion_endes}
 \end{figure*}
 
-A partir de esta muestra se definió la variable dependiente, la desnutrición crónica infantil, categorizada de acuerdo con los estándares internacionales de crecimiento de la Organización Mundial de la Salud, criterio empleado sistemáticamente en el análisis de la desnutrición infantil peruana \citep{sobrino2014peru,santos2021peru}. Se definió como caso positivo ($Y=1$) a todo infante cuyo puntaje Z de talla para la edad ($\mathrm{HAZ}=\mathrm{HC70}/100$) se situó por debajo de menos dos desviaciones estándar respecto de la mediana de referencia, y como caso control ($Y=0$) en caso contrario. La prevalencia global en la serie histórica fue del 15.8~\%, con una razón de desbalance de 1:5.3 (Tabla~\ref{tab:descriptiva}). Para preservar la validez metodológica y evitar el sobreajuste espurio por fuga de datos (data leakage) \citep{kaufman2011leakage}, se excluyeron de las variables predictoras la talla directa en centímetros (HC3), el peso crudo (HC2) y cualquier intervención terapéutica o diagnóstico clínico registrado después de la medición antropométrica.
+A partir de esta muestra se definió la variable dependiente, la desnutrición crónica infantil, categorizada de acuerdo con los estándares internacionales de crecimiento de la Organización Mundial de la Salud \citep{who2006growth}, criterio empleado sistemáticamente en el análisis de la desnutrición infantil peruana \citep{sobrino2014peru,santos2021peru}. Se definió como caso positivo ($Y=1$) a todo infante cuyo puntaje Z de talla para la edad ($\mathrm{HAZ}=\mathrm{HC70}/100$) se situó por debajo de menos dos desviaciones estándar respecto de la mediana de referencia, y como caso control ($Y=0$) en caso contrario. La prevalencia global en la serie histórica fue del 15.8~\%, con una razón de desbalance de 1:5.3 (Tabla~\ref{tab:descriptiva}). Para preservar la validez metodológica y evitar el sobreajuste espurio por fuga de datos (data leakage) \citep{kaufman2011leakage}, se excluyeron de las variables predictoras la talla directa en centímetros (HC3), el peso crudo (HC2) y cualquier intervención terapéutica o diagnóstico clínico registrado después de la medición antropométrica.
 
 \begin{equation}
 Y =
@@ -245,7 +266,7 @@ Por separado, se aplicó el factor de expansión del INEI, $w_i=\mathrm{HV005}_i
 
 Por último, el umbral de decisión $\tau$ se fijó con un criterio de triaje preventivo, que prioriza detectar los casos positivos, en lugar de asumir el valor convencional de 0.5, ya que un AUC-ROC alto no basta para usar un modelo en la práctica sin elegir el umbral según su propósito \citep{deng2025highauc}.
 
-Con este tratamiento, se evaluaron seis algoritmos supervisados: Regresión Logística con regularización L2, Árbol de Decisión CART, XGBoost, CatBoost, Red Neuronal Perceptrón Multicapa (MLP de tres capas ocultas con 200 neuronas cada una) y LightGBM. La comparación se realizó sobre los 74 factores significativos y utilizó validación cruzada estratificada de cinco pliegues y una semilla determinista (\texttt{random\_state = 42}). LightGBM permite agrupar variables categóricas de alta cardinalidad mediante histogramas, sin recurrir a expansión One-Hot \citep{bentejac2021gradientboosting}. La selección de estos algoritmos, en particular de los ensambles basados en árboles, es coherente con estudios sobre datos DHS que reportan su utilidad para predecir la desnutrición infantil \citep{bitew2021ethiopia,talukder2020bangladesh,chilyabanyama2022zambia}. Los hiperparámetros se fijaron de antemano, sin búsqueda sistemática de valores (Tabla~\ref{tab:hiperparametros}); los no indicados conservan los valores por defecto de cada biblioteca.
+Con este tratamiento, se evaluaron seis algoritmos supervisados: Regresión Logística con regularización L2, Árbol de Decisión CART, XGBoost, CatBoost, Red Neuronal Perceptrón Multicapa (MLP de tres capas ocultas con 200 neuronas cada una) y LightGBM; los tres ensambles de árboles potenciados se describen en sus trabajos originales \citep{chen2016xgboost,prokhorenkova2018catboost,ke2017lightgbm}. La comparación se realizó sobre los 74 factores significativos y utilizó validación cruzada estratificada de cinco pliegues y una semilla determinista (\texttt{random\_state = 42}). LightGBM permite agrupar variables categóricas de alta cardinalidad mediante histogramas, sin recurrir a expansión One-Hot \citep{bentejac2021gradientboosting}. La selección de estos algoritmos, en particular de los ensambles basados en árboles, es coherente con estudios sobre datos DHS que reportan su utilidad para predecir la desnutrición infantil \citep{bitew2021ethiopia,talukder2020bangladesh,chilyabanyama2022zambia}. Los hiperparámetros se fijaron de antemano, sin búsqueda sistemática de valores (Tabla~\ref{tab:hiperparametros}); los no indicados conservan los valores por defecto de cada biblioteca.
 
 \begin{table}[!tp]
 \centering
@@ -268,7 +289,7 @@ LightGBM & 300 árboles; pesos de clase balanceados; variables categóricas nati
 
 \subsection{Evaluación}
 
-La evaluación del desempeño se basó en las probabilidades fuera de pliegue (out-of-fold) de los 304,271 registros, siguiendo las recomendaciones para reportar modelos predictivos en salud \citep{moons2015tripod}. Se calcularon AUC-ROC, sensibilidad, precisión y especificidad, todas ponderadas con el factor de expansión, pues las métricas sin ponderar no representan el desempeño en la población \citep{wadekar2024survey}. La incertidumbre de las estimaciones se cuantificó mediante 1,000 repeticiones de bootstrap no paramétrico y sus intervalos de confianza del 95~\%. La comparación del modelo seleccionado con los modelos de referencia se efectuó con la prueba de DeLong para curvas ROC correlacionadas. Como dicha prueba se basa en rangos y no admite ponderación muestral, se aplicó sobre la muestra sin expandir, utilizando los mismos individuos para todos los modelos.
+La evaluación del desempeño se basó en las probabilidades fuera de pliegue (out-of-fold) de los 304,271 registros, siguiendo las recomendaciones para reportar modelos predictivos en salud \citep{moons2015tripod}. Se calcularon AUC-ROC, sensibilidad, precisión y especificidad, todas ponderadas con el factor de expansión, pues las métricas sin ponderar no representan el desempeño en la población \citep{wadekar2024survey}. La incertidumbre de las estimaciones se cuantificó mediante 1,000 repeticiones de bootstrap no paramétrico \citep{efron1993bootstrap} y sus intervalos de confianza del 95~\%. La comparación del modelo seleccionado con los modelos de referencia se efectuó con la prueba de DeLong para curvas ROC correlacionadas \citep{delong1988roc}. Como dicha prueba se basa en rangos y no admite ponderación muestral, se aplicó sobre la muestra sin expandir, utilizando los mismos individuos para todos los modelos.
 
 Además de medir el desempeño, para interpretar las predicciones se aplicó la teoría de juegos cooperativos mediante el algoritmo TreeExplainer del framework SHAP (SHapley Additive exPlanations) \citep{lundberg2017shap}. Este enfoque descompone la probabilidad predicha en la suma del valor base poblacional y las contribuciones marginales de cada una de las 45 variables predictoras. En el nivel local, el sistema separa la predicción individual en factores de riesgo y condiciones protectoras. En los niveles global y territorial, los valores SHAP se agregaron sobre una muestra representativa de 10,000 registros para construir mapas de riesgo y perfiles de determinantes diferenciados para los 25 departamentos y las tres regiones naturales del país.
 
@@ -281,7 +302,7 @@ f(x)=\phi_0+\sum_{j=1}^{M}\phi_j(x).
 
 La solución se implementó como una aplicación web interactiva en Streamlit, organizada en tres capas (Figura~\ref{fig:arquitectura}). La capa de presentación integra la visualización coroplética departamental basada en geometrías GeoJSON, la evaluación de un niño con la explicación de su puntaje y la evaluación de un grupo de niños a partir de un archivo CSV o Excel, que devuelve una lista ordenada por riesgo. La capa lógica reúne el motor de inferencia LightGBM, el selector del umbral de prioridad según la cobertura elegida y el cálculo de la contribución de cada variable mediante valores SHAP en tiempo de ejecución. La capa de datos contiene el modelo serializado y sus metadatos, la curva cobertura--umbral, los valores SHAP agregados por departamento y las geometrías departamentales; el conjunto maestro en formato Parquet se utiliza únicamente en el flujo de entrenamiento.
 
-\begin{figure*}[t]
+\begin{figure*}[!t]
 \centering
 \includegraphics[width=0.85\textwidth]{prism-uploads/Figura3_arquitectura_software.png}
 \caption{Arquitectura de la solución en tres capas: presentación, lógica y datos.}
@@ -290,11 +311,11 @@ La solución se implementó como una aplicación web interactiva en Streamlit, o
 
 La reproducibilidad se abordó de acuerdo con los principios FAIR mediante la modularización del código en el paquete Python \texttt{mnp/}, el aislamiento del entorno con Docker (\texttt{python:3.12-slim}), la automatización del flujo con Makefile y el depósito del conjunto de datos final y del modelo serializado en Zenodo. El flujo se ejecutó con Python 3.12 y las bibliotecas LightGBM 4.6.0, XGBoost 3.2.0, CatBoost 1.2.10, scikit-learn 1.8.0 y SHAP 0.52.0.
 
-Una vez implementada la aplicación, su pertinencia se evaluó mediante un panel de cuatro profesionales sanitarios: tres nutricionistas y un enfermero, todos con al menos diez años de experiencia asistencial y grado de maestría. La evaluación se apoyó en el Modelo de Aceptación Tecnológica \citep{davis1989tam} y en su extensión TAM2 \citep{venkatesh2000tam2}; la utilidad percibida fue el criterio central, como en otras evaluaciones de sistemas de apoyo a la decisión clínica \citep{chien2025tam}, por el propósito del sistema de aportar información accionable para priorizar la atención sanitaria.
+Una vez implementada la aplicación, su pertinencia se evaluó mediante un panel de cuatro profesionales sanitarios: tres nutricionistas y un enfermero, todos con al menos diez años de experiencia asistencial y grado de maestría. La evaluación se apoyó en el Modelo de Aceptación Tecnológica \citep{davis1989tam} y en su extensión TAM2 \citep{venkatesh2000tam2}, cuya adaptación a contextos de salud es frecuente \citep{matemba2020tamreview}; la utilidad percibida fue el criterio central, como en otras evaluaciones de sistemas de apoyo a la decisión clínica \citep{chien2025tam}, por el propósito del sistema de aportar información accionable para priorizar la atención sanitaria.
 
-La selección del modelo de aceptación siguió el marco de decisión de \citet{britto2026framework}, que compara TAM, TAM2, TAM3, UTAUT y UTAUT2 según el contexto, el régimen de uso, la etapa de adopción, el foco explicativo y la granularidad. Se eligió TAM2 por tratarse de una evaluación organizacional de aceptación inicial con un panel reducido. De TAM3 \citep{venkatesh2008tam3} se incorporó únicamente la percepción de control externo, para determinar si los datos requeridos por el sistema están disponibles en la práctica asistencial; se omitieron los constructos de imagen y voluntariedad, que no corresponden a especialistas que evalúan la herramienta sin obligación de adoptarla.
+La selección del modelo de aceptación siguió el marco de decisión de Britto~\citep{britto2026framework}, que compara TAM, TAM2, TAM3, UTAUT y UTAUT2 según el contexto, el régimen de uso, la etapa de adopción, el foco explicativo y la granularidad. Se eligió TAM2 por tratarse de una evaluación organizacional de aceptación inicial con un panel reducido. De TAM3 \citep{venkatesh2008tam3} se incorporó únicamente la percepción de control externo, para determinar si los datos requeridos por el sistema están disponibles en la práctica asistencial; se omitieron los constructos de imagen y voluntariedad, que no corresponden a especialistas que evalúan la herramienta sin obligación de adoptarla.
 
-Los ítems se adaptaron al contexto sanitario a partir de las escalas de \citet{venkatesh2000tam2}, conservando en cada constructo enunciados con contenido diferenciado y al menos dos ítems. La Tabla~\ref{tab:constructos_tam} detalla los constructos, su modelo de origen y el número de ítems de cada uno. El instrumento consta de 19 afirmaciones en escala Likert de cinco puntos, una valoración global de 1 a 10 y cuatro preguntas abiertas. El ítem K2 consulta específicamente la disponibilidad del dato de hemoglobina, la única variable predictora que requiere un procedimiento sobre el menor. Las respuestas se resumen mediante la mediana y el rango intercuartílico por constructo y el porcentaje de acuerdo por ítem; se considera favorable una mediana igual o superior a 4.
+Los ítems se adaptaron al contexto sanitario a partir de las escalas de Venkatesh y Davis~\citep{venkatesh2000tam2}, conservando en cada constructo enunciados con contenido diferenciado y al menos dos ítems. La Tabla~\ref{tab:constructos_tam} detalla los constructos, su modelo de origen y el número de ítems de cada uno. El instrumento consta de 19 afirmaciones en escala Likert de cinco puntos, una valoración global de 1 a 10 y cuatro preguntas abiertas. El ítem K2 consulta específicamente la disponibilidad del dato de hemoglobina, la única variable predictora que requiere un procedimiento sobre el menor. Las respuestas se resumen mediante la mediana y el rango intercuartílico por constructo y el porcentaje de acuerdo por ítem; se considera favorable una mediana igual o superior a 4.
 
 \begin{table*}[t]
 \centering
@@ -363,12 +384,12 @@ Total & 304,271 & 100.0 & 15.8 & 16.2 \\
 
 La prevalencia corresponde a talla para la edad menor de $-2$ DE según el patrón OMS. La prevalencia nacional ponderada descendió de 29.2~\% en 2007 a 13.0~\% en 2017 y, desde 2018, se mantiene entre 11.3~\% y 12.4~\%, con 12.0~\% en 2025 (Figura~\ref{fig:tendencia}). La brecha entre áreas persiste: en 2025 la prevalencia fue de 21.5~\% en el área rural y de 7.9~\% en la urbana.
 
-\begin{figure*}[!tp]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.75\textwidth]{prism-uploads/Figura4_tendencia_prevalencia.png}
+\includegraphics[width=\columnwidth]{prism-uploads/Figura4_tendencia_prevalencia.png}
 \caption{Prevalencia ponderada de desnutrición crónica en menores de cinco años, Perú, 2007--2025.}
 \label{fig:tendencia}
-\end{figure*}
+\end{figure}
 
 \subsection{Selección de variables}
 \label{sec:seleccion}
@@ -405,14 +426,14 @@ Red neuronal & 0.8227 (0.0059) & 0.4874 (0.0058) & 24.5 (2.1) & \textbf{61.3 (1.
 
 En el quinto pliegue y con el umbral de 0.5, LightGBM clasificó correctamente al 75.3~\% de los niños con desnutrición crónica y al 73.8~\% de los niños sin ella (Figura~\ref{fig:confusion}). Cada curva ROC muestra, para todos los umbrales posibles, la proporción de casos detectados frente a la de falsos positivos; la diagonal corresponde a una clasificación al azar, y cuanto más se acerca la curva a la esquina superior izquierda, mejor discrimina el modelo. Las curvas de LightGBM, CatBoost y la red neuronal se superponen en la mayor parte del recorrido, por encima de las de la regresión logística, XGBoost y el árbol de decisión (Figura~\ref{fig:roc}).
 
-\begin{figure*}[!tp]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.75\textwidth]{prism-uploads/Figura5_curvas_roc.png}
+\includegraphics[width=\columnwidth]{prism-uploads/Figura5_curvas_roc.png}
 \caption{Curvas ROC de los seis algoritmos en el quinto pliegue de validación.}
 \label{fig:roc}
-\end{figure*}
+\end{figure}
 
-\begin{figure}[!tp]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.6\columnwidth]{prism-uploads/Figura6_matriz_confusion_lightgbm.png}
 \caption{Matriz de confusión de LightGBM en el quinto pliegue (umbral de 0.5).}
@@ -443,21 +464,21 @@ F1 & 49.28~\% & 48.85--49.66~\% \\
 
 La importancia global, que mide cuánto cambia en promedio la salida del modelo por cada variable sin indicar si la eleva o la reduce, se calculó sobre una muestra aleatoria de 10,000 niños y se concentra en pocos factores (Figura~\ref{fig:shap_global}): la pobreza del hogar (0.42), el peso al nacer (0.41), la altitud de residencia (0.26) y el tamaño al nacer (0.25) destacan claramente, y las diez variables principales acumulan el 68.0~\% de la importancia total. En el nivel local, la Figura~\ref{fig:shap_local} descompone la salida del modelo para un perfil sintético de riesgo alto (0.93); cada barra es la contribución de una variable, y las barras hacia la derecha elevan el resultado: el peso al nacer de 2.4~kg, el nivel socioeconómico más bajo, la edad de 18 meses y el tamaño pequeño al nacer son los factores que más elevan el resultado. Estos valores describen asociaciones aprendidas de la encuesta y no relaciones causales. El peso de cada factor varía entre territorios (Figura~\ref{fig:mapa_factores}); en esa figura, cada fila es un departamento y cada columna un factor, y el color indica su peso relativo frente a los demás departamentos, de modo que los tonos más intensos señalan dónde ese factor pesa más: en Puno destacan la altitud, la pobreza del hogar y el bajo peso al nacer, mientras que en Huancavelica destacan el bajo peso al nacer, el intervalo entre partos y la edad del jefe del hogar.
 
-\begin{figure}[!tp]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\columnwidth]{prism-uploads/Figura7_importancia_global_shap.png}
 \caption{Importancia global de las 15 variables principales según el valor SHAP absoluto promedio.}
 \label{fig:shap_global}
 \end{figure}
 
-\begin{figure*}[!tp]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.6\textwidth]{prism-uploads/Figura8_explicacion_local.png}
+\includegraphics[width=\columnwidth]{prism-uploads/Figura8_explicacion_local.png}
 \caption{Explicación local de un perfil sintético de riesgo alto (salida del modelo de 0.93).}
 \label{fig:shap_local}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}[!tp]
+\begin{figure*}[!t]
 \centering
 \includegraphics[width=0.85\textwidth]{prism-uploads/Figura9_mapa_factores_departamentos.png}
 \caption{Peso relativo de los diez principales factores por departamento (0 = menor; 1 = mayor).}
@@ -468,7 +489,7 @@ La importancia global, que mide cuánto cambia en promedio la salida del modelo 
 
 La aplicación permite evaluar a un niño, con la explicación de los factores que elevan o reducen su puntaje, y a un grupo de niños a partir de un archivo, con una lista ordenada por riesgo (Figura~\ref{fig:app}). En el perfil de ejemplo, el puntaje de 93 supera el umbral de 45 y el niño queda como prioridad alta (panel a); el panel b muestra qué datos elevaron ese puntaje. En una muestra de 300 niños de la ENDES 2025, la aplicación reconoció las 45 columnas y marcó 100 como prioridad alta (panel c). El panel d corresponde al mapa territorial: al elegir un factor, colorea cada departamento según su peso y, al elegir un departamento, lista sus factores con mayor peso. También muestra, por departamento, los factores con mayor peso según la Figura~\ref{fig:mapa_factores}.
 
-\begin{figure*}[!tp]
+\begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{prism-uploads/Figura10_aplicacion.png}
 \caption{Pantallas de la aplicación: (a) evaluación individual, (b) explicación del puntaje, (c) evaluación de un grupo de 300 niños de la ENDES 2025 y (d) mapa de riesgo territorial.}
@@ -503,16 +524,15 @@ Valoración global (1 a 10) & 9 & 8--10 & --- \\
 \end{tabular}
 \end{table}
 
-\FloatBarrier
 \section{Discusión}
 
-El modelo seleccionado alcanzó un AUC-ROC de 0.83 sobre 304,271 niños y diecinueve años de encuesta, un desempeño comparable al de estudios con datos DHS de un solo año y superior a la exactitud combinada de 68.9~\% reportada en un metaanálisis de esos estudios \citep{rao2025metaanalysis}. En Etiopía, \citet{bitew2021ethiopia} también obtuvieron el mejor resultado con un ensamble de árboles potenciados, y en Zambia \citet{chilyabanyama2022zambia} alcanzaron una exactitud del 79~\%. \citet{talukder2020bangladesh} reportaron una sensibilidad del 94.7~\% en Bangladesh, pero con un kappa de Cohen de 0.24, lo que muestra que una sensibilidad alta puede ocultar una concordancia baja. Por ello, este estudio reportó en conjunto la sensibilidad, la precisión, la especificidad, el F1 y el AUC-PR, y no solo la exactitud, que con una prevalencia del 16~\% favorece a los modelos que casi no marcan casos. Por la misma razón, las exactitudes cercanas al 100~\% obtenidas con sobremuestreo sintético \citep{mgomezulu2025malawi} deben interpretarse con cautela. Así ocurrió con CatBoost y la red neuronal: con AUC-ROC cercanos al de LightGBM, detectaron menos del 30~\% de los niños con desnutrición crónica con el umbral de 0.5.
+El modelo seleccionado alcanzó un AUC-ROC de 0.83 sobre 304,271 niños y diecinueve años de encuesta, un desempeño comparable al de estudios con datos DHS de un solo año y superior a la exactitud combinada de 68.9~\% reportada en un metaanálisis de esos estudios \citep{rao2025metaanalysis}. En Etiopía, Bitew et al.~\citep{bitew2021ethiopia} también obtuvieron el mejor resultado con un ensamble de árboles potenciados, y en Zambia Chilyabanyama et al.~\citep{chilyabanyama2022zambia} alcanzaron una exactitud del 79~\%. Talukder y Ahammed~\citep{talukder2020bangladesh} reportaron una sensibilidad del 94.7~\% en Bangladesh, pero con un kappa de Cohen de 0.24, lo que muestra que una sensibilidad alta puede ocultar una concordancia baja. Por ello, este estudio reportó en conjunto la sensibilidad, la precisión, la especificidad, el F1 y el AUC-PR, y no solo la exactitud, que con una prevalencia del 16~\% favorece a los modelos que casi no marcan casos. Por la misma razón, las exactitudes cercanas al 100~\% obtenidas con sobremuestreo sintético \citep{mgomezulu2025malawi} deben interpretarse con cautela. Así ocurrió con CatBoost y la red neuronal: con AUC-ROC cercanos al de LightGBM, detectaron menos del 30~\% de los niños con desnutrición crónica con el umbral de 0.5.
 
 La precisión del 36~\% implica que, de cada tres niños señalados, aproximadamente uno presenta desnutrición crónica. Para un instrumento de triaje este equilibrio es aceptable, porque el costo de un falso positivo es una evaluación adicional, mientras que un falso negativo deja sin atención a un niño en riesgo. Con este criterio se fijó el umbral de 0.45, que eleva la sensibilidad al 80.5~\% a cambio de una precisión del 34.0~\%.
 
-Los factores con mayor peso coinciden con el marco de causas de la desnutrición materno-infantil \citep{black2013lancet,victora2021lancet}: la pobreza del hogar como causa básica, el peso y el tamaño al nacer como reflejo de la nutrición durante el embarazo, y la altitud, asociada en el Perú a la concentración de hemoglobina \citep{accinelli2020anemia} y, en los Andes, a un menor peso y talla al nacer \citep{martinez2019altitude}. La importancia del peso al nacer es coherente con que el retraso del crecimiento comience en los primeros meses de vida \citep{benjaminchung2023faltering}, y la de la pobreza coincide con otros estudios con explicabilidad \citep{yehuala2026xai} y con Colombia, donde la riqueza del hogar explica más de la mitad de la brecha rural-urbana \citep{cardenas2022colombia}. La variación del peso de cada factor entre departamentos, como la altitud en Puno o el intervalo entre partos en Huancavelica, sugiere que las intervenciones podrían priorizarse según el perfil de cada territorio y no solo según la prevalencia. Estos resultados describen asociaciones aprendidas por el modelo y no relaciones causales.
+Los factores con mayor peso coinciden con el marco de causas de la desnutrición materno-infantil \citep{black2013lancet,victora2021lancet}: la pobreza del hogar como causa básica, el peso y el tamaño al nacer como reflejo de la nutrición durante el embarazo, y la altitud, asociada en el Perú a la concentración de hemoglobina \citep{accinelli2020anemia} y, en los Andes, a un menor peso y talla al nacer \citep{martinez2019altitude}. La importancia del peso al nacer es coherente con que el retraso del crecimiento comience en los primeros meses de vida \citep{benjaminchung2023faltering}. La mayor prevalencia entre los 12 y 23 meses coincide con el patrón por edad observado en 94 países de ingresos bajos y medios \citep{karlsson2023age}, y la importancia de la pobreza coincide con otros estudios con explicabilidad \citep{yehuala2026xai} y con Colombia, donde la riqueza del hogar explica más de la mitad de la brecha rural-urbana \citep{cardenas2022colombia}. La variación del peso de cada factor entre departamentos, como la altitud en Puno o el intervalo entre partos en Huancavelica, sugiere que las intervenciones podrían priorizarse según el perfil de cada territorio y no solo según la prevalencia. Estos resultados describen asociaciones aprendidas por el modelo y no relaciones causales.
 
-El estancamiento de la prevalencia en torno al 12~\% desde 2018 y la brecha rural de 21.5~\% frente a 7.9~\% en el área urbana coinciden con la desigualdad territorial descrita por \citet{santos2021peru} y con un periodo en que los factores que impulsaron la reducción previa \citep{huicho2020peru} parecen haber agotado su efecto, y refuerzan la utilidad de focalizar los recursos. El panel de especialistas valoró favorablemente la utilidad y la facilidad de uso de la aplicación, y sus observaciones se centraron en la vigencia de los datos y en la incorporación de nuevas variables, no en los factores mostrados. Esta valoración es similar a la de una herramienta de machine learning en atención primaria, que el 65~\% de sus usuarios consideró útil \citep{herter2026cdss}.
+El estancamiento de la prevalencia en torno al 12~\% desde 2018 y la brecha rural de 21.5~\% frente a 7.9~\% en el área urbana coinciden con la desigualdad territorial descrita por Santos et al.~\citep{santos2021peru} y con un periodo en que los factores que impulsaron la reducción previa \citep{huicho2020peru} parecen haber agotado su efecto, y refuerzan la utilidad de focalizar los recursos. El panel de especialistas valoró favorablemente la utilidad y la facilidad de uso de la aplicación, y sus observaciones se centraron en la vigencia de los datos y en la incorporación de nuevas variables, no en los factores mostrados. Esta valoración es similar a la de una herramienta de machine learning en atención primaria, que el 65~\% de sus usuarios consideró útil \citep{herter2026cdss}, aunque su adopción real depende también de factores organizacionales que una evaluación inicial no mide \citep{ji2021framework}.
 
 El estudio tiene limitaciones. Primero, la ENDES es una encuesta transversal, por lo que el modelo identifica asociaciones y no permite inferir causalidad. Segundo, la validación cruzada mezcla los años de la encuesta; no se evaluó el desempeño entrenando con un periodo y probando con otro, ni con datos externos a la ENDES. Tercero, el índice de riqueza (HV271) se calcula en cada ronda con una escala propia, lo que puede afectar su comparabilidad entre años. Además, algunos trabajos señalan que el diseño muestral no siempre cambia el desempeño predictivo \citep{si2025sampling}, por lo que el efecto de la ponderación debería evaluarse de forma explícita. Cuarto, los hiperparámetros se fijaron sin búsqueda sistemática y la comparación entre algoritmos se realizó sobre los 74 factores significativos. Quinto, la hemoglobina requiere un procedimiento sobre el niño, aunque su exclusión redujo el AUC-ROC en solo 0.0014. Por último, el panel de cuatro especialistas no permite generalizar la evaluación de la aplicación.
 
@@ -523,9 +543,8 @@ Este estudio desarrolló un modelo predictivo de riesgo de desnutrición crónic
 La aplicación web desarrollada permite evaluar a un niño o a un grupo y explica cada resultado, y fue valorada favorablemente por profesionales de salud como apoyo a la focalización y a la priorización de la atención. Como trabajo futuro se propone validar el modelo por periodos de la encuesta, corregir la escala del índice de riqueza entre años, incorporar datos locales de los establecimientos de salud y extender el enfoque a la malnutrición por exceso y a las deficiencias de micronutrientes.
 
 \FloatBarrier
-\section*{Agradecimientos}
 \bibliographystyle{elsarticle-num} 
-\bibliography{referencias}
+\bibliography{prism-uploads/referencias}
 
 %% else use the following coding to input the bibitems directly in the
 %% TeX file.
