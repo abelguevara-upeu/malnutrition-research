@@ -1,0 +1,7 @@
+Highlights (borrador en español; traducir al inglés y verificar máximo 85 caracteres)
+
+- La desnutrición crónica en el Perú se estancó cerca del 12 % desde 2018
+- LightGBM detectó el 80 % de los casos en 304,271 niños de la ENDES 2007–2025
+- Pobreza, peso al nacer y altitud fueron los factores más asociados al riesgo
+- SHAP explica el riesgo de cada niño y los factores de cada departamento
+- Profesionales de salud valoraron la herramienta con 9 de 10 puntos
