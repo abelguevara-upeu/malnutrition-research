@@ -216,7 +216,7 @@ El estudio utilizó los microdatos anuales de la ENDES, recolectados y publicado
 \label{fig:integracion_endes}
 \end{figure*}
 
-A partir de esta muestra se definió la variable dependiente, la desnutrición crónica infantil, categorizada de acuerdo con los estándares internacionales de crecimiento de la Organización Mundial de la Salud \citep{who2006growth}, criterio empleado sistemáticamente en el análisis de la desnutrición infantil peruana \citep{sobrino2014peru,santos2021peru}. Se definió como caso positivo ($Y=1$) a todo infante cuyo puntaje Z de talla para la edad ($\mathrm{HAZ}=\mathrm{HC70}/100$) se situó por debajo de menos dos desviaciones estándar respecto de la mediana de referencia, y como caso control ($Y=0$) en caso contrario (Ecuación~\ref{eq:variable_objetivo}). La prevalencia global en la serie histórica fue del 15.8~\%, con una razón de desbalance de 1:5.3 (Sección~\ref{sec:muestra}). El sexo del niño corresponde al registrado en la encuesta (masculino o femenino), sin distinción de género. Para evitar resultados inflados por usar datos que revelan la respuesta (fuga de datos) \citep{kaufman2011leakage}, se excluyeron de las variables predictoras la talla directa en centímetros (HC3), el peso crudo (HC2) y cualquier intervención terapéutica o diagnóstico clínico registrado después de la medición antropométrica.
+A partir de esta muestra se definió la variable dependiente, la desnutrición crónica infantil, categorizada de acuerdo con los estándares internacionales de crecimiento de la Organización Mundial de la Salud \citep{who2006growth}, criterio empleado sistemáticamente en el análisis de la desnutrición infantil peruana \citep{sobrino2014peru,santos2021peru}. Se definió como caso positivo ($Y=1$) a todo infante cuyo puntaje Z de talla para la edad ($\mathrm{HAZ}=\mathrm{HC70}/100$) se situó por debajo de menos dos desviaciones estándar respecto de la mediana de referencia, y como caso control ($Y=0$) en caso contrario (Ecuación~\ref{eq:variable_objetivo}). Los casos representaron el 15.8~\% de la muestra, con una razón de desbalance de 1:5.3. El sexo del niño corresponde al registrado en la encuesta (masculino o femenino), sin distinción de género. Para evitar resultados inflados por usar datos que revelan la respuesta (fuga de datos) \citep{kaufman2011leakage}, se excluyeron de las variables predictoras la talla directa en centímetros (HC3), el peso crudo (HC2) y cualquier intervención terapéutica o diagnóstico clínico registrado después de la medición antropométrica. A diferencia del indicador oficial \citep{inei2023indicadores}, la muestra no se restringió a los niños que durmieron en el hogar la noche anterior (HV103); aplicar ese filtro cambia la prevalencia ponderada de 16.2~\% a 16.1~\%.
 
 \begin{equation}
 Y =
@@ -261,7 +261,7 @@ Se contrastaron cuatro configuraciones experimentales, el modelo de 45 variables
 
 \subsection{Modelado}
 
-Antes de entrenar los modelos se trató el desbalance de clases, pues por cada niño con desnutrición crónica hay 5.3 sin ella (Sección~\ref{sec:muestra}). Para que los modelos no ignoren la clase minoritaria, se usaron pesos de clase: equivocarse con un niño desnutrido cuesta más que equivocarse con uno sano, en proporción inversa a la frecuencia de cada clase. Se aplicaron como pesos de clase balanceados en la regresión logística, el árbol de decisión, LightGBM y CatBoost, y como \texttt{scale\_pos\_weight} en XGBoost; la red neuronal de scikit-learn no admite pesos y se entrenó sin ellos.
+Antes de entrenar los modelos se trató el desbalance de clases, pues por cada niño con desnutrición crónica hay 5.3 sin ella. Para que los modelos no ignoren la clase minoritaria, se usaron pesos de clase: equivocarse con un niño desnutrido cuesta más que equivocarse con uno sano, en proporción inversa a la frecuencia de cada clase. Se aplicaron como pesos de clase balanceados en la regresión logística, el árbol de decisión, LightGBM y CatBoost, y como \texttt{scale\_pos\_weight} en XGBoost; la red neuronal de scikit-learn no admite pesos y se entrenó sin ellos.
 
 No se generaron registros sintéticos (por ejemplo, con SMOTE). La clase minoritaria ya cuenta con más de 48,000 casos reales, los registros sintéticos no tendrían un factor de expansión propio y, sin ellos, las métricas se calculan sobre la distribución real de la población.
 
@@ -332,8 +332,8 @@ Percepción de control externo & TAM3 & --- & 3 (K1--K3) \\
 \end{tabular}
 \end{table*}
 
-La reproducibilidad se abordó de acuerdo con los principios FAIR mediante la modularización del código en el paquete Python \texttt{mnp/}, el aislamiento del entorno con Docker (\texttt{python:3.12-slim}), la automatización del flujo con Makefile y el depósito del código y del modelo serializado en Zenodo (modelo: \url{https://doi.org/10.5281/zenodo.23962363}). Los datos no se redistribuyen: el flujo los descarga directamente del portal del INEI.
-% PENDIENTE antes de enviar: publicar el borrador del modelo en Zenodo (el DOI no funciona hasta entonces) y agregar el DOI del código.
+La reproducibilidad se abordó de acuerdo con los principios FAIR mediante la modularización del código en el paquete Python \texttt{mnp/}, el aislamiento del entorno con Docker (\texttt{python:3.12-slim}), la automatización del flujo con Makefile y el depósito del código y del modelo serializado en Zenodo (código: \url{https://doi.org/10.5281/zenodo.23963410}; modelo: \url{https://doi.org/10.5281/zenodo.23962363}). Los datos no se redistribuyen: el flujo los descarga directamente del portal del INEI.
+% PENDIENTE antes de enviar: publicar el borrador del modelo en Zenodo (el DOI no funciona hasta entonces) y cambiar los dos registros de Restricted a Public.
 El flujo se ejecutó con Python 3.12 y las bibliotecas LightGBM 4.6.0, XGBoost 3.2.0, CatBoost 1.2.10, scikit-learn 1.8.0 y SHAP 0.52.0.
 
 Una vez implementada la aplicación, su pertinencia se evaluó mediante un panel de cuatro profesionales sanitarios: tres nutricionistas y un enfermero, todos con al menos diez años de experiencia asistencial y grado de maestría. La evaluación se apoyó en el Modelo de Aceptación Tecnológica \citep{davis1989tam} y en su extensión TAM2 \citep{venkatesh2000tam2}, cuya adaptación a contextos de salud es frecuente \citep{matemba2020tamreview}; la utilidad percibida fue el criterio central, como en otras evaluaciones de sistemas de apoyo a la decisión clínica \citep{chien2025tam}, por el propósito del sistema de aportar información accionable para priorizar la atención sanitaria.
@@ -352,37 +352,35 @@ Los microdatos de la ENDES son de acceso público y no contienen información qu
 \subsection{Características de la muestra}
 \label{sec:muestra}
 
-La muestra incluyó 304,271 niños menores de cinco años, 51.0~\% varones y 65.6~\% residentes del área urbana. La prevalencia de desnutrición crónica en el conjunto de los 19 años fue de 15.8~\% al contar a cada niño por igual (prevalencia simple) y de 16.2~\% al aplicar el factor de expansión de la encuesta (prevalencia ponderada; Tabla~\ref{tab:descriptiva}). La primera describe a los niños encuestados; la segunda estima la prevalencia en la población del país, porque cada niño cuenta según el número de niños que representa. Las prevalencias que siguen son ponderadas. La desnutrición crónica fue mayor en el área rural (30.7~\%) que en la urbana (9.4~\%), en la Sierra (26.2~\%) y la Selva (21.8~\%) que en la Costa fuera de Lima (10.0~\%) y en Lima metropolitana (5.4~\%), y entre los 12 y 23 meses de edad (19.8~\%).
+La muestra incluyó 304,271 niños menores de cinco años, 51.0~\% varones y 65.6~\% residentes del área urbana. Las prevalencias se ponderaron con el factor de expansión de la encuesta, como en el indicador oficial \citep{inei2023indicadores}, para que cada niño cuente según el número de niños que representa y los resultados estimen la situación del país. En el conjunto de los 19 años, la prevalencia de desnutrición crónica fue de 16.2~\% (Tabla~\ref{tab:descriptiva}). Fue mayor en el área rural (30.7~\%) que en la urbana (9.4~\%), en la Sierra (26.2~\%) y la Selva (21.8~\%) que en la Costa fuera de Lima (10.0~\%) y en Lima metropolitana (5.4~\%), y entre los 12 y 23 meses de edad (19.8~\%).
 
 \begin{table}[!tp]
 \centering
-\caption{Características de la muestra y prevalencia de desnutrición crónica (simple y ponderada), 2007--2025.}
+\caption{Características de la muestra y prevalencia ponderada de desnutrición crónica, 2007--2025.}
 \label{tab:descriptiva}
 \footnotesize
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{lrrcc}
+\begin{tabular}{lrrc}
 \hline
-Característica & $n$ & \% muestra & \multicolumn{2}{c}{Prevalencia (\%)} \\
-\cline{4-5}
- & & & Simple & Pond. \\
+Característica & $n$ & \% muestra & Prevalencia (\%) \\
 \hline
-Total & 304,271 & 100.0 & 15.8 & 16.2 \\
-\multicolumn{5}{l}{\textit{Sexo}} \\
-\quad Varones & 155,149 & 51.0 & 16.8 & 17.1 \\
-\quad Mujeres & 149,122 & 49.0 & 14.8 & 15.2 \\
-\multicolumn{5}{l}{\textit{Área de residencia}} \\
-\quad Urbana & 199,571 & 65.6 & 9.6 & 9.4 \\
-\quad Rural & 104,700 & 34.4 & 27.7 & 30.7 \\
-\multicolumn{5}{l}{\textit{Región natural}} \\
-\quad Lima metropolitana & 32,004 & 10.5 & 5.2 & 5.4 \\
-\quad Resto de la Costa & 85,227 & 28.0 & 7.7 & 10.0 \\
-\quad Sierra & 104,518 & 34.4 & 23.6 & 26.2 \\
-\quad Selva & 82,522 & 27.1 & 18.3 & 21.8 \\
-\multicolumn{5}{l}{\textit{Edad (meses)}} \\
-\quad 0--5 & 23,615 & 7.8 & 10.8 & 11.2 \\
-\quad 6--11 & 30,742 & 10.1 & 12.3 & 12.5 \\
-\quad 12--23 & 60,560 & 19.9 & 19.8 & 19.8 \\
-\quad 24--59 & 189,354 & 62.2 & 15.7 & 16.2 \\
+Total & 304,271 & 100.0 & 16.2 \\
+\multicolumn{4}{l}{\textit{Sexo}} \\
+\quad Varones & 155,149 & 51.0 & 17.1 \\
+\quad Mujeres & 149,122 & 49.0 & 15.2 \\
+\multicolumn{4}{l}{\textit{Área de residencia}} \\
+\quad Urbana & 199,571 & 65.6 & 9.4 \\
+\quad Rural & 104,700 & 34.4 & 30.7 \\
+\multicolumn{4}{l}{\textit{Región natural}} \\
+\quad Lima metropolitana & 32,004 & 10.5 & 5.4 \\
+\quad Resto de la Costa & 85,227 & 28.0 & 10.0 \\
+\quad Sierra & 104,518 & 34.4 & 26.2 \\
+\quad Selva & 82,522 & 27.1 & 21.8 \\
+\multicolumn{4}{l}{\textit{Edad (meses)}} \\
+\quad 0--5 & 23,615 & 7.8 & 11.2 \\
+\quad 6--11 & 30,742 & 10.1 & 12.5 \\
+\quad 12--23 & 60,560 & 19.9 & 19.8 \\
+\quad 24--59 & 189,354 & 62.2 & 16.2 \\
 \hline
 \end{tabular}}
 \end{table}
