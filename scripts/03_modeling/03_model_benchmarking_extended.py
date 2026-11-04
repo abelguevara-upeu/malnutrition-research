@@ -483,8 +483,8 @@ joblib.dump(champion_model, model_path)
 
 # 5. Exportación de los Metadatos Técnicos (JSON)
 metadata_export = {
-    'model_name': 'LightGBM_Top43',
-    'optimal_threshold': UMBRAL_DECISION,
+    'model_name': 'LightGBM_Top45',
+    'optimal_threshold': 0.45,  # umbral de la aplicación
     'features': final_features,
     'cat_features': final_cat_features
 }

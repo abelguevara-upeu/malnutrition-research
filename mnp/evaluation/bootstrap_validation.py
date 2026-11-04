@@ -195,7 +195,7 @@ def delong_test(y, p1, p2):
 
 def main():
     X, y, w, meta = load_xy()
-    tau = meta["optimal_threshold"]
+    tau = 0.5  # umbral de comparación del artículo; la aplicación usa 0.45
     print(f"dataset={X.shape} | prevalencia={y.mean()*100:.2f}% | tau={tau}\n")
 
     print("Calculando probabilidades out-of-fold (3 modelos x 5 folds)...")
