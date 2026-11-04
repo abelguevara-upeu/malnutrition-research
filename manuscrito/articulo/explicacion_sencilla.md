@@ -1,92 +1,122 @@
-# El artículo explicado en palabras sencillas
+# El artículo explicado párrafo por párrafo
 
-Esta guía resume qué dice cada parte del artículo (`art-prisma.tex`) sin lenguaje técnico, para poder explicarlo en una reunión o en la sustentación.
+Esta guía resume qué dice cada parte de `art-prisma.tex` y explica los términos que pueden confundir. Sirve para preparar una reunión o una sustentación.
 
 ## La idea en una frase
 
-Usamos datos de una encuesta nacional para entrenar un programa que señala qué niños tienen más riesgo de desnutrición crónica, explica por qué, y lo pusimos en una aplicación web que profesionales de salud evaluaron como útil.
+Usamos datos de una encuesta nacional para entrenar un modelo que señala qué niños tienen más riesgo de desnutrición crónica, explica por qué, y lo pusimos en una aplicación web que evaluaron profesionales de salud.
 
-## 1. Introducción: el problema
+## Introducción
 
-- La **desnutrición crónica** es cuando un niño mide menos de lo que debería para su edad. Afecta su desarrollo de por vida.
-- En el Perú bajó mucho entre 2007 y 2017 (de 29 % a 13 %), pero **desde 2018 se estancó en torno al 12 %**. Las estrategias de siempre ya no la bajan más.
-- La brecha sigue: en el campo afecta a 1 de cada 5 niños; en la ciudad, a menos de 1 de cada 10.
-- **Nuestra propuesta:** en lugar de esperar a medir a cada niño, usar sus datos (nacimiento, madre, hogar) para saber a quién conviene priorizar.
+- **Problema:** la desnutrición crónica afecta el desarrollo de por vida.
+- **Perú:** bajó mucho, pero desde 2018 se mantiene alrededor del 12 %.
+- **Vacío:** los estudios previos suelen usar una sola ronda de la encuesta, reportan sobre todo la exactitud y no ofrecen una herramienta.
+- **Objetivo:** predecir el riesgo y analizar los factores por departamento.
 
-## 2. Metodología: qué hicimos
+## Metodología
 
-Seguimos cinco fases ordenadas (el método se llama CRISP-DM). Están dibujadas en la Figura 1.
+**Inicio:** el estudio siguió CRISP-DM. El problema está en la Introducción y aquí van las otras cinco fases.
+
+- **CRISP-DM:** guía de pasos para proyectos de datos.
 
 ### Comprensión de los datos
 
-- Usamos la **ENDES**, la encuesta de salud que el INEI hace cada año en todo el país. Tomamos 19 años (2007–2025).
-- La encuesta viene repartida en varias tablas (hogar, niño, madre). Las unimos y obtuvimos **304,271 niños menores de 5 años** (Figura 2).
-- Definimos qué es un caso: un niño con desnutrición crónica según la tabla de la OMS.
-- Quitamos los datos que serían "trampa", como la talla del niño: si el programa la viera, adivinaría la respuesta sin aprender nada útil.
+1. **Fuente y unión:** se unieron cinco módulos de la ENDES y se obtuvieron 304,271 niños.
+    - **Módulo:** cada tabla de la encuesta.
+    - **Llaves (`HHID`, `CASEID`):** códigos que permiten unir las tablas.
+2. **Qué es un caso:** desnutrición crónica si la talla para la edad está por debajo de −2 DE. Los casos son 15.8 % de la muestra.
+    - **Puntaje Z o DE:** cuánto se aleja la talla del niño de la referencia OMS.
+    - **Desbalance 1:5.3:** por cada caso hay 5.3 niños sin desnutrición.
+    - **Fuga de datos:** dar al modelo información que revela la respuesta, como la talla.
+    - **HV103:** indica si el niño durmió en el hogar la noche anterior. No se filtró, y el efecto es mínimo.
+3. **Variables:** las 45 se agrupan en cinco dominios.
+    - **Dominio:** grupo de variables, como vivienda o madre.
 
 ### Preparación de los datos
 
-- Limpiamos los datos: códigos como "no sabe" pasaron a "dato faltante" y unificamos códigos que cambiaron entre años.
-- De 189 datos posibles por niño nos quedamos con **45** en cuatro filtros: quitar los que casi siempre faltan, los repetidos, los que no se relacionan con la desnutrición y los que menos ayudan (Tabla de variables).
-- Comprobamos que no dejamos fuera nada importante: al volver a agregar las variables descartadas, el resultado no cambió.
+1. **Limpieza:** se unificaron códigos entre años.
+2. **Faltantes:** "no sabe" pasó a dato faltante.
+    - **Imputar con la mediana:** llenar un dato numérico faltante con el valor central.
+    - **Estandarizar:** poner las variables en una escala comparable.
+3. **Selección en cuatro etapas:** de 189 columnas a 74 y luego a 45.
+    - **Correlación y VIF:** detectan variables que dicen casi lo mismo.
+    - **Chi-cuadrado y Kruskal-Wallis:** prueban si una variable se relaciona con la desnutrición.
+    - **p < 0.05:** es poco probable que esa relación sea casualidad.
+4. **Verificación:** se volvieron a agregar variables descartadas para comprobar que no se perdió algo útil.
+    - **`2|AUC − 0.5|`:** mide cuánto separa una variable por sí sola; 0 significa que no separa.
 
 ### Modelado
 
-- **Desbalance:** hay 5 niños sanos por cada niño con desnutrición. Si no se corrige, el programa aprende a decir siempre "sano" y acierta mucho, pero no sirve. Le indicamos que **equivocarse con un niño desnutrido cuesta más** que equivocarse con uno sano.
-- **Factor de expansión:** la encuesta entrevista más hogares en unas zonas que en otras. Este factor corrige eso para que los resultados representen a todo el país. No es lo mismo que el desbalance.
-- Probamos **6 programas** distintos (algoritmos), desde uno simple hasta una red neuronal.
+1. **Pesos de clase:** equivocarse con un niño desnutrido cuesta más.
+2. **Sin SMOTE:** no se inventaron casos. SMOTE crea registros artificiales.
+3. **Factor de expansión:** cada niño cuenta según a cuántos representa. No corrige el desbalance.
+4. **Seis algoritmos:** se compararon en igualdad de condiciones.
+    - **Ensamble de árboles:** muchos árboles de decisión combinados.
+    - **Hiperparámetros:** ajustes fijados antes de entrenar.
+    - **Semilla (`random_state`):** hace que el resultado se pueda repetir.
+5. **Umbral:** puntaje desde el cual un niño es prioridad. El puntaje sirve para ordenar: 0.45 no significa 45 % de riesgo.
 
 ### Evaluación
 
-- Para no hacernos trampa, cada programa se entrenó con una parte de los niños y se probó con otra que no había visto. Se repitió 5 veces con grupos distintos y se promedió.
-- Medimos varias cosas: cuántos casos detecta, cuántos de los señalados de verdad tienen desnutrición, y cuánto acierta en general.
-- Usamos **SHAP**, una técnica que dice qué datos de cada niño subieron o bajaron su puntaje. Así el programa no es una caja negra.
+1. **Métricas:**
+    - **Fuera de pliegue:** cada niño se evalúa con un modelo que no lo vio.
+    - **AUC-ROC:** capacidad de separar casos y no casos; 0.5 es azar y 1 es perfecto.
+    - **Bootstrap:** repite el cálculo con muestras al azar para obtener el IC 95 %.
+    - **DeLong:** comprueba si dos AUC realmente difieren.
+2. **SHAP:** indica cuánto subió o bajó cada variable el puntaje de un niño.
 
 ### Despliegue
 
-- Hicimos una **aplicación web** donde se evalúa un niño o una lista de niños de un archivo Excel (Figura 3).
-- **Cuatro profesionales de salud** (tres nutricionistas y un enfermero) la probaron y respondieron un cuestionario basado en el modelo TAM, que mide si una tecnología se percibe útil y fácil de usar.
+1. **Aplicación:** tiene pantalla, lógica y datos.
+    - **Coroplético:** mapa pintado por departamento.
+2. **Reproducibilidad:** código y modelo en Zenodo.
+    - **FAIR:** datos y código fáciles de hallar y reutilizar.
+3. **Panel:** cuatro profesionales.
+    - **TAM2:** modelo que mide si una tecnología se percibe útil y fácil de usar.
+    - **Constructo:** tema medido con varias preguntas.
+    - **Likert:** escala de 1 a 5.
+    - **Mediana y RIC:** valor central y rango del 50 % central de las respuestas.
 
-## 3. Resultados: qué encontramos
+## Resultados
 
-| Resultado | En palabras sencillas | Dónde está |
-| --- | --- | --- |
-| La muestra | Más desnutrición en el campo (31 %) que en la ciudad (9 %), y en la Sierra (26 %) que en Lima (5 %) | Tabla de la muestra, Figura 4 |
-| El mejor programa | **LightGBM** fue el que mejor distinguió a los niños en riesgo | Tabla de modelos |
-| Cuántos detecta | De cada 100 niños con desnutrición, encuentra **80** | Tabla de confiabilidad |
-| Cuántos falsos avisos | De cada 3 niños que señala, **1** de verdad tiene desnutrición. Para priorizar visitas es aceptable: es mejor revisar de más que dejar a un niño sin atención | Tabla de confiabilidad |
-| Los otros programas | Dos de ellos parecían buenos, pero solo encontraban a 3 de cada 10 niños | Tabla de modelos, Figura 5 |
-| Los factores principales | Pobreza del hogar, bajo peso al nacer, altitud y tamaño pequeño al nacer | Figura 7 |
-| Cada niño | La aplicación muestra qué datos de ese niño suben su riesgo | Figura 8 |
-| Cada departamento | Los factores cambian por zona: en Puno pesa más la altitud; en Huancavelica, el intervalo entre partos | Figura 9 |
-| La aplicación | Funciona con un niño o con una lista; con 300 niños reales marcó 100 como prioridad | Figura 10 |
-| El panel | Todos los aspectos con nota de 4 o más sobre 5; nota global de 9 sobre 10 | Tabla del panel |
+1. **Muestra:** prevalencia ponderada de 16.2 % en los 19 años. Es mayor en zona rural y Sierra.
+2. **Tendencia:** bajó de 29.2 % a 13.0 %, y desde 2018 ronda 12 %. El 16.2 % es de todo el periodo; el 12 % es por año.
+3. **Selección:** agregar diez variables no mejoró el modelo.
+    - **η²:** parte de la variación explicada.
+4. **Comparación:** LightGBM tuvo el mejor equilibrio.
+    - **Sensibilidad:** casos que detecta.
+    - **Precisión:** señalados que realmente son casos.
+    - **Especificidad:** niños sin desnutrición bien clasificados.
+    - **F1:** equilibrio entre sensibilidad y precisión.
+    - **AUC-PR:** como el AUC, pero centrado en los casos.
+5. **Curvas ROC y matriz:** comparan modelos y muestran aciertos y errores.
+    - **Quinto pliegue:** uno de los cinco grupos de validación.
+6. **Confiabilidad:** con 0.45, detecta 80.46 % de los casos.
+    - **Excluir hemoglobina:** el AUC casi no cambia.
+7. **Explicabilidad:** pobreza, peso al nacer, altitud y tamaño al nacer pesan más.
+    - **Perfil sintético:** niño de ejemplo, no real.
+8. **Sistema:** evalúa uno o varios niños y muestra el mapa.
+9. **Panel:** todas las medianas fueron de 4 o más.
 
-## 4. Discusión: qué significa
+## Discusión
 
-- Nuestro resultado es parecido al de estudios en Etiopía, Zambia y Ruanda, pero con muchos más niños y años.
-- Los factores que encontró el programa coinciden con lo que ya se sabe sobre las causas de la desnutrición, lo que da confianza.
-- El programa muestra **asociaciones, no causas**: que la altitud pese no significa que la altitud cause la desnutrición.
-- **Limitaciones** (lo que no pudimos hacer):
-    - La encuesta mira a cada niño una sola vez, no lo sigue en el tiempo.
-    - No probamos el programa entrenando con unos años y evaluando con otros.
-    - El índice de pobreza se calcula distinto cada año.
-    - Cuatro profesionales son pocos para generalizar su opinión.
+1. **Comparación con otros estudios:** una exactitud alta puede engañar si hay pocos casos.
+    - **Kappa:** acuerdo más allá del azar.
+    - **Exactitud:** total de aciertos; sube aunque el modelo casi no marque casos.
+2. **Precisión aceptable:** revisar de más cuesta menos que dejar sin atención a un niño.
+    - **Triaje:** ordenar a quién atender primero.
+3. **Factores:** coinciden con las causas conocidas, pero son asociaciones, no causas.
+4. **Estancamiento:** refuerza la utilidad de focalizar recursos.
+5. **Panel:** buena valoración, pero la adopción real depende de cada organización.
+6. **Limitaciones:**
+    - **Transversal:** mide a cada niño una sola vez.
+    - **Validación por periodos:** entrenar con unos años y probar con otros; no se hizo.
 
-## 5. Conclusiones
+## Conclusiones
 
-- Es posible priorizar a los niños en riesgo con datos que ya existen, sin medirlos a todos primero.
-- La herramienta sirve para **ordenar a quién atender primero**, no para diagnosticar. El diagnóstico sigue siendo medir talla y edad.
-- A futuro: probarla por periodos, corregir el índice de pobreza, usar datos de los establecimientos de salud y ampliarla al sobrepeso y la anemia.
+1. **Hallazgos:** LightGBM y sus factores principales.
+2. **Aplicación y futuro:** apoya la priorización, no el diagnóstico.
 
-## Glosario rápido
+## Por qué solo prevalencia ponderada
 
-| Término | Qué significa |
-| --- | --- |
-| AUC-ROC | Qué tan bien separa el programa a niños con y sin desnutrición. 0.5 es adivinar al azar; 1 es perfecto. El nuestro: 0.83 |
-| Sensibilidad | De los niños que sí tienen desnutrición, cuántos encuentra (80 %) |
-| Precisión | De los niños que señala, cuántos de verdad la tienen (34 %) |
-| Umbral | El puntaje a partir del cual un niño se marca como prioridad. Usamos 45 de 100 |
-| Validación cruzada | Probar el programa 5 veces con niños que no vio al entrenar |
-| SHAP | Técnica que explica qué datos subieron o bajaron el puntaje de cada niño |
-| TAM | Cuestionario estándar para medir si una tecnología se percibe útil y fácil de usar |
+La ENDES no selecciona a todos con la misma probabilidad. El factor de expansión permite estimar la situación del país, y la ficha técnica del INEI calcula así el indicador oficial. El 15.8 % sin ponderar solo describe el desbalance de los datos usados para entrenar.
