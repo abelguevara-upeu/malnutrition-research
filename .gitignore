@@ -224,3 +224,6 @@ docs/**/*.docx
 
 # Respuestas del panel de especialistas: llevan nombres y correos (consentimiento informado)
 entrevista/
+
+# Probabilidades del benchmark (se regeneran)
+reports/benchmark/fold5_probs.npz
